@@ -7,8 +7,9 @@ public class Deck {
 
     public Deck(){
         this.cards = new ArrayList<>();
-        List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW}, 2);
-        List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE}, 2);
+
+        List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
+        List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
 
         for (int i = 0; i < lightSideDetails.size() && i < darkSideDetails.size(); i++) {
             CardSideDetails light = lightSideDetails.get(i);
@@ -26,10 +27,11 @@ public class Deck {
 
         }
     }
-    private List<CardSideDetails> createSideDetails(Color[] colors, int sets) {
+    private List<CardSideDetails> createSideDetails(Color[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
+        // might be a cleaner way of initializing one side
         for (Color color: colors){
-            for (int i = 0; i < sets; i++){
+            for (int i = 0; i < 2; i++){
                 for (CardType type: CardType.values()){
                     sideDetails.add(new CardSideDetails(type, color));
                 }
@@ -37,5 +39,26 @@ public class Deck {
         }
         Collections.shuffle(sideDetails);
         return sideDetails;
+    }
+
+    public void shuffle(){
+        Collections.shuffle(cards);
+    }
+
+    public Card drawCard(){
+        Card card = this.cards.get(0);
+        cards.remove(card);
+        return card;
+    }
+
+    // maybe game class handles discard pile instead
+    public void emptyDiscard(){
+        this.cards.addAll(discardPile);
+        this.discardPile = new ArrayList<>();
+    }
+
+    public static void main(String[] args) {
+        Deck d = new Deck();
+        System.out.println(d.drawCard());
     }
 }

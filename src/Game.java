@@ -1,20 +1,43 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Game {
-    ArrayList <Player> players;
-    Player currentPlayer;
-    Boolean direction; //false when lighter side of deck is played
-    Deck deck;
+    import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-    public Game(){
-        players = new ArrayList<Player>();
-        direction = false;
-        currentPlayer = new CurrentPlayer();
-        deck = new Deck();
-    }
+    public class Game {
+        public ArrayList <Player> players;
+        Player currentPlayer;
+        Boolean direction; //false when lighter side of deck is played
+        Deck deck;
 
-    private void startGame(){
+        public Game(){
+            players = new ArrayList<Player>();
+            direction = false;
+            currentPlayer = new Player("");
+            deck = new Deck();
+        }
+
+        public void addPlayer(Player pl){
+            players.add(pl);
+        }
+
+        public void removePlayer(Player pl){
+            players.remove(pl);
+        }
+
+        public void printPlayer(){
+            for(Player p: players){
+                p.addCardToHand(deck.drawCard());
+                p.addCardToHand(deck.drawCard());
+                p.addCardToHand(deck.drawCard());
+                p.addCardToHand(deck.drawCard());
+                p.displayHand();
+                //System.out.println(players.get(0));
+            }
+        }
+
+
+    /*private void startGame(){
         System.out.println("The game has started");
     }
     private Player nextTurn() {
@@ -30,9 +53,9 @@ public class Game {
         }
     }
     private void playCard(){
-        if ((CardType.Flip == (?)) && (direction == true)){
+        //if ((CardType.Flip == (?)) && (direction == true)){
             //will build on this once I think of something here
-        }
+
     }
     private Player checkWinner(){
         for(Player p: players ){
@@ -41,11 +64,22 @@ public class Game {
             }
         }
         return null;
-    }
+    }*/
 
-    public static void main(String args[]){
-        Game play = new Game();
-        play.startGame();
+        public static void main(String args[]){
+            Game play = new Game();
+            Deck d = new Deck();
+            ViewGame view = new ViewGame();
+            view.playerInput();
+            //play.printPlayer();
+            Player p1 = new Player("Jamal");
+            Player p2 =  new Player("Henry");
+            p1.addCardToHand(d.drawCard());
+            p1.addCardToHand(d.drawCard());
+            p1.addCardToHand(d.drawCard());
+            p1.displayHand();
+            play.printPlayer();
+            //view.printPlayer();
+        }
+
     }
-    //hello
-}
