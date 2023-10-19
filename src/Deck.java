@@ -3,11 +3,14 @@ import java.util.*;
 public class Deck {
 
     private List<Card> cards;
+
     private List<Card> discardPile;
+
+    private List<Card> drawPile; //Nikita
 
     public Deck(){
         this.cards = new ArrayList<>();
-
+        this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
 
@@ -47,13 +50,24 @@ public class Deck {
 
     public Card drawCard(){
         Card card = this.cards.get(0);
-        cards.remove(card);
+        cards.remove(card);       
         return card;
     }
 
-    // maybe game class handles discard pile instead
+    // maybe game class handles discard pile instead    
     public void emptyDiscard(){
         this.cards.addAll(discardPile);
         this.discardPile = new ArrayList<>();
     }
+
+    //Nikita
+    public void addToDiscardPile(Card card){
+        discardPile.add(card);
+    }
+
+    //Nikita
+    public void removeFromDrawPile(Card card){
+        drawPile.remove(card);
+    }
+
 }
