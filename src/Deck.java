@@ -8,6 +8,9 @@ public class Deck {
 
     private List<Card> drawPile; //Nikita
 
+    /**
+     * Populates the deck with both light and dark side of UNO cards
+     */
     public Deck(){
         this.cards = new ArrayList<>();
         this.drawPile = new ArrayList<>(); //Nikita
@@ -21,6 +24,9 @@ public class Deck {
         }
     }
 
+    /**
+     *
+     */
     private static class CardSideDetails {
         CardType type;
         Color color;
@@ -63,6 +69,10 @@ public class Deck {
     //Nikita
     public void addToDiscardPile(Card card){
         discardPile.add(card);
+    }
+
+    public Card topCardFromDiscardFile(){
+        return discardPile.get(cards.size()-1);
     }
 
     //Nikita

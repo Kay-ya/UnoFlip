@@ -1,40 +1,48 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-    import java.lang.reflect.Array;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-    public class Game {
-        public ArrayList <Player> players;
-        Player currentPlayer;
-        Boolean direction; //false when lighter side of deck is played
-        Deck deck;
+public class Game {
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
 
-        public Game(){
-            players = new ArrayList<Player>();
-            direction = false;
-            currentPlayer = new Player("");
-            deck = new Deck();
-        }
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
 
-        public void addPlayer(Player pl){
-            players.add(pl);
-        }
+    public ArrayList <Player> players;
+    Player currentPlayer;
+    Boolean direction; //false when lighter side of deck is played
+    Deck deck;
 
-        public void removePlayer(Player pl){
-            players.remove(pl);
-        }
+    public Game(){
+        players = new ArrayList<Player>();
+        direction = false;
+        currentPlayer = new Player(" ");
+        deck = new Deck();
+    }
 
-        public void printPlayer(){
-            for(Player p: players){
-                p.addCardToHand(deck.drawCard());
-                p.addCardToHand(deck.drawCard());
-                p.addCardToHand(deck.drawCard());
-                p.addCardToHand(deck.drawCard());
-                p.displayHand();
-                //System.out.println(players.get(0));
-            }
+    public void addPlayer(Player pl){
+        players.add(pl);
+    }
+
+    public void removePlayer(Player pl){
+        players.remove(pl);
+    }
+
+    public void printPlayer(){
+        for(Player p: players){
+            p.addCardToHand(deck.drawCard());
+            p.addCardToHand(deck.drawCard());
+            p.addCardToHand(deck.drawCard());
+            p.addCardToHand(deck.drawCard());
+            p.displayHand();
+            //System.out.println(players.get(0));
         }
+    }
 
 
     /*private void startGame(){
@@ -66,20 +74,22 @@ import java.util.ArrayList;
         return null;
     }*/
 
-        public static void main(String args[]){
-            Game play = new Game();
-            Deck d = new Deck();
-            ViewGame view = new ViewGame();
-            view.playerInput();
-            //play.printPlayer();
-            Player p1 = new Player("Jamal");
-            Player p2 =  new Player("Henry");
-            p1.addCardToHand(d.drawCard());
-            p1.addCardToHand(d.drawCard());
-            p1.addCardToHand(d.drawCard());
-            p1.displayHand();
-            play.printPlayer();
-            //view.printPlayer();
-        }
+    public static void main(String args[]){
+        Game play = new Game();
+        Deck d = new Deck();
+        ViewGame view = new ViewGame();
 
+        // Updated
+        play.players = view.playerInput();
+
+        //Removed hardcoded players
+        // Calling below methods on the players entered
+        for (Player player : play.players) {
+            player.addCardToHand(d.drawCard());
+            player.displayHand();
+            play.printPlayer();
+            player.getPlayerHandPoints();
+        }
     }
+
+}

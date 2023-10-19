@@ -36,66 +36,66 @@ public class Player {
     public int calculateTotalPointsForPlayerHand(){
 
         for (Card card : hand) {
-            System.out.println("In calculateTotalPointsForPlayerHand 2");
+            //System.out.println("In calculateTotalPointsForPlayerHand 2");
             switch(card.getBrightCardType()){
                 case ONE:
-                    System.out.println("ONE");
+                    //System.out.println("ONE");
                     handPoints+=1;
                     break;
                 case TWO:
-                    System.out.println("TWO");
+                    //System.out.println("TWO");
                     handPoints+=2;
                     break;
                 case THREE:
-                    System.out.println("THREE");
+                    //System.out.println("THREE");
                     handPoints+=3;
                     break;
                 case FOUR:
-                    System.out.println("FOUR");
+                    //System.out.println("FOUR");
                     handPoints+=4;
                     break;
                 case FIVE:
-                    System.out.println("FIVE");
+                    //System.out.println("FIVE");
                     handPoints+=5;
                     break;
                 case SIX:
-                    System.out.println("SIX");
+                    //System.out.println("SIX");
                     handPoints+=6;
                     break;
                 case SEVEN:
-                    System.out.println("SEVEN");
+                    //System.out.println("SEVEN");
                     handPoints+=7;
                     break;
                 case EIGHT:
-                    System.out.println("EIGHT");
+                    //System.out.println("EIGHT");
                     handPoints+=8;
                     break;
                 case NINE:
-                    System.out.println("NINE");
+                    //System.out.println("NINE");
                     handPoints+=9;
                     break;
                 case DRAW:
-                    System.out.println("DRAW");
+                    //System.out.println("DRAW");
                     handPoints+=10;                 //light side
                     break;
                 case REVERSE:
-                    System.out.println("REVERSE");
+                    //System.out.println("REVERSE");
                     handPoints+=20;
                     break;
                 case SKIP:
-                    System.out.println("SKIP");
+                    //System.out.println("SKIP");
                     handPoints+=20;
                     break;
                 case FLIP:
-                    System.out.println("FLIP");
+                    //System.out.println("FLIP");
                     handPoints+=20;
                     break;
                 case WILD:
-                    System.out.println("WILD");
+                    //System.out.println("WILD");
                     handPoints+=40;
                     break;
                 case WILD_DRAW:
-                    System.out.println("WILD_DRAW");
+                    //System.out.println("WILD_DRAW");
                     handPoints+=50;                     //light side
                     break;
                 default:
@@ -127,12 +127,15 @@ public class Player {
      *  Displays the cards in player's hand
      */
     public void displayHand() {
-        System.out.println(this.name + "'s hand:");
+        System.out.print(this.name + "'s hand:");
         for (Card card : hand) {
-            System.out.print(card.getBrightCardType() + "_" + card.getBrightColor() + " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
+            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor() + " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
         }
+    }
+
+    public void getPlayerHandPoints(){
         int playerPoints = calculateTotalPointsForPlayerHand();
-        System.out.println("Total points for the player's hand:" + playerPoints);
+        System.out.println("Total points for the player's hand: " + playerPoints);
     }
 
     public int getPlayerScore() {
