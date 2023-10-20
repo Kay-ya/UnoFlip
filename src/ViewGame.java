@@ -32,4 +32,13 @@ public class ViewGame {
         }
         return players; // Added , return type change from void to ArrayList <Player>
     }
+
+    public void printCard(Card card, Boolean isBright){
+        if (isBright){
+            System.out.println(card.getBrightCardType().toString()+"_"+card.getBrightColor().toString());
+        }
+        else {
+            System.out.println(card.getDarkCardType().toString()+"_"+card.getDarkColor().toString());
+        }
+    }
 }
