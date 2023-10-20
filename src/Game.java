@@ -33,17 +33,6 @@ public class Game {
         players.remove(pl);
     }
 
-    public void printPlayer(){
-        for(Player p: players){
-            p.addCardToHand(deck.drawCard());
-            p.addCardToHand(deck.drawCard());
-            p.addCardToHand(deck.drawCard());
-            p.addCardToHand(deck.drawCard());
-            p.displayHand();
-            //System.out.println(players.get(0));
-        }
-    }
-
 
     /*private void startGame(){
         System.out.println("The game has started");
@@ -85,9 +74,10 @@ public class Game {
         //Removed hardcoded players
         // Calling below methods on the players entered
         for (Player player : play.players) {
-            player.addCardToHand(d.drawCard());
+            for (int i = 0; i < 7; i++){
+                player.addCardToHand(d.drawCard());
+            }
             player.displayHand();
-            play.printPlayer();
             player.getPlayerHandPoints();
         }
     }

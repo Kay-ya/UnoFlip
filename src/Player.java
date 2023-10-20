@@ -127,7 +127,7 @@ public class Player {
      *  Displays the cards in player's hand
      */
     public void displayHand() {
-        System.out.print(this.name + "'s hand:");
+        System.out.println(this.name + "'s hand:");
         for (Card card : hand) {
             System.out.println(card.getBrightCardType() + "_" + card.getBrightColor() + " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
         }
