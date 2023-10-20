@@ -72,7 +72,7 @@ public class Deck {
     }
 
     public Card topCardFromDiscardPile(){
-        return discardPile.get(cards.size()-1);
+        return discardPile.get(discardPile.size()-1);
     }
 
     //Nikita
