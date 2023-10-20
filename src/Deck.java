@@ -71,7 +71,7 @@ public class Deck {
         discardPile.add(card);
     }
 
-    public Card topCardFromDiscardFile(){
+    public Card topCardFromDiscardPile(){
         return discardPile.get(cards.size()-1);
     }
 
