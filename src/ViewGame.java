@@ -17,7 +17,8 @@ public class ViewGame {
      * @return ArrayList containing entered players
      */
     public ArrayList <Player> playerInput() {
-        ArrayList<Player> players = new ArrayList<>();
+        Game g = new Game();
+        Deck d = new Deck();
         System.out.println("Enter Number of Players (you can only enter a maximum of upto 4 player): ");
         numberOfPlayers = scan.nextInt();
         if ((numberOfPlayers < 2) || (numberOfPlayers > 4)){
@@ -27,9 +28,10 @@ public class ViewGame {
             for (int i = 0; i < numberOfPlayers; i++) {
                 System.out.print("Player name: ");
                 String playerName = scan.next();
-                players.add(new Player(playerName));
+                Player player = new Player(playerName);
+                g.addPlayer(new Player(playerName));
             }
         }
-        return players; // Added , return type change from void to ArrayList <Player>
+        return g.getPlayers(); // Added , return type change from void to ArrayList <Player>
     }
 }
