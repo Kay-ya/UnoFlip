@@ -1,7 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Game {
@@ -17,20 +13,22 @@ public class Game {
     Player currentPlayer;
     Boolean direction; //false when lighter side of deck is played
     Deck deck;
+    Boolean isBright;
 
     public Game(){
-        players = new ArrayList<Player>();
-        direction = false;
-        currentPlayer = new Player(" ");
-        deck = new Deck();
+        this.players = new ArrayList<>();
+        this.direction = false;
+        this.currentPlayer = new Player(" ");
+        this.deck = new Deck();
+        this.isBright = true;
     }
 
     public void addPlayer(Player pl){
-        players.add(pl);
+        this.players.add(pl);
     }
 
     public void removePlayer(Player pl){
-        players.remove(pl);
+        this.players.remove(pl);
     }
 
 
@@ -63,23 +61,59 @@ public class Game {
         return null;
     }*/
 
-    public static void main(String args[]){
-        Game play = new Game();
-        Deck d = new Deck();
+    public static void main(String[] args){
+        Game game = new Game();
         ViewGame view = new ViewGame();
+        int playerIndex = 0;
+        game.players = view.playerInput();
 
-        // Updated
-        play.players = view.playerInput();
-
-        //Removed hardcoded players
-        // Calling below methods on the players entered
-        for (Player player : play.players) {
+        // deal cards to players
+        for (Player player : game.players) {
             for (int i = 0; i < 7; i++){
-                player.addCardToHand(d.drawCard());
+                player.addCardToHand(game.deck.drawCard());
             }
-            player.displayHand();
-            player.getPlayerHandPoints();
         }
+        // initial card to start game
+        game.deck.addToDiscardPile(game.deck.drawCard());
+
+        while(true){
+            game.currentPlayer = game.players.get(playerIndex);
+            System.out.println("The current card is:");
+            view.printCard(game.deck.topCardFromDiscardPile(), game.isBright);
+            StringBuilder s = new StringBuilder();
+            int i = 1;
+            for (Card card : game.currentPlayer.hand){
+                s.append(i).append(". ").append(card.getBrightCardType()).append("_").append(card.getBrightColor()).append(" ").append(card.getDarkCardType()).append("_").append(card.getDarkColor()).append(", ");
+                i++;
+            }
+            System.out.println(s);
+            Card chosenCard = view.playerChooseCard(game.currentPlayer);
+            Card topDiscardCard = game.deck.topCardFromDiscardPile();
+            if (game.isBright) {
+                while (chosenCard.getBrightColor() != topDiscardCard.getBrightColor() && chosenCard.getBrightCardType() != topDiscardCard.getBrightCardType()){
+                    System.out.println("Invalid card chosen.");
+                    chosenCard = view.playerChooseCard(game.currentPlayer);
+                }
+            }
+            else {
+                while (chosenCard.getDarkColor() != topDiscardCard.getDarkColor() && chosenCard.getDarkCardType() != topDiscardCard.getDarkCardType()){
+                    System.out.println("Invalid card chosen.");
+                    chosenCard = view.playerChooseCard(game.currentPlayer);
+                }
+            }
+            game.currentPlayer.removeCardFromHand(chosenCard);
+            game.deck.addToDiscardPile(chosenCard);
+
+            //special card effect happen here
+
+            if (game.direction) {
+                //reverse direction
+            }
+            else{
+                playerIndex = (playerIndex + 1) % game.players.size();
+            }
+        }
+
     }
 
 }
