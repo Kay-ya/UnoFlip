@@ -41,4 +41,14 @@ public class ViewGame {
             System.out.println(card.getDarkCardType().toString()+"_"+card.getDarkColor().toString());
         }
     }
+
+    public Card playerChooseCard(Player player) {
+        System.out.println("It is " + player.getName() + "'s turn. The card you would like to play: ");
+        int cardNum = scan.nextInt();
+        while(cardNum < 1 || cardNum > player.hand.size()){
+            System.out.println("Please enter a number between 1 and " + player.hand.size());
+            cardNum = scan.nextInt();
+        }
+        return player.hand.get(cardNum-1);
+    }
 }
