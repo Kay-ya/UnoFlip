@@ -101,13 +101,63 @@ public class Game {
                     chosenCard = view.playerChooseCard(game.currentPlayer);
                 }
             }
+
+            if (game.isBright){
+                switch(chosenCard.getBrightCardType()){
+                    case DRAW:
+                        game.currentPlayer.addCardToHand(game.deck.drawCard());
+                        break;
+                    case REVERSE:
+                        game.direction = !game.direction;
+                        break;
+                    case SKIP:
+                        if (game.direction){
+                            playerIndex -= 1;
+                            if (playerIndex == -1){
+                                playerIndex = game.players.size()-1;
+                            }
+                        }
+                        else {
+                            playerIndex = (playerIndex + 1) % game.players.size();
+                        }
+                        break;
+                    case FLIP:
+                        game.isBright = !game.isBright;
+                        break;
+                }
+            }
+            else {
+                switch(chosenCard.getDarkCardType()){
+                    case DRAW:
+                        for (int j = 0; j < 5; j++){
+                            game.currentPlayer.addCardToHand(game.deck.drawCard());
+                        }
+                        break;
+                    case REVERSE:
+                        game.direction = !game.direction;
+                        break;
+                    case SKIP:
+                        if (game.direction){
+                            playerIndex += 1;
+                        }
+                        else {
+                            playerIndex -= 1;
+                        }
+                        break;
+                    case FLIP:
+                        game.isBright = !game.isBright;
+                        break;
+                }
+            }
+
             game.currentPlayer.removeCardFromHand(chosenCard);
             game.deck.addToDiscardPile(chosenCard);
 
-            //special card effect happen here
-
             if (game.direction) {
-                //reverse direction
+                playerIndex -= 1;
+                if (playerIndex == -1){
+                    playerIndex = game.players.size()-1;
+                }
             }
             else{
                 playerIndex = (playerIndex + 1) % game.players.size();
