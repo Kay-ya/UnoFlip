@@ -13,6 +13,7 @@ public class Deck {
      */
     public Deck(){
         this.cards = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
         this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
