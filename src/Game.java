@@ -126,15 +126,7 @@ public class Game {
                         game.direction = !game.direction;
                         break;
                     case SKIP:
-                        if (game.direction){
-                            playerIndex -= 1;
-                            if (playerIndex == -1){
-                                playerIndex = game.players.size()-1;
-                            }
-                        }
-                        else {
-                            playerIndex = (playerIndex + 1) % game.players.size();
-                        }
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
                         break;
                     case FLIP:
                         game.isBright = !game.isBright;
@@ -164,12 +156,7 @@ public class Game {
                         game.direction = !game.direction;
                         break;
                     case SKIP:
-                        if (game.direction){
-                            playerIndex += 1;
-                        }
-                        else {
-                            playerIndex -= 1;
-                        }
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
                         break;
                     case FLIP:
                         game.isBright = !game.isBright;
