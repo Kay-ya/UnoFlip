@@ -17,31 +17,12 @@ class GameTest {
     }
 
     @Test
-    void getPlayers() {
-    }
-
-    @Test
-    void setPlayers() {
-    }
-
-    @Test
     void testNextPlayerIndex(){
+
         int result = game.nextPlayerIndex(1, 4, true);
         int resultFalse = game.nextPlayerIndex(1, 4, false);
 
         assertEquals(0,result);
         assertEquals(2,resultFalse);
-    }
-
-    @Test
-    void addPlayer() {
-    }
-
-    @Test
-    void removePlayer() {
-    }
-
-    @Test
-    void printPlayer() {
     }
 }
