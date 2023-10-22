@@ -115,7 +115,7 @@ public class Game {
             System.out.println(strCards);
 
             Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);
-
+            Color chosenColor = null;
             if ( chosenCard != null && game.isBright ){
                 switch(chosenCard.getBrightCardType()){
                     case DRAW:
@@ -132,13 +132,25 @@ public class Game {
                         game.isBright = !game.isBright;
                         break;
                     case WILD:
-                        Color chosenColor = view.playerColorInput(game.isBright);
+                        chosenColor = view.playerColorInput(game.isBright);
                         if (game.isBright){
                             chosenCard.setBrightColor(chosenColor);
                         }
                         else{
                             chosenCard.setDarkColor(chosenColor);
                         }
+                        break;
+                    case WILD_DRAW:
+                        chosenColor = view.playerColorInput(game.isBright);
+                        if (game.isBright){
+                            chosenCard.setBrightColor(chosenColor);
+                        }
+                        else{
+                            chosenCard.setDarkColor(chosenColor);
+                        }
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
+                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
+                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
                         break;
                 }
                 game.currentPlayer.removeCardFromHand(chosenCard);
@@ -162,12 +174,32 @@ public class Game {
                         game.isBright = !game.isBright;
                         break;
                     case WILD:
-                        Color chosenColor = view.playerColorInput(game.isBright);
+                        chosenColor = view.playerColorInput(game.isBright);
                         if (game.isBright){
                             chosenCard.setBrightColor(chosenColor);
                         }
                         else{
                             chosenCard.setDarkColor(chosenColor);
+                        }
+                        break;
+                    case WILD_DRAW:
+                        chosenColor = view.playerColorInput(game.isBright);
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
+                        Card c = game.deck.drawCard();
+                        game.players.get(playerIndex).addCardToHand(c);
+                        if (game.isBright){
+                            chosenCard.setBrightColor(chosenColor);
+                            while (c.getBrightColor() != chosenColor){
+                                c = game.deck.drawCard();
+                                game.players.get(playerIndex).addCardToHand(c);
+                            }
+                        }
+                        else{
+                            chosenCard.setDarkColor(chosenColor);
+                            while (c.getDarkColor() != chosenColor){
+                                c = game.deck.drawCard();
+                                game.players.get(playerIndex).addCardToHand(c);
+                            }
                         }
                         break;
                 }
