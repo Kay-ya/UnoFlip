@@ -38,7 +38,7 @@ public class Game {
      * @param direction
      * @return int
      */
-    private static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
+    public static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
         if (direction) {
             curIndex -= 1;
             if (curIndex == -1){
