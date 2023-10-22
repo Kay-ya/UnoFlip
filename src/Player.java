@@ -24,11 +24,19 @@ public class Player {
     }
 
     /**
-     *  Play the card if any of the cards from the hand matches the card in the pile (in terms of same color or number)
-     *  or play an action card (wild or wild four) which can be played anytime
+     * Play the card if any of the cards from the hand matches the card in the pile (in terms of same color or number)
+     * or play an action card (wild or wild four) which can be played anytime
+     *
+     * @return
      */
-    public void playCard(){
+    public Card playCard(Card chosenCard) {
+        if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW){
+            return chosenCard;
+        }
 
+
+
+        return chosenCard;
     }
 
     /**
