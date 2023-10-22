@@ -14,8 +14,10 @@ public class Player {
         hand = new ArrayList<>();
         calculateTotalPointsForPlayerHand();
     }
+
     /**
      *  Draw a card from the deck if the none of the cards in their hand match the card in the pile
+     * @return An instance of the Card class
      */
     public Card drawCard(){
         return deck.drawCard();
@@ -29,73 +31,58 @@ public class Player {
 
     }
 
-
     /**
      *  Calculates the points of each player - calculated after each player has played their card
+     * @return Returns an integer value representing total points of the player's hand
      */
     public int calculateTotalPointsForPlayerHand(){
 
         for (Card card : hand) {
-            System.out.println("In calculateTotalPointsForPlayerHand 2");
             switch(card.getBrightCardType()){
+
                 case ONE:
-                    System.out.println("ONE");
                     handPoints+=1;
                     break;
                 case TWO:
-                    System.out.println("TWO");
                     handPoints+=2;
                     break;
                 case THREE:
-                    System.out.println("THREE");
                     handPoints+=3;
                     break;
                 case FOUR:
-                    System.out.println("FOUR");
                     handPoints+=4;
                     break;
                 case FIVE:
-                    System.out.println("FIVE");
                     handPoints+=5;
                     break;
                 case SIX:
-                    System.out.println("SIX");
                     handPoints+=6;
                     break;
                 case SEVEN:
-                    System.out.println("SEVEN");
                     handPoints+=7;
                     break;
                 case EIGHT:
-                    System.out.println("EIGHT");
                     handPoints+=8;
                     break;
                 case NINE:
-                    System.out.println("NINE");
                     handPoints+=9;
                     break;
                 case DRAW:
-                    System.out.println("DRAW");
                     handPoints+=10;                 //light side
                     break;
                 case REVERSE:
-                    System.out.println("REVERSE");
                     handPoints+=20;
                     break;
                 case SKIP:
-                    System.out.println("SKIP");
                     handPoints+=20;
                     break;
                 case FLIP:
-                    System.out.println("FLIP");
                     handPoints+=20;
                     break;
                 case WILD:
-                    System.out.println("WILD");
                     handPoints+=40;
                     break;
                 case WILD_DRAW:
-                    System.out.println("WILD_DRAW");
                     handPoints+=50;                     //light side
                     break;
                 default:
@@ -109,14 +96,15 @@ public class Player {
 
     /**
      *  Adds the card drawn from draw pile to hand and removes it from draw pile
+     * @param card An instance of the Card class
      */
     public void addCardToHand(Card card){
         hand.add(card);
-        deck.removeFromDrawPile(card);
     }
 
     /**
      *  Removes the card from the hand and adds to discard pile
+     *  @param card An instance of the Card class
      */
     public void removeCardFromHand(Card card){
         hand.remove(card);
@@ -129,17 +117,32 @@ public class Player {
     public void displayHand() {
         System.out.println(this.name + "'s hand:");
         for (Card card : hand) {
-            System.out.print(card.getBrightCardType() + "_" + card.getBrightColor() + " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
+            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor()); //+ " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
         }
-        int playerPoints = calculateTotalPointsForPlayerHand();
-        System.out.println("Total points for the player's hand:" + playerPoints);
     }
 
+    public void getPlayerHandPoints(){
+        int playerPoints = calculateTotalPointsForPlayerHand();
+        System.out.println("Total points for the player's hand: " + playerPoints);
+    }
+
+    /**
+     * Returns the player's score
+     * @return int Player's score
+     */
     public int getPlayerScore() {
         return playerScore;
     }
 
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
+    }
+
+    /**
+     * Returns the player's name
+     * @return String Player's name
+     */
+    public String getName() {
+        return name;
     }
 }
