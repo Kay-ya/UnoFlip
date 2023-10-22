@@ -129,7 +129,7 @@ public class Player {
     public void displayHand() {
         System.out.println(this.name + "'s hand:");
         for (Card card : hand) {
-            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor() + " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
+            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor()); //+ " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
         }
     }
 

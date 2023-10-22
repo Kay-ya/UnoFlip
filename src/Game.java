@@ -23,10 +23,18 @@ public class Game {
         this.isBright = true;
     }
 
+    /**
+     * Adds a player to the ArrayList of players
+     * @param pl
+     */
     public void addPlayer(Player pl){
         this.players.add(pl);
     }
 
+    /**
+     * Removes a player from the Arraylist of Players
+     * @param pl
+     */
     public void removePlayer(Player pl){
         this.players.remove(pl);
     }
