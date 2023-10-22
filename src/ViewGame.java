@@ -51,18 +51,26 @@ public class ViewGame {
             System.out.println("Enter card index to play or 0 to draw a card:");
             cardNum = scan.nextInt();
         }
+
         if (cardNum == 0){
             return null;
         }
         Card chosenCard = player.hand.get(cardNum-1);
 
+
         if (isBright){
+            if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW){
+                return chosenCard;
+            }
             while (chosenCard.getBrightColor() != topCard.getBrightColor() && chosenCard.getBrightCardType() != topCard.getBrightCardType()){
                 System.out.println("Invalid card chosen.");
                 chosenCard = playerChooseOption(player, topCard, isBright);
             }
         }
         else {
+            if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW){
+                return chosenCard;
+            }
             while (chosenCard.getDarkColor() != topCard.getDarkColor() && chosenCard.getDarkCardType() != topCard.getDarkCardType()){
                 System.out.println("Invalid card chosen.");
                 chosenCard = playerChooseOption(player, topCard, isBright);
@@ -70,5 +78,46 @@ public class ViewGame {
         }
 
         return chosenCard;
+    }
+
+    public Color playerColorInput(Boolean isBright){
+        if (isBright){
+            System.out.println("You have played a wild card. Please choose a color: Blue, Green, Red, Yellow");
+        }
+        else{
+            System.out.println("You have played a wild card. Please choose a color: Orange, Pink, Purple, Teal");
+        }
+        String color = scan.next();
+        if (isBright){
+            switch (color){
+                case "Blue":
+                    return Color.BLUE;
+                case "Green":
+                    return Color.GREEN;
+                case "Red":
+                    return Color.RED;
+                case "Yellow":
+                    return Color.YELLOW;
+                default:
+                    System.out.println("Invalid color chosen");
+                    playerColorInput(isBright);
+            }
+        }
+        else {
+            switch (color){
+                case "Orange":
+                    return Color.ORANGE;
+                case "Pink":
+                    return Color.PINK;
+                case "Purple":
+                    return Color.PURPLE;
+                case "Teal":
+                    return Color.TEAL;
+                default:
+                    System.out.println("Invalid color chosen");
+                    playerColorInput(isBright);
+            }
+        }
+        return null;
     }
 }

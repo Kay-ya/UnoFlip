@@ -138,6 +138,15 @@ public class Game {
                     case FLIP:
                         game.isBright = !game.isBright;
                         break;
+                    case WILD:
+                        Color chosenColor = view.playerColorInput(game.isBright);
+                        if (game.isBright){
+                            chosenCard.setBrightColor(chosenColor);
+                        }
+                        else{
+                            chosenCard.setDarkColor(chosenColor);
+                        }
+                        break;
                 }
                 game.currentPlayer.removeCardFromHand(chosenCard);
                 game.deck.addToDiscardPile(chosenCard);
@@ -162,6 +171,15 @@ public class Game {
                         break;
                     case FLIP:
                         game.isBright = !game.isBright;
+                        break;
+                    case WILD:
+                        Color chosenColor = view.playerColorInput(game.isBright);
+                        if (game.isBright){
+                            chosenCard.setBrightColor(chosenColor);
+                        }
+                        else{
+                            chosenCard.setDarkColor(chosenColor);
+                        }
                         break;
                 }
                 game.currentPlayer.removeCardFromHand(chosenCard);

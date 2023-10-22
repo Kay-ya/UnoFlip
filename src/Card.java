@@ -1,8 +1,8 @@
 public class Card {
     private final CardType brightType;
-    private final Color brightColor;
+    private Color brightColor;
     private final CardType darkType;
-    private final Color darkColor;
+    private Color darkColor;
 
     public Card(CardType bCT, Color bC, CardType dCT, Color dC) {
         this.brightType = bCT;
@@ -27,4 +27,7 @@ public class Card {
     public Color getDarkColor() {
         return darkColor;
     }
+
+    public void setBrightColor(Color color){ this.brightColor = color; }
+    public void setDarkColor(Color color){ this.darkColor = color; }
 }

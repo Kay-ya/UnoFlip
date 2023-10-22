@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Deck {
 
@@ -39,12 +40,24 @@ public class Deck {
     }
     private List<CardSideDetails> createSideDetails(Color[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
-        // might be a cleaner way of initializing one side
+        List<CardType> cardTypes = Arrays.stream(CardType.values())
+                .filter(card -> card != CardType.WILD && card != CardType.WILD_DRAW)
+                .collect(Collectors.toList());
+        CardType[] wildTypes = new CardType[]{CardType.WILD, CardType.WILD_DRAW};
+
+
+        // all card except the wild cards
         for (Color color: colors){
             for (int i = 0; i < 2; i++){
-                for (CardType type: CardType.values()){
+                for (CardType type: cardTypes) {
                     sideDetails.add(new CardSideDetails(type, color));
                 }
+            }
+        }
+
+        for (int i = 0; i< 4; i++){
+            for (CardType type: wildTypes) {
+                sideDetails.add(new CardSideDetails(type, Color.WILD));
             }
         }
         Collections.shuffle(sideDetails);
