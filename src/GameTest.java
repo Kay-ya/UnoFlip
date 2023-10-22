@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
+    Game game;
 
     @BeforeEach
     void setUp() {
+        game = new Game();
     }
 
     @AfterEach
@@ -15,22 +17,12 @@ class GameTest {
     }
 
     @Test
-    void getPlayers() {
-    }
+    void testNextPlayerIndex(){
 
-    @Test
-    void setPlayers() {
-    }
+        int result = game.nextPlayerIndex(1, 4, true);
+        int resultFalse = game.nextPlayerIndex(1, 4, false);
 
-    @Test
-    void addPlayer() {
-    }
-
-    @Test
-    void removePlayer() {
-    }
-
-    @Test
-    void printPlayer() {
+        assertEquals(0,result);
+        assertEquals(2,resultFalse);
     }
 }

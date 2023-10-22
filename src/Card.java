@@ -12,18 +12,34 @@ public class Card {
 
     }
 
+    /**
+     * Returns the type of the card being played on the light side of the deck
+     * @return CardType
+     */
     public CardType getBrightCardType() {
         return brightType;
     }
 
+    /**
+     * Returns the type of card being played on the dark side of the deck
+     * @return CardType
+     */
     public CardType getDarkCardType() {
         return darkType;
     }
 
+    /**
+     * Returns the color on the light side of the deck
+     * @return Color
+     */
     public Color getBrightColor() {
         return brightColor;
     }
 
+    /**
+     * Returns the color on the dark side of the deck
+     * @return Color
+     */
     public Color getDarkColor() {
         return darkColor;
     }

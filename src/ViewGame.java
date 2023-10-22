@@ -35,6 +35,12 @@ public class ViewGame {
         return players; // Added , return type change from void to ArrayList <Player>
     }
 
+    /**
+     * Prints the card of the side the user is player (dark or light) and returns the
+     * type and color of the card on the bright or dark side
+     * @param card
+     * @param isBright
+     */
     public void printCard(Card card, Boolean isBright){
         if (isBright){
             System.out.println(card.getBrightCardType().toString()+"_"+card.getBrightColor().toString());
@@ -44,6 +50,14 @@ public class ViewGame {
         }
     }
 
+    /**
+     * Returns the card the user has chosen from the hand or returns an invalid card if the card
+     * does not match the color or number present in hand
+     * @param player
+     * @param topCard
+     * @param isBright
+     * @return Card
+     */
     public Card playerChooseOption(Player player, Card topCard, Boolean isBright) {
         System.out.println("It is " + player.getName() + "'s turn. The card you would like to play: ");
         int cardNum = scan.nextInt();
