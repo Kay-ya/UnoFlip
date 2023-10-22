@@ -60,7 +60,18 @@ public class Game {
         }
         return null;
     }*/
-
+    private static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
+        if (direction) {
+            curIndex -= 1;
+            if (curIndex == -1){
+                curIndex = numPlayers-1;
+            }
+        }
+        else{
+            curIndex = (curIndex + 1) % numPlayers;
+        }
+        return curIndex;
+    }
     public static void main(String[] args){
         Game game = new Game();
         ViewGame view = new ViewGame();
@@ -73,39 +84,34 @@ public class Game {
                 player.addCardToHand(game.deck.drawCard());
             }
         }
+
+        // starting player
+        game.currentPlayer = game.players.get(playerIndex);
+
         // initial card to start game
         game.deck.addToDiscardPile(game.deck.drawCard());
 
-        while(true){
+        // game loop
+        while(!game.currentPlayer.hand.isEmpty()){
             game.currentPlayer = game.players.get(playerIndex);
+
             System.out.println("The current card is:");
             view.printCard(game.deck.topCardFromDiscardPile(), game.isBright);
-            StringBuilder s = new StringBuilder();
+
+            StringBuilder strCards = new StringBuilder();
             int i = 1;
             for (Card card : game.currentPlayer.hand){
-                s.append(i).append(". ").append(card.getBrightCardType()).append("_").append(card.getBrightColor()).append(" ").append(card.getDarkCardType()).append("_").append(card.getDarkColor()).append(", ");
+                strCards.append(i).append(". ").append(card.getBrightCardType()).append("_").append(card.getBrightColor()).append(" ").append(card.getDarkCardType()).append("_").append(card.getDarkColor()).append(", ");
                 i++;
             }
-            System.out.println(s);
-            Card chosenCard = view.playerChooseCard(game.currentPlayer);
-            Card topDiscardCard = game.deck.topCardFromDiscardPile();
-            if (game.isBright) {
-                while (chosenCard.getBrightColor() != topDiscardCard.getBrightColor() && chosenCard.getBrightCardType() != topDiscardCard.getBrightCardType()){
-                    System.out.println("Invalid card chosen.");
-                    chosenCard = view.playerChooseCard(game.currentPlayer);
-                }
-            }
-            else {
-                while (chosenCard.getDarkColor() != topDiscardCard.getDarkColor() && chosenCard.getDarkCardType() != topDiscardCard.getDarkCardType()){
-                    System.out.println("Invalid card chosen.");
-                    chosenCard = view.playerChooseCard(game.currentPlayer);
-                }
-            }
+            System.out.println(strCards);
 
-            if (game.isBright){
+            Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);
+
+            if ( chosenCard != null && game.isBright ){
                 switch(chosenCard.getBrightCardType()){
                     case DRAW:
-                        game.currentPlayer.addCardToHand(game.deck.drawCard());
+                        game.players.get(nextPlayerIndex(playerIndex, game.players.size(), game.direction)).addCardToHand(game.deck.drawCard());
                         break;
                     case REVERSE:
                         game.direction = !game.direction;
@@ -125,12 +131,14 @@ public class Game {
                         game.isBright = !game.isBright;
                         break;
                 }
+                game.currentPlayer.removeCardFromHand(chosenCard);
+                game.deck.addToDiscardPile(chosenCard);
             }
-            else {
+            else if (chosenCard != null){
                 switch(chosenCard.getDarkCardType()){
                     case DRAW:
                         for (int j = 0; j < 5; j++){
-                            game.currentPlayer.addCardToHand(game.deck.drawCard());
+                            game.players.get(nextPlayerIndex(playerIndex, game.players.size(), game.direction)).addCardToHand(game.deck.drawCard());
                         }
                         break;
                     case REVERSE:
@@ -148,21 +156,22 @@ public class Game {
                         game.isBright = !game.isBright;
                         break;
                 }
+                game.currentPlayer.removeCardFromHand(chosenCard);
+                game.deck.addToDiscardPile(chosenCard);
+            }
+            else {
+                game.currentPlayer.addCardToHand(game.deck.drawCard());
             }
 
-            game.currentPlayer.removeCardFromHand(chosenCard);
-            game.deck.addToDiscardPile(chosenCard);
-
-            if (game.direction) {
-                playerIndex -= 1;
-                if (playerIndex == -1){
-                    playerIndex = game.players.size()-1;
-                }
-            }
-            else{
-                playerIndex = (playerIndex + 1) % game.players.size();
-            }
+            playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
         }
+
+        int score = 0;
+        for (Player p: game.players){
+            score += p.getPlayerScore();
+        }
+
+        System.out.println(game.currentPlayer.getName() + "is the winner. \nScore: " + score);
 
     }
 

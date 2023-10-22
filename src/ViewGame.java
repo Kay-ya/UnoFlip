@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -42,13 +44,31 @@ public class ViewGame {
         }
     }
 
-    public Card playerChooseCard(Player player) {
+    public Card playerChooseOption(Player player, Card topCard, Boolean isBright) {
         System.out.println("It is " + player.getName() + "'s turn. The card you would like to play: ");
         int cardNum = scan.nextInt();
-        while(cardNum < 1 || cardNum > player.hand.size()){
-            System.out.println("Please enter a number between 1 and " + player.hand.size());
+        while(cardNum < 0 || cardNum > player.hand.size()){
+            System.out.println("Enter card index to play or 0 to draw a card:");
             cardNum = scan.nextInt();
         }
-        return player.hand.get(cardNum-1);
+        if (cardNum == 0){
+            return null;
+        }
+        Card chosenCard = player.hand.get(cardNum-1);
+
+        if (isBright){
+            while (chosenCard.getBrightColor() != topCard.getBrightColor() && chosenCard.getBrightCardType() != topCard.getBrightCardType()){
+                System.out.println("Invalid card chosen.");
+                chosenCard = playerChooseOption(player, topCard, isBright);
+            }
+        }
+        else {
+            while (chosenCard.getDarkColor() != topCard.getDarkColor() && chosenCard.getDarkCardType() != topCard.getDarkCardType()){
+                System.out.println("Invalid card chosen.");
+                chosenCard = playerChooseOption(player, topCard, isBright);
+            }
+        }
+
+        return chosenCard;
     }
 }
