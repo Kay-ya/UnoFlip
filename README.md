@@ -1,15 +1,27 @@
-# UnoFlip
-    Description:
-This game is a card game that is between 2 - 4 players
+# SYSC3110: UNO FLIP
+SYSC3110 Group 28 UNO FLIP Game Project Version 1.0;
 
-The goal of the game is to be the first to clear the cards on one's hand
+10/22/2023
+    
+## Description:
+
+This game is a text-based UNO game that is played in the command line and is  between 2 - 4 players
+
+The goal of the game is to be the first to clear the cards on one's hand by 
+matching the cards they have in their hand with the top card of the discard pile based on either number or colour
 
 It is based on the [Uno flip! card game](https://en.wikipedia.org/wiki/Uno_Flip!)
 
-Cards are played either by number or by colour
+This program is implemented in Java
 
 
-    Gameplay features:
+
+## Installation:
+Java 17 or later is recommended
+
+
+
+## Gameplay features:
 
 Player Interaction: Players actively participate in the game by choosing cards to play, making colour selections for Wild cards, and making strategic decisions.
 
@@ -20,7 +32,7 @@ Special Action Cards: Action cards introduce unique effects, such as drawing car
 Dynamic Color Selection: Players can dynamically choose the colour they want to match when playing Wild cards, adding a strategic element to the game.
 
 
-    How to play:
+## How to play:
 This game can be run in the Game.java file in our repository
 
 The game will prompt you to enter the names of players.
@@ -34,5 +46,19 @@ Special action cards (e.g., Draw Two, Skip, Reverse, Wild) have unique effects a
 The game continues until one player successfully clears their hand of cards.
 
 The winner is declared, and the game ends.
+
+## Usage:
+
+1. Checkout the UNO repository from GitHub
+2. Run the Game.java class to begin the game
+
+## Authors:
+
+Samson Ha <br>
+Keya Patel <br>
+Nikita Sara Vijay <br>
+Mofiopefoluwa Olatunji <br>
+
+CopyrightÂ© 2023 Keya Patel, Samson Ha, Nikita Sara Vijay, Mofiopefoluwa Olatunji
 
     
