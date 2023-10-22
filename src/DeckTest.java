@@ -51,23 +51,25 @@ class DeckTest {
     }
 
     @org.junit.jupiter.api.Test
-    void emptyDiscard() {
-
-    }
-
-    @org.junit.jupiter.api.Test
     void addToDiscardPile() {
         Card card = side.remove(0);
         d.addToDiscardPile(card);
         discardCard.add(card);
+        assertEquals(discardCard.size(), 1);
     }
 
     @org.junit.jupiter.api.Test
     void topCardFromDiscardFile() {
+        Player p = new Player("Sam");
         //discardCard.get(0);
-    }
+        Card c = d.drawCard();
+        p.addCardToHand(c);
+        Card c1 = p.hand.remove(0);
+        d.addToDiscardPile(c1);
+        Card c2 = d.topCardFromDiscardPile();
 
-    @org.junit.jupiter.api.Test
-    void removeFromDrawPile() {
+        String c3 = c2.getBrightCardType() + "_" + c2.getBrightColor() ;
+        assertNotEquals(card1.getBrightCardType()+ "_" + card1.getBrightColor(), c3);
+
     }
 }

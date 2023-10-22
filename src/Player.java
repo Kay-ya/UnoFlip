@@ -21,14 +21,6 @@ public class Player {
         return deck.drawCard();
     }
 
-    /**
-     *  Play the card if any of the cards from the hand matches the card in the pile (in terms of same color or number)
-     *  or play an action card (wild or wild four) which can be played anytime
-     */
-    public void playCard(){
-
-    }
-
 
     /**
      *  Calculates the points of each player - calculated after each player has played their card?
@@ -123,16 +115,6 @@ public class Player {
         deck.addToDiscardPile(card);
     }
 
-    /**
-     *  Displays the cards in player's hand
-     */
-    public void displayHand() {
-        System.out.println(this.name + "'s hand:");
-        for (Card card : hand) {
-            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor()); //+ " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
-        }
-    }
-
     public void getPlayerHandPoints(){
         int playerPoints = calculateTotalPointsForPlayerHand();
         System.out.println("Total points for the player's hand: " + playerPoints);
@@ -142,7 +124,9 @@ public class Player {
         return playerScore;
     }
 
-    public void setPlayerScore(int playerScore) {
-        this.playerScore = playerScore;
-    }
+    /**
+     * Returns Player name stored in Player ArrayList
+     * @return String
+     */
+    public String getName(){ return name; }
 }

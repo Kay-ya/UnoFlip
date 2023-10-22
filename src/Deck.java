@@ -9,10 +9,11 @@ public class Deck {
     private List<Card> drawPile; //Nikita
 
     /**
-     * Populates the card with both light and dark side of UNO cards and adds them to the deck
+     * Populates the deck with both light and dark side of UNO cards
      */
     public Deck(){
         this.cards = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
         this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
@@ -25,7 +26,7 @@ public class Deck {
     }
 
     /**
-     *
+     * Creates the side for the card in the deck of the card type and the color associated with the type card
      */
     private static class CardSideDetails {
         CardType type;
@@ -36,6 +37,12 @@ public class Deck {
 
         }
     }
+
+    /**
+     * Returns a List of type CardSideDetails
+     * @param colors
+     * @return List<CardSideDetails>
+     */
     private List<CardSideDetails> createSideDetails(Color[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
         // might be a cleaner way of initializing one side
@@ -50,12 +57,8 @@ public class Deck {
         return sideDetails;
     }
 
-    public void shuffle(){
-        Collections.shuffle(cards);
-    }
-
     /**
-     * Draws a card from the top of the deck pile and removes it from the deck ArrayList
+     * Draws a card from the deck, removes the card from the deck and returns the drawn card
      * @return Card
      */
     public Card drawCard(){
@@ -64,32 +67,21 @@ public class Deck {
         return card;
     }
 
-    // maybe game class handles discard pile instead    
-    public void emptyDiscard(){
-        this.cards.addAll(discardPile);
-        this.discardPile = new ArrayList<>();
-    }
 
     /**
-     * Adds a card to the discard pile ArrayList
+     * Adds the card to the discard pile after the user has
      * @param card
      */
-    //Nikita
     public void addToDiscardPile(Card card){
         discardPile.add(card);
     }
 
     /**
-     * returns the card that is added last to the discard pile
+     * Returns the last card entered into the discard pile
      * @return Card
      */
-    public Card topCardFromDiscardFile(){
-        return discardPile.get(cards.size()-1);
-    }
-
-    //Nikita
-    public void removeFromDrawPile(Card card){
-        drawPile.remove(card);
+    public Card topCardFromDiscardPile(){
+        return discardPile.get(discardPile.size()-1);
     }
 
 }
