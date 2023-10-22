@@ -68,7 +68,7 @@ public class ViewGame {
             }
         }
         else {
-            if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW){
+            if (chosenCard.getDarkCardType() == CardType.WILD || chosenCard.getDarkCardType() == CardType.WILD_DRAW){
                 return chosenCard;
             }
             while (chosenCard.getDarkColor() != topCard.getDarkColor() && chosenCard.getDarkCardType() != topCard.getDarkCardType()){
