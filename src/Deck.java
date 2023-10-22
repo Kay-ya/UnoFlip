@@ -27,7 +27,7 @@ public class Deck {
     }
 
     /**
-     *
+     * Creates the side for the card in the deck of the card type and the color associated with the type card
      */
     private static class CardSideDetails {
         CardType type;
@@ -38,6 +38,12 @@ public class Deck {
 
         }
     }
+
+    /**
+     * Returns a List of type CardSideDetails
+     * @param colors
+     * @return List<CardSideDetails>
+     */
     private List<CardSideDetails> createSideDetails(Color[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
         List<CardType> cardTypes = Arrays.stream(CardType.values())
@@ -64,34 +70,31 @@ public class Deck {
         return sideDetails;
     }
 
-    public void shuffle(){
-        Collections.shuffle(cards);
-    }
-
+    /**
+     * Draws a card from the deck, removes the card from the deck and returns the drawn card
+     * @return Card
+     */
     public Card drawCard(){
         Card card = this.cards.get(0);
         cards.remove(card);       
         return card;
     }
 
-    // maybe game class handles discard pile instead    
-    public void emptyDiscard(){
-        this.cards.addAll(discardPile);
-        this.discardPile = new ArrayList<>();
-    }
 
-    //Nikita
+    /**
+     * Adds the card to the discard pile after the user has
+     * @param card
+     */
     public void addToDiscardPile(Card card){
         discardPile.add(card);
     }
 
+    /**
+     * Returns the last card entered into the discard pile
+     * @return Card
+     */
     public Card topCardFromDiscardPile(){
         return discardPile.get(discardPile.size()-1);
-    }
-
-    //Nikita
-    public void removeFromDrawPile(Card card){
-        drawPile.remove(card);
     }
 
 }
