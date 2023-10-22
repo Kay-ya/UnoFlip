@@ -50,7 +50,6 @@ public class Card {
     /**
      * Prints the card of the side the user is player (dark or light) and returns the
      * type and color of the card on the bright or dark side
-     * @param card
      * @param isBright
      */
     public void printCard(Boolean isBright){
