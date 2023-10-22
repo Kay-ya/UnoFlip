@@ -145,4 +145,6 @@ public class Player {
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
+
+    public String getName(){ return name; }
 }

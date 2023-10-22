@@ -9,10 +9,11 @@ public class Deck {
     private List<Card> drawPile; //Nikita
 
     /**
-     * Populates the card with both light and dark side of UNO cards and adds them to the deck
+     * Populates the deck with both light and dark side of UNO cards
      */
     public Deck(){
         this.cards = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
         this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
@@ -54,10 +55,6 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
-    /**
-     * Draws a card from the top of the deck pile and removes it from the deck ArrayList
-     * @return Card
-     */
     public Card drawCard(){
         Card card = this.cards.get(0);
         cards.remove(card);       
@@ -70,21 +67,13 @@ public class Deck {
         this.discardPile = new ArrayList<>();
     }
 
-    /**
-     * Adds a card to the discard pile ArrayList
-     * @param card
-     */
     //Nikita
     public void addToDiscardPile(Card card){
         discardPile.add(card);
     }
 
-    /**
-     * returns the card that is added last to the discard pile
-     * @return Card
-     */
-    public Card topCardFromDiscardFile(){
-        return discardPile.get(cards.size()-1);
+    public Card topCardFromDiscardPile(){
+        return discardPile.get(discardPile.size()-1);
     }
 
     //Nikita

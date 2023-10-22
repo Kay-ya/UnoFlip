@@ -5,7 +5,7 @@ public class SpecialCards {
         deck = new Deck();
     }
     public void applyActionBrightSide(){
-        Card card = deck.topCardFromDiscardFile();
+        Card card = deck.topCardFromDiscardPile();
         switch (card.getBrightCardType()){
             case REVERSE:
                 break;
@@ -17,7 +17,7 @@ public class SpecialCards {
     }
 
     public void applyActionDarkSide(){
-        Card card = deck.topCardFromDiscardFile();
+        Card card = deck.topCardFromDiscardPile();
         switch (card.getDarkCardType()){
         }
     }
