@@ -74,15 +74,10 @@ public class Game {
             game.currentPlayer = game.players.get(playerIndex);
 
             System.out.println("The current card is:");
-            view.printCard(game.deck.topCardFromDiscardPile(), game.isBright);
+            game.deck.topCardFromDiscardPile().printCard(game.isBright);
 
             StringBuilder strCards = new StringBuilder();
-            int i = 1;
-            for (Card card : game.currentPlayer.hand){
-                strCards.append(i).append(". ").append(card.getBrightCardType()).append("_").append(card.getBrightColor()).append(" ").append(card.getDarkCardType()).append("_").append(card.getDarkColor()).append(", ");
-                i++;
-            }
-            System.out.println(strCards);
+            game.currentPlayer.displayHand(game.isBright);
 
             Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);
             Color chosenColor = null;

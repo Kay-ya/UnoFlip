@@ -46,4 +46,19 @@ public class Card {
 
     public void setBrightColor(Color color){ this.brightColor = color; }
     public void setDarkColor(Color color){ this.darkColor = color; }
+
+    /**
+     * Prints the card of the side the user is player (dark or light) and returns the
+     * type and color of the card on the bright or dark side
+     * @param card
+     * @param isBright
+     */
+    public void printCard(Boolean isBright){
+        if (isBright){
+            System.out.println(this.getBrightCardType().toString()+" "+this.getBrightColor().toString());
+        }
+        else {
+            System.out.println(this.getDarkCardType().toString()+" "+this.getDarkColor().toString());
+        }
+    }
 }

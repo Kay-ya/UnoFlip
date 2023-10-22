@@ -36,21 +36,6 @@ public class ViewGame {
     }
 
     /**
-     * Prints the card of the side the user is player (dark or light) and returns the
-     * type and color of the card on the bright or dark side
-     * @param card
-     * @param isBright
-     */
-    public void printCard(Card card, Boolean isBright){
-        if (isBright){
-            System.out.println(card.getBrightCardType().toString()+"_"+card.getBrightColor().toString());
-        }
-        else {
-            System.out.println(card.getDarkCardType().toString()+"_"+card.getDarkColor().toString());
-        }
-    }
-
-    /**
      * Returns the card the user has chosen from the hand or returns an invalid card if the card
      * does not match the color or number present in hand
      * @param player
