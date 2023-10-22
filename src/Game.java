@@ -119,7 +119,8 @@ public class Game {
             if ( chosenCard != null && game.isBright ){
                 switch(chosenCard.getBrightCardType()){
                     case DRAW:
-                        game.players.get(nextPlayerIndex(playerIndex, game.players.size(), game.direction)).addCardToHand(game.deck.drawCard());
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
+                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
                         break;
                     case REVERSE:
                         game.direction = !game.direction;
@@ -154,8 +155,9 @@ public class Game {
             else if (chosenCard != null){
                 switch(chosenCard.getDarkCardType()){
                     case DRAW:
+                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
                         for (int j = 0; j < 5; j++){
-                            game.players.get(nextPlayerIndex(playerIndex, game.players.size(), game.direction)).addCardToHand(game.deck.drawCard());
+                            game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
                         }
                         break;
                     case REVERSE:
