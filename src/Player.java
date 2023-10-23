@@ -2,94 +2,129 @@ import java.util.ArrayList;
 
 public class Player {
 
-    private Deck deck = new Deck();
     public ArrayList<Card> hand;
 
     private String name;
-    private int handPoints;
 
     private int playerScore;
     public Player(String name){
         this.name = name;
         hand = new ArrayList<>();
-        calculateTotalPointsForPlayerHand();
-    }
-
-    /**
-     *  Draw a card from the deck if the none of the cards in their hand match the card in the pile
-     * @return An instance of the Card class
-     */
-    public Card drawCard(){
-        return deck.drawCard();
-    }
-
-    /**
-     *  Play the card if any of the cards from the hand matches the card in the pile (in terms of same color or number)
-     *  or play an action card (wild or wild four) which can be played anytime
-     */
-    public void playCard(){
-
     }
 
     /**
      *  Calculates the points of each player - calculated after each player has played their card
+     * @param isBright for light or dark side of card
      * @return Returns an integer value representing total points of the player's hand
      */
-    public int calculateTotalPointsForPlayerHand(){
-
+    public int calculateTotalPointsForPlayerHand(Boolean isBright){
+        int handPoints = 0;
         for (Card card : hand) {
-            switch(card.getBrightCardType()){
-
-                case ONE:
-                    handPoints+=1;
-                    break;
-                case TWO:
-                    handPoints+=2;
-                    break;
-                case THREE:
-                    handPoints+=3;
-                    break;
-                case FOUR:
-                    handPoints+=4;
-                    break;
-                case FIVE:
-                    handPoints+=5;
-                    break;
-                case SIX:
-                    handPoints+=6;
-                    break;
-                case SEVEN:
-                    handPoints+=7;
-                    break;
-                case EIGHT:
-                    handPoints+=8;
-                    break;
-                case NINE:
-                    handPoints+=9;
-                    break;
-                case DRAW:
-                    handPoints+=10;                 //light side
-                    break;
-                case REVERSE:
-                    handPoints+=20;
-                    break;
-                case SKIP:
-                    handPoints+=20;
-                    break;
-                case FLIP:
-                    handPoints+=20;
-                    break;
-                case WILD:
-                    handPoints+=40;
-                    break;
-                case WILD_DRAW:
-                    handPoints+=50;                     //light side
-                    break;
-                default:
-                    System.out.println("ERROR");
-                    break;
-
+            if (isBright){
+                switch(card.getBrightCardType()){
+                    case ONE:
+                        handPoints+=1;
+                        break;
+                    case TWO:
+                        handPoints+=2;
+                        break;
+                    case THREE:
+                        handPoints+=3;
+                        break;
+                    case FOUR:
+                        handPoints+=4;
+                        break;
+                    case FIVE:
+                        handPoints+=5;
+                        break;
+                    case SIX:
+                        handPoints+=6;
+                        break;
+                    case SEVEN:
+                        handPoints+=7;
+                        break;
+                    case EIGHT:
+                        handPoints+=8;
+                        break;
+                    case NINE:
+                        handPoints+=9;
+                        break;
+                    case DRAW:
+                        handPoints+=10;           // draw one = 10 pts
+                        break;
+                    case REVERSE:
+                        handPoints+=20;
+                        break;
+                    case SKIP:
+                        handPoints+=20;           // normal skip = 20 pts
+                        break;
+                    case FLIP:
+                        handPoints+=20;
+                        break;
+                    case WILD:
+                        handPoints+=40;
+                        break;
+                    case WILD_DRAW:
+                        handPoints+=50;            // wild draw two = 50 pts
+                        break;
+                    default:
+                        System.out.println("ERROR");
+                        break;
+                }
             }
+            else {
+                switch(card.getDarkCardType()){
+                    case ONE:
+                        handPoints+=1;
+                        break;
+                    case TWO:
+                        handPoints+=2;
+                        break;
+                    case THREE:
+                        handPoints+=3;
+                        break;
+                    case FOUR:
+                        handPoints+=4;
+                        break;
+                    case FIVE:
+                        handPoints+=5;
+                        break;
+                    case SIX:
+                        handPoints+=6;
+                        break;
+                    case SEVEN:
+                        handPoints+=7;
+                        break;
+                    case EIGHT:
+                        handPoints+=8;
+                        break;
+                    case NINE:
+                        handPoints+=9;
+                        break;
+                    case DRAW:
+                        handPoints+=20;     // draw five = 20 pts
+                        break;
+                    case REVERSE:
+                        handPoints+=20;
+                        break;
+                    case SKIP:
+                        handPoints+=30;     // skip all  = 30 pts
+                        break;
+                    case FLIP:
+                        handPoints+=20;
+                        break;
+                    case WILD:
+                        handPoints+=40;
+                        break;
+                    case WILD_DRAW:
+                        handPoints+=60;     // wild draw color = 60 pts
+                        break;
+                    default:
+                        System.out.println("ERROR");
+                        break;
+                }
+            }
+
         }
         return handPoints;
     }
@@ -108,22 +143,24 @@ public class Player {
      */
     public void removeCardFromHand(Card card){
         hand.remove(card);
-        deck.addToDiscardPile(card);
     }
 
     /**
      *  Displays the cards in player's hand
+     *  @param isBright bright or dark side of the card
      */
-    public void displayHand() {
+    public void displayHand(Boolean isBright) {
+        int i = 1;
         System.out.println(this.name + "'s hand:");
         for (Card card : hand) {
-            System.out.println(card.getBrightCardType() + "_" + card.getBrightColor()); //+ " " + card.getDarkCardType() + "_" + card.getDarkColor() + " ");
+            if (isBright){
+                System.out.println(i + ". " + card.getBrightCardType() + " " + card.getBrightColor());
+            }
+            else{
+                System.out.println( i + ". " + card.getDarkCardType() + " " + card.getDarkColor());
+            }
+            i++;
         }
-    }
-
-    public void getPlayerHandPoints(){
-        int playerPoints = calculateTotalPointsForPlayerHand();
-        System.out.println("Total points for the player's hand: " + playerPoints);
     }
 
     /**

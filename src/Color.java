@@ -9,4 +9,6 @@ public enum Color {
     TEAL,
     ORANGE,
     PURPLE,
+    // WILD
+    WILD
 }
