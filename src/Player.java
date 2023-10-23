@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.util.ArrayList;
 
 public class Player {
@@ -16,6 +14,7 @@ public class Player {
 
     /**
      *  Calculates the points of each player - calculated after each player has played their card
+     * @param isBright for light or dark side of card
      * @return Returns an integer value representing total points of the player's hand
      */
     public int calculateTotalPointsForPlayerHand(Boolean isBright){
