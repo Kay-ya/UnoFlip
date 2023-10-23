@@ -20,14 +20,14 @@ public class ViewGame {
      */
     public ArrayList <Player> playerInput() {
         ArrayList<Player> players = new ArrayList<>();
-        System.out.println("Enter Number of Players (you can only enter a maximum of upto 4 player): ");
+        System.out.println("Enter Number of Players (2-4): ");
         numberOfPlayers = scan.nextInt();
         if ((numberOfPlayers < 2) || (numberOfPlayers > 4)){
             System.out.println("Invalid Number of Players entered, try again");
         }
         else {
             for (int i = 0; i < numberOfPlayers; i++) {
-                System.out.print("Player name: ");
+                System.out.print("Enter name for Player " + (i+1) + ": ");
                 String playerName = scan.next();
                 players.add(new Player(playerName));
             }
@@ -44,10 +44,10 @@ public class ViewGame {
      * @return Card
      */
     public Card playerChooseOption(Player player, Card topCard, Boolean isBright) {
-        System.out.println("It is " + player.getName() + "'s turn. The card you would like to play: ");
+        System.out.println("It is " + player.getName() + "'s turn. Enter card index to play or 0 to draw a card: ");
         int cardNum = scan.nextInt();
         while(cardNum < 0 || cardNum > player.hand.size()){
-            System.out.println("Enter card index to play or 0 to draw a card:");
+            System.out.println("Enter card index to play or 0 to draw a card: ");
             cardNum = scan.nextInt();
         }
 

@@ -76,7 +76,6 @@ public class Game {
             System.out.println("The current card is:");
             game.deck.topCardFromDiscardPile().printCard(game.isBright);
 
-            StringBuilder strCards = new StringBuilder();
             game.currentPlayer.displayHand(game.isBright);
 
             Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);

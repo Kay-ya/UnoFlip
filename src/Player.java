@@ -155,7 +155,7 @@ public class Player {
         System.out.println(this.name + "'s hand:");
         for (Card card : hand) {
             if (isBright){
-                System.out.println(card.getBrightCardType() + " " + card.getBrightColor());
+                System.out.println(i + ". " + card.getBrightCardType() + " " + card.getBrightColor());
             }
             else{
                 System.out.println( i + ". " + card.getDarkCardType() + " " + card.getDarkColor());
