@@ -22,15 +22,16 @@ public class ViewGame {
         ArrayList<Player> players = new ArrayList<>();
         System.out.println("Enter Number of Players (2-4): ");
         numberOfPlayers = scan.nextInt();
-        if ((numberOfPlayers < 2) || (numberOfPlayers > 4)){
+        while ((numberOfPlayers < 2) || (numberOfPlayers > 4)){
             System.out.println("Invalid Number of Players entered, try again");
+            System.out.println("Enter Number of Players (2-4): ");
+            numberOfPlayers = scan.nextInt();
         }
-        else {
-            for (int i = 0; i < numberOfPlayers; i++) {
-                System.out.print("Enter name for Player " + (i+1) + ": ");
-                String playerName = scan.next();
-                players.add(new Player(playerName));
-            }
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+            System.out.print("Enter name for Player " + (i+1) + ": ");
+            String playerName = scan.next();
+            players.add(new Player(playerName));
         }
         return players; // Added , return type change from void to ArrayList <Player>
     }
