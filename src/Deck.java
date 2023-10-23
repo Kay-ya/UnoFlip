@@ -84,4 +84,10 @@ public class Deck {
         return discardPile.get(discardPile.size()-1);
     }
 
+    public void addToTopOfDiscardPile(Card cardToAdd) {
+        discardPile.add(0, cardToAdd); // Adds the cardToAdd at the beginning of the list
+    }
+
 }
+
+

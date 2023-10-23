@@ -46,20 +46,16 @@ public class ViewGame {
             System.out.println(card.getDarkCardType().toString() + "_" + card.getDarkColor().toString());
         }
     }
-/**
-    public void askColour(){
-        System.out.println("Choose a color (RED, YELLOW, GREEN) ");
+    public Color getPlayerColorChoice() {
+        System.out.println("Choose a color (RED, YELLOW, GREEN, BLUE): ");
         String colorChoice = scan.next();
-        if (colorChoice.equals("RED") || colorChoice.equals("YELLOW") || colorChoice.equals("GREEN") ) {
-            System.out.printf("%s has been chosen\n", colorChoice);
-            // Create a new Card with the chosen color and type WILD
-            Color chosenColor = Color.valueOf(colorChoice);
-            chosenCard = new Card(CardType.WILD, chosenColor, null, null);
+        if (colorChoice.equals("RED") || colorChoice.equals("YELLOW") || colorChoice.equals("GREEN")) {
+            return Color.valueOf(colorChoice);
+
         } else {
-            System.out.println("Invalid color choice. Try again.");
-            return playerChooseOption(player, topCard, isBright);
+             return getPlayerColorChoice(); // Recursively get a valid color choice
         }
- **/
+    }
 
     //}
 

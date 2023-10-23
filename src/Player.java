@@ -29,15 +29,26 @@ public class Player {
      *
      * @return
      */
-    public Card playCard(Card chosenCard) {
-        if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW){
-            return chosenCard;
+    public Card playCard(Card chosenCard, Game game) {
+        if (chosenCard != null) {
+            if (chosenCard.getBrightCardType() == CardType.WILD || chosenCard.getBrightCardType() == CardType.WILD_DRAW) {
+                game.currentPlayer.removeCardFromHand(chosenCard);
+                game.deck.addToDiscardPile(chosenCard);
+                return chosenCard;
+            } else if (chosenCard.equals(deck.topCardFromDiscardPile())) {
+                game.currentPlayer.removeCardFromHand(chosenCard);
+                game.deck.addToDiscardPile(chosenCard);
+                return chosenCard;
+            } else {
+                return null;
+            }
+        } else {
+            Card drawnCard = game.deck.drawCard();
+            game.currentPlayer.addCardToHand(drawnCard);
+            return drawnCard;
         }
-
-
-
-        return chosenCard;
     }
+
 
     /**
      *  Calculates the points of each player - calculated after each player has played their card

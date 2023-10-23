@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
     public ArrayList <Player> players; //Stores the player name in an ArrayList
@@ -38,7 +39,7 @@ public class Game {
      * @param direction
      * @return int
      */
-    private static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
+    static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
         if (direction) {
             curIndex -= 1;
             if (curIndex == -1){
@@ -108,6 +109,14 @@ public class Game {
                     case FLIP:
                         game.isBright = !game.isBright;
                         break;
+                    case WILD:
+                        Color selectedColor = view.getPlayerColorChoice();
+                        System.out.println(selectedColor + " is chosen");
+                        Card wildCard = new Card(CardType.WILD, selectedColor, null, null);
+                        game.deck.addToTopOfDiscardPile(wildCard); // Add the WILD card to the discard pile
+                        break;
+
+
                 }
                 game.currentPlayer.removeCardFromHand(chosenCard);
                 game.deck.addToDiscardPile(chosenCard);
@@ -133,9 +142,21 @@ public class Game {
                     case FLIP:
                         game.isBright = !game.isBright;
                         break;
+
+
+                    case WILD:
+                        Color selectedColor = view.getPlayerColorChoice();
+                        System.out.println(selectedColor + " is chosen");
+                        Card wildCard = new Card(CardType.WILD, selectedColor, null, null);
+                        game.deck.addToTopOfDiscardPile(wildCard); // Add the WILD card to the discard pile
+                        break;
+
+
                 }
+
+
                 game.currentPlayer.removeCardFromHand(chosenCard);
-                game.deck.addToDiscardPile(chosenCard);
+               // game.deck.addToDiscardPile(chosenCard);
             }
             else {
                 game.currentPlayer.addCardToHand(game.deck.drawCard());
