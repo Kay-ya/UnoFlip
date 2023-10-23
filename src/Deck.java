@@ -7,15 +7,12 @@ public class Deck {
 
     private List<Card> discardPile;
 
-    private List<Card> drawPile; //Nikita
-
     /**
      * Populates the deck with both light and dark side of UNO cards
      */
     public Deck(){
         this.cards = new ArrayList<>();
         this.discardPile = new ArrayList<>();
-        this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
 
@@ -41,7 +38,7 @@ public class Deck {
 
     /**
      * Returns a List of type CardSideDetails
-     * @param colors
+     * @param colors possible colors for bright or dark side that is being generated
      * @return List<CardSideDetails>
      */
     private List<CardSideDetails> createSideDetails(Color[] colors) {
@@ -83,7 +80,7 @@ public class Deck {
 
     /**
      * Adds the card to the discard pile after the user has
-     * @param card
+     * @param card card to add to discard pile
      */
     public void addToDiscardPile(Card card){
         discardPile.add(card);

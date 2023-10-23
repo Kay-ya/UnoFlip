@@ -16,26 +16,10 @@ public class Game {
     }
 
     /**
-     * Adds a player to the ArrayList of players
-     * @param pl
-     */
-    public void addPlayer(Player pl){
-        this.players.add(pl);
-    }
-
-    /**
-     * Removes a player from the Arraylist of Players
-     * @param pl
-     */
-    public void removePlayer(Player pl){
-        this.players.remove(pl);
-    }
-
-    /**
      * Returns the player index of the card to see which direction the game is being played.
-     * @param curIndex
-     * @param numPlayers
-     * @param direction
+     * @param curIndex current index
+     * @param numPlayers number of players in game
+     * @param direction clockwise or counter-clockwise
      * @return int
      */
     public static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
@@ -69,17 +53,22 @@ public class Game {
         // initial card to start game
         game.deck.addToDiscardPile(game.deck.drawCard());
 
-        // game loop
+        // game loop, loop while no winner yet
         while(!game.currentPlayer.hand.isEmpty()){
+            // set current player
             game.currentPlayer = game.players.get(playerIndex);
-
+            //print the current top card of discard pile
             System.out.println("The current card is:");
             game.deck.topCardFromDiscardPile().printCard(game.isBright);
 
+            // print current player hand
             game.currentPlayer.displayHand(game.isBright);
 
+            // player chooses card from hand to play
             Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);
-            Color chosenColor = null;
+            Color chosenColor;
+
+            // bright side special cards
             if ( chosenCard != null && game.isBright ){
                 switch(chosenCard.getBrightCardType()){
                     case DRAW:
@@ -120,6 +109,7 @@ public class Game {
                 game.currentPlayer.removeCardFromHand(chosenCard);
                 game.deck.addToDiscardPile(chosenCard);
             }
+            // dark side special cards
             else if (chosenCard != null){
                 switch(chosenCard.getDarkCardType()){
                     case DRAW:
@@ -170,18 +160,19 @@ public class Game {
                 game.currentPlayer.removeCardFromHand(chosenCard);
                 game.deck.addToDiscardPile(chosenCard);
             }
+            // player chooses to draw card
             else {
                 game.currentPlayer.addCardToHand(game.deck.drawCard());
             }
 
+            // next turn
             playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
         }
-
+        // print winner's score
         int score = 0;
         for (Player p: game.players){
             score += p.getPlayerScore();
         }
-
         System.out.println(game.currentPlayer.getName() + "is the winner. \nScore: " + score);
 
     }

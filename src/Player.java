@@ -7,7 +7,6 @@ public class Player {
     public ArrayList<Card> hand;
 
     private String name;
-    private int handPoints;
 
     private int playerScore;
     public Player(String name){
@@ -149,6 +148,7 @@ public class Player {
 
     /**
      *  Displays the cards in player's hand
+     *  @param isBright bright or dark side of the card
      */
     public void displayHand(Boolean isBright) {
         int i = 1;

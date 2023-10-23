@@ -44,13 +44,22 @@ public class Card {
         return darkColor;
     }
 
+    /**
+     * Set the bright side color for the current instance of the card
+     * @param color the color that the card is going to be set to
+     */
     public void setBrightColor(Color color){ this.brightColor = color; }
+
+    /**
+     * Set the dark side color for the current instance of the card
+     * @param color the color that the card is going to be set to
+     */
     public void setDarkColor(Color color){ this.darkColor = color; }
 
     /**
      * Prints the card of the side the user is player (dark or light) and returns the
      * type and color of the card on the bright or dark side
-     * @param isBright
+     * @param isBright for which side of the card that is currently being used
      */
     public void printCard(Boolean isBright){
         if (isBright){

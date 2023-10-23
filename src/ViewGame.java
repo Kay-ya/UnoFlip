@@ -79,6 +79,11 @@ public class ViewGame {
         return chosenCard;
     }
 
+    /**
+     * Returns the color the user has chosen
+     * @param isBright
+     * @return Color
+     */
     public Color playerColorInput(Boolean isBright){
         if (isBright){
             System.out.println("You have played a wild card. Please choose a color: Blue, Green, Red, Yellow");
