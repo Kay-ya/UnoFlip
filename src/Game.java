@@ -112,7 +112,9 @@ public class Game {
                     case WILD:
                         Color selectedColor = view.getPlayerColorChoice();
                         System.out.println(selectedColor + " is chosen");
+
                         Card wildCard = new Card(CardType.WILD, selectedColor, null, null);
+                        game.currentPlayer.playCard(wildCard,game);
                         game.deck.addToTopOfDiscardPile(wildCard); // Add the WILD card to the discard pile
                         break;
 
