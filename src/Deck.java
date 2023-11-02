@@ -21,6 +21,8 @@ public class Deck {
             CardSideDetails dark = darkSideDetails.get(i);
             cards.add(new Card(light.type, light.color, dark.type, dark.color));
         }
+        // starting card
+        addToDiscardPile(drawCard());
     }
 
     /**

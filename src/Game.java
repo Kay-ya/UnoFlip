@@ -1,19 +1,60 @@
 import java.util.ArrayList;
 
 public class Game {
-    public ArrayList <Player> players; //Stores the player name in an ArrayList
-    Player currentPlayer;
-    Boolean direction; //false when lighter side of deck is played
-    Deck deck;
-    Boolean isBright;
+    private ArrayList <Player> players; //Stores the player name in an ArrayList
+    private Player currentPlayer;
+    private Boolean direction; // true (default) = clockwise,
+    private Deck deck;
+    private Boolean side; // true = Bright side, false = Dark side
 
     public Game(){
         this.players = new ArrayList<>();
         this.direction = false;
-        this.currentPlayer = new Player(" ");
+        this.currentPlayer = null;
         this.deck = new Deck();
-        this.isBright = true;
+        this.side = true;
     }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer( Player player) {
+        players.add(player);
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Boolean getDirection() {
+        return direction;
+    }
+
+    public void flipDirection() {
+        direction = !direction;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public Boolean getSide() {
+        return side;
+    }
+
+    public void flipSide() {
+        side = !side;
+    }
+
 
     /**
      * Returns the player index of the card to see which direction the game is being played.
@@ -33,148 +74,6 @@ public class Game {
             curIndex = (curIndex + 1) % numPlayers;
         }
         return curIndex;
-    }
-    public static void main(String[] args){
-        Game game = new Game();
-        ViewGame view = new ViewGame();
-        int playerIndex = 0;
-        game.players = view.playerInput();
-
-        // deal cards to players
-        for (Player player : game.players) {
-            for (int i = 0; i < 7; i++){
-                player.addCardToHand(game.deck.drawCard());
-            }
-        }
-
-        // starting player
-        game.currentPlayer = game.players.get(playerIndex);
-
-        // initial card to start game
-        game.deck.addToDiscardPile(game.deck.drawCard());
-
-        // game loop, loop while no winner yet
-        while(!game.currentPlayer.hand.isEmpty()){
-            // set current player
-            game.currentPlayer = game.players.get(playerIndex);
-            //print the current top card of discard pile
-            System.out.println("The current card is:");
-            game.deck.topCardFromDiscardPile().printCard(game.isBright);
-
-            // print current player hand
-            game.currentPlayer.displayHand(game.isBright);
-
-            // player chooses card from hand to play
-            Card chosenCard = view.playerChooseOption(game.currentPlayer, game.deck.topCardFromDiscardPile(), game.isBright);
-            Color chosenColor;
-
-            // bright side special cards
-            if ( chosenCard != null && game.isBright ){
-                switch(chosenCard.getBrightCardType()){
-                    case DRAW:
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
-                        break;
-                    case REVERSE:
-                        game.direction = !game.direction;
-                        break;
-                    case SKIP:
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        break;
-                    case FLIP:
-                        game.isBright = !game.isBright;
-                        break;
-                    case WILD:
-                        chosenColor = view.playerColorInput(game.isBright);
-                        if (game.isBright){
-                            chosenCard.setBrightColor(chosenColor);
-                        }
-                        else{
-                            chosenCard.setDarkColor(chosenColor);
-                        }
-                        break;
-                    case WILD_DRAW:
-                        chosenColor = view.playerColorInput(game.isBright);
-                        if (game.isBright){
-                            chosenCard.setBrightColor(chosenColor);
-                        }
-                        else{
-                            chosenCard.setDarkColor(chosenColor);
-                        }
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
-                        game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
-                        break;
-                }
-                game.currentPlayer.removeCardFromHand(chosenCard);
-                game.deck.addToDiscardPile(chosenCard);
-            }
-            // dark side special cards
-            else if (chosenCard != null){
-                switch(chosenCard.getDarkCardType()){
-                    case DRAW:
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        for (int j = 0; j < 5; j++){
-                            game.players.get(playerIndex).addCardToHand(game.deck.drawCard());
-                        }
-                        break;
-                    case REVERSE:
-                        game.direction = !game.direction;
-                        break;
-                    case SKIP:
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        break;
-                    case FLIP:
-                        game.isBright = !game.isBright;
-                        break;
-                    case WILD:
-                        chosenColor = view.playerColorInput(game.isBright);
-                        if (game.isBright){
-                            chosenCard.setBrightColor(chosenColor);
-                        }
-                        else{
-                            chosenCard.setDarkColor(chosenColor);
-                        }
-                        break;
-                    case WILD_DRAW:
-                        chosenColor = view.playerColorInput(game.isBright);
-                        playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-                        Card c = game.deck.drawCard();
-                        game.players.get(playerIndex).addCardToHand(c);
-                        if (game.isBright){
-                            chosenCard.setBrightColor(chosenColor);
-                            while (c.getBrightColor() != chosenColor){
-                                c = game.deck.drawCard();
-                                game.players.get(playerIndex).addCardToHand(c);
-                            }
-                        }
-                        else{
-                            chosenCard.setDarkColor(chosenColor);
-                            while (c.getDarkColor() != chosenColor){
-                                c = game.deck.drawCard();
-                                game.players.get(playerIndex).addCardToHand(c);
-                            }
-                        }
-                        break;
-                }
-                game.currentPlayer.removeCardFromHand(chosenCard);
-                game.deck.addToDiscardPile(chosenCard);
-            }
-            // player chooses to draw card
-            else {
-                game.currentPlayer.addCardToHand(game.deck.drawCard());
-            }
-
-            // next turn
-            playerIndex = nextPlayerIndex(playerIndex, game.players.size(), game.direction);
-        }
-        // print winner's score
-        int score = 0;
-        for (Player p: game.players){
-            score += p.getPlayerScore();
-        }
-        System.out.println(game.currentPlayer.getName() + "is the winner. \nScore: " + score);
-
     }
 
 }

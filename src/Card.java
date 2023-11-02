@@ -69,4 +69,18 @@ public class Card {
             System.out.println(this.getDarkCardType().toString()+" "+this.getDarkColor().toString());
         }
     }
+
+    /**
+     * Prints the card of the side the user is player (dark or light) and returns the
+     * type and color of the card on the bright or dark side
+     *
+     * @param isBright for which side of the card that is currently being used
+     * @return
+     */
+    public String toString(Boolean isBright){
+        if (isBright){
+            return getBrightCardType().toString() + " " + getBrightColor().toString();
+        }
+        return getDarkCardType().toString() + " " + getDarkColor().toString();
+    }
 }
