@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private ArrayList <Player> players; //Stores the player name in an ArrayList
     private Player currentPlayer;
+    List<GameUpdate> updateView;
     private Boolean direction; // true (default) = clockwise,
     private Deck deck;
     private Boolean side; // true = Bright side, false = Dark side
@@ -13,6 +15,7 @@ public class Game {
         this.currentPlayer = null;
         this.deck = new Deck();
         this.side = true;
+        updateView = new ArrayList<>();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -76,4 +79,22 @@ public class Game {
         return curIndex;
     }
 
+    public void addGameView(GameUpdate view){
+        updateView.add(view);
+    }
+
+    public void placeCards(Card handCard, Card topDiscardCard){
+        if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
+            this.getCurrentPlayer().removeCardFromHand(handCard);
+            this.getDeck().addToDiscardPile(handCard);
+            //removeCard = handCard;
+        } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
+            this.getCurrentPlayer().removeCardFromHand(handCard);
+            this.getDeck().addToDiscardPile(handCard);
+            //removeCard = handCard;
+        }
+        for (GameUpdate view: updateView){
+            view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard));
+        }
+    }
 }
