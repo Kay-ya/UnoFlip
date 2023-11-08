@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Deck {
 
@@ -6,15 +7,12 @@ public class Deck {
 
     private List<Card> discardPile;
 
-    private List<Card> drawPile; //Nikita
-
     /**
      * Populates the deck with both light and dark side of UNO cards
      */
     public Deck(){
         this.cards = new ArrayList<>();
         this.discardPile = new ArrayList<>();
-        this.drawPile = new ArrayList<>(); //Nikita
         List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
         List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
 
@@ -23,6 +21,8 @@ public class Deck {
             CardSideDetails dark = darkSideDetails.get(i);
             cards.add(new Card(light.type, light.color, dark.type, dark.color));
         }
+        // starting card
+        addToDiscardPile(drawCard());
     }
 
     /**
@@ -40,17 +40,29 @@ public class Deck {
 
     /**
      * Returns a List of type CardSideDetails
-     * @param colors
+     * @param colors possible colors for bright or dark side that is being generated
      * @return List<CardSideDetails>
      */
     private List<CardSideDetails> createSideDetails(Color[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
-        // might be a cleaner way of initializing one side
+        List<CardType> cardTypes = Arrays.stream(CardType.values())
+                .filter(card -> card != CardType.WILD && card != CardType.WILD_DRAW)
+                .collect(Collectors.toList());
+        CardType[] wildTypes = new CardType[]{CardType.WILD, CardType.WILD_DRAW};
+
+
+        // all card except the wild cards
         for (Color color: colors){
             for (int i = 0; i < 2; i++){
-                for (CardType type: CardType.values()){
+                for (CardType type: cardTypes) {
                     sideDetails.add(new CardSideDetails(type, color));
                 }
+            }
+        }
+
+        for (int i = 0; i< 4; i++){
+            for (CardType type: wildTypes) {
+                sideDetails.add(new CardSideDetails(type, Color.WILD));
             }
         }
         Collections.shuffle(sideDetails);
@@ -70,7 +82,7 @@ public class Deck {
 
     /**
      * Adds the card to the discard pile after the user has
-     * @param card
+     * @param card card to add to discard pile
      */
     public void addToDiscardPile(Card card){
         discardPile.add(card);
@@ -84,10 +96,4 @@ public class Deck {
         return discardPile.get(discardPile.size()-1);
     }
 
-    public void addToTopOfDiscardPile(Card cardToAdd) {
-        discardPile.add(0, cardToAdd); // Adds the cardToAdd at the beginning of the list
-    }
-
 }
-
-
