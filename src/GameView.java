@@ -21,7 +21,7 @@ public class GameView extends JFrame implements GameUpdate{
     JTextArea area;
     Player p;
     public int handSize;
-    public JButton deckButton, discardButton;
+    public JButton deckButton, discardButton, currentPlayerButton;
     public GameView(){
         this.setTitle("Uno Flip");
         game = new Game();
@@ -35,6 +35,12 @@ public class GameView extends JFrame implements GameUpdate{
         deckButton.setBorderPainted(false);
         deckButton.setOpaque(true);
         deckButton.setBackground(Color.lightGray);
+
+
+
+
+
+
         //if()
         n = numberOfPlayers();
         for (int i = 0; i < n; i++){
@@ -101,6 +107,15 @@ public class GameView extends JFrame implements GameUpdate{
                 cardsPanel.add(cardButtons[i]);
                 //cardsPanel.add(cardButtons[7]);
             }
+        currentPlayerButton = new JButton("Current Player: " + game.getCurrentPlayer().getName());
+        ArrayList<Player> players = game.getPlayers();
+        int currentPlayer = (players.indexOf(game.getCurrentPlayer()));
+        int nextPlayer = (currentPlayer + 1);
+        if (nextPlayer == players.size()) {
+            nextPlayer = 0;
+        }
+        game.setCurrentPlayer(players.get(nextPlayer));
+
         //}
         cardsPanel.revalidate();
         cardsPanel.repaint();
@@ -130,10 +145,13 @@ public class GameView extends JFrame implements GameUpdate{
         deckButton.setPreferredSize(new Dimension(150,275));
         centerPanel.add(deckButton);
         centerPanel.add(discardButton);
+        centerPanel.add(currentPlayerButton);
 
         centerPanel.revalidate();
         centerPanel.repaint();
     }
+
+
 
     public int numberOfPlayers(){
         Object[] option = {2, 3, 4};
@@ -154,6 +172,7 @@ public class GameView extends JFrame implements GameUpdate{
         //view.numberOfPlayers();
     }
 
+
     @Override
     public void handleUnoUpdate(GameEvent e) {
         String card = e.getDrawCard();
@@ -162,5 +181,6 @@ public class GameView extends JFrame implements GameUpdate{
 
         String removeCard = e.getRemovedCard();
         //cardsPanel.remove();
+        currentPlayerButton.setText("Current Player: " + game.getCurrentPlayer().getName());
     }
 }
