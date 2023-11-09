@@ -1,51 +1,101 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
-    ArrayList <Player> players;
-    Player currentPlayer;
-    Boolean direction; //false when lighter side of deck is played
-    Deck deck;
+    private ArrayList <Player> players; //Stores the player name in an ArrayList
+    private Player currentPlayer;
+    List<GameUpdate> updateView;
+    private Boolean direction; // true (default) = clockwise,
+    private Deck deck;
+    private Boolean side; // true = Bright side, false = Dark side
 
     public Game(){
-        players = new ArrayList<Player>();
-        direction = false;
-        currentPlayer = new CurrentPlayer();
-        deck = new Deck();
+        this.players = new ArrayList<>();
+        this.direction = false;
+        this.currentPlayer = null;
+        this.deck = new Deck();
+        this.side = true;
+        updateView = new ArrayList<>();
     }
 
-    private void startGame(){
-        System.out.println("The game has started");
-    }
-    private Player nextTurn() {
-        for (int i = 0; i < 4; i++) { //for now there are only 4 turns
-            // currentPlayer = players.get(0);
-            if(currentPlayer == players.get(0)) {
-                currentPlayer = players.get(1);
-                return currentPlayer;
-            } else {
-                currentPlayer = players.get(0);
-                return currentPlayer;
-            }
-        }
-    }
-    private void playCard(){
-        if ((CardType.Flip == (?)) && (direction == true)){
-            //will build on this once I think of something here
-        }
-    }
-    private Player checkWinner(){
-        for(Player p: players ){
-            if(p.countCardsInHand == 0){
-                return p;
-            }
-        }
-        return null;
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
-    public static void main(String args[]){
-        Game play = new Game();
-        play.startGame();
+    public void addPlayer( Player player) {
+        players.add(player);
     }
-    //hello
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Boolean getDirection() {
+        return direction;
+    }
+
+    public void flipDirection() {
+        direction = !direction;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public Boolean getSide() {
+        return side;
+    }
+
+    public void flipSide() {
+        side = !side;
+    }
+
+
+    /**
+     * Returns the player index of the card to see which direction the game is being played.
+     * @param curIndex current index
+     * @param numPlayers number of players in game
+     * @param direction clockwise or counter-clockwise
+     * @return int
+     */
+    public static int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
+        if (direction) {
+            curIndex -= 1;
+            if (curIndex == -1){
+                curIndex = numPlayers-1;
+            }
+        }
+        else{
+            curIndex = (curIndex + 1) % numPlayers;
+        }
+        return curIndex;
+    }
+
+    public void addGameView(GameUpdate view){
+        updateView.add(view);
+    }
+
+    public void placeCards(Card handCard, Card topDiscardCard){
+        System.out.println(this.getSide());
+        if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType() || handCard.getBrightCardType().toString().equals("WILD_DRAW") || handCard.getBrightCardType().toString().equals("WILD"))) {
+            this.getCurrentPlayer().removeCardFromHand(handCard);
+            this.getDeck().addToDiscardPile(handCard);
+            //removeCard = handCard;
+        } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType()  || handCard.getDarkCardType().toString().equals("WILD_DRAW")  || handCard.getDarkCardType().toString().equals("WILD"))) {
+            this.getCurrentPlayer().removeCardFromHand(handCard);
+            this.getDeck().addToDiscardPile(handCard);
+            //removeCard = handCard;
+        }
+        for (GameUpdate view: updateView){
+            view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard));
+        }
+    }
 }
