@@ -82,19 +82,47 @@ public class Game {
     public void addGameView(GameUpdate view){
         updateView.add(view);
     }
+    public void replaceDeckCard(Card handCard){
+        this.getCurrentPlayer().removeCardFromHand(handCard);
+        this.getDeck().addToDiscardPile(handCard);
+    }
 
     public void placeCards(Card handCard, Card topDiscardCard){
         if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
-            this.getCurrentPlayer().removeCardFromHand(handCard);
-            this.getDeck().addToDiscardPile(handCard);
-            //removeCard = handCard;
+            replaceDeckCard(handCard);
+            if(handCard.getBrightCardType() == CardType.FLIP){
+                flipSide();
+            }
+            else if(handCard.getBrightCardType() == CardType.DRAW){
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+            }
         } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
             this.getCurrentPlayer().removeCardFromHand(handCard);
             this.getDeck().addToDiscardPile(handCard);
             //removeCard = handCard;
+            replaceDeckCard(handCard);
+            if(handCard.getDarkCardType() == CardType.FLIP){
+                flipSide();
+            }
+            else if(handCard.getDarkCardType() == CardType.DRAW){
+                for(int i =0; i<5; i++) {
+                    this.getCurrentPlayer().addCardToHand(deck.drawCard());
+                }
+            }
+        }
+        else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD_DRAW){
+            replaceDeckCard(handCard);
+            for(int i =0; i<2; i++) {
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+            }
+        } else if (!this.getSide() && handCard.getDarkCardType() == CardType.WILD) {
+            replaceDeckCard(handCard);
+        } else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD){
+            replaceDeckCard(handCard);
         }
         for (GameUpdate view: updateView){
             view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard));
         }
     }
+
 }

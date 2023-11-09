@@ -11,14 +11,20 @@ import java.util.Objects;
 import java.awt.Scrollbar;
 
 public class GameView extends JFrame implements GameUpdate{
-    public JPanel cardsPanel, centerPanel;
+    public JPanel cardsPanel, centerPanel, westPanel, eastPanel, northPanel;
     public Game game;
     public Card card;
+    public JMenu menu;
+    public JMenuBar menuBar;
+    public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
     //public ScrollBar scrollBar;
     int n;
     JTextArea area;
+    JTextArea textArea;
+    JScrollPane scrollPane;//= new JScrollPane(textArea);
+    //JTextArea area;
     Player p;
     public int handSize;
     public JButton deckButton, discardButton;
@@ -30,6 +36,19 @@ public class GameView extends JFrame implements GameUpdate{
         game.addGameView(this);
         centerPanel.setBackground(Color.DARK_GRAY);
         cardsPanel.setBackground(Color.DARK_GRAY);
+        westPanel = new JPanel();
+        eastPanel = new JPanel();
+        northPanel = new JPanel();
+        menuBar = new JMenuBar();
+        menu = new JMenu("Game");
+        menuItemSave = new JMenuItem("Save");
+        menuItemExit = new JMenuItem("Exit");
+        menu.add(menuItemSave);
+        menu.add(menuItemExit);
+        menuBar.add(menu);
+        textArea = new JTextArea(5, 30);
+        scrollPane = new JScrollPane(cardsPanel);
+        scrollPane.setPreferredSize(new Dimension(450, 110));
         //scrollBar = new Scrollbar(Scrollbar.HORIZONTAL, 0, 60, 0, 300);
         deckButton = new JButton("Deck");
         deckButton.setBorderPainted(false);
@@ -44,6 +63,8 @@ public class GameView extends JFrame implements GameUpdate{
             }
             game.addPlayer(p);
         }
+        westPanel.setBackground(Color.DARK_GRAY);
+        eastPanel.setBackground(Color.DARK_GRAY);
 
         game.setCurrentPlayer(game.getPlayers().get(0));
         updateView(game);
@@ -56,6 +77,19 @@ public class GameView extends JFrame implements GameUpdate{
         this.setLayout(new BorderLayout());
         this.add(cardsPanel, BorderLayout.SOUTH);
         this.add(centerPanel, BorderLayout.CENTER);
+        this.add(westPanel, BorderLayout.WEST);
+        this.add(eastPanel, BorderLayout.EAST);
+        this.add(menuBar, BorderLayout.NORTH);
+        //menu.add(menuBar);
+        //menuBar.add(menuItem);
+        //this.add(menu);
+        //this.add(northPanel, BorderLayout.NORTH);
+        JButton nextPlayer = new JButton("Next Player");
+        westPanel.add(nextPlayer);
+        JLabel status = new JLabel("Status:");
+        eastPanel.add(status);
+        //scrollPane.setContent
+        //add(scrollPane, BorderLayout.SOUTH);
         //this.cardsPanel.add(scrollPane);
         this.pack();
         this.setVisible(true);
@@ -98,6 +132,34 @@ public class GameView extends JFrame implements GameUpdate{
                     cardButtons[i].setOpaque(true);
                     cardButtons[i].setBackground(Color.ORANGE);
                 }
+                else if (cardButtons[i].getText().contains("TEAL")) {
+                    cardButtons[i].setOpaque(true);
+                    Color Teal = new Color(0,255,255);
+                    cardButtons[i].setBackground(Teal);
+                }
+                else if (cardButtons[i].getText().contains("PINK")) {
+                    cardButtons[i].setOpaque(true);
+                    Color Pink = new Color(255, 192, 203);
+                    cardButtons[i].setBackground(Pink);
+                }
+                else if (cardButtons[i].getText().contains("ORANGE")) {
+                    cardButtons[i].setOpaque(true);
+                    Color Orange = new Color(255, 165, 0);
+                    cardButtons[i].setBackground(Orange);
+                }
+                else if (cardButtons[i].getText().contains("PURPLE")) {
+                    cardButtons[i].setOpaque(true);
+                    Color Purple= new Color(102,0,153);
+                    cardButtons[i].setBackground(Purple.darker());
+                }
+                /**else if(cardButtons[i].getText().equals("WILD WILD")){
+                 System.out.println("WILD");
+                 wildCard();
+                 }
+                 else if (cardButtons[i].getText().equals("WILD_DRAW WILD")) {
+                 System.out.println("WILD2");
+                 wildDrawTwoCard();
+                 }**/
                 cardsPanel.add(cardButtons[i]);
                 //cardsPanel.add(cardButtons[7]);
             }
@@ -127,6 +189,27 @@ public class GameView extends JFrame implements GameUpdate{
             discardButton.setOpaque(true);
             discardButton.setBackground(Color.ORANGE);
         }
+        else if (discardButton.getText().contains("TEAL")) {
+            discardButton.setOpaque(true);
+            Color Teal = new Color(0,255,255);
+            discardButton.setBackground(Teal);
+        }
+        else if (discardButton.getText().contains("PINK")) {
+            discardButton.setOpaque(true);
+            Color Pink = new Color(255, 192, 203);
+            discardButton.setBackground(Pink);
+        }
+        else if (discardButton.getText().contains("ORANGE")) {
+            discardButton.setOpaque(true);
+            Color Orange = new Color(255, 165, 0);
+            discardButton.setBackground(Orange);
+        }
+        else if (discardButton.getText().contains("PURPLE")) {
+            discardButton.setOpaque(true);
+            Color Purple= new Color(102,0,153);
+            discardButton.setBackground(Purple.darker());
+        }
+
         deckButton.setPreferredSize(new Dimension(150,275));
         centerPanel.add(deckButton);
         centerPanel.add(discardButton);
@@ -141,6 +224,21 @@ public class GameView extends JFrame implements GameUpdate{
         int number = (int) selectNumberOfPlayers;
         return number;
     }
+
+    public String wildCard(){
+        Object[] option = {"RED", "GREEN", "BLUE", "YELLOW"};
+        Object selectColor = JOptionPane.showInputDialog(this, "Choose a color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        String selectedColor = (String) selectColor;
+        return selectedColor;
+    }
+
+    public String wildDrawTwoCard(){
+        Object[] option = {"RED", "GREEN", "BLUE", "YELLOW"};
+        Object selectColor = JOptionPane.showInputDialog(this, "Choose a color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        String selectedColor = (String) selectColor;
+        return selectedColor;
+    }
+
 
     public void getPlayerSize(){
         Game g = new Game();
