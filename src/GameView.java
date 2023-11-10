@@ -16,6 +16,7 @@ public class GameView extends JFrame implements GameUpdate{
     public Card card;
     public JMenu menu;
     public JMenuBar menuBar;
+    JButton nextPlayer;
     public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
@@ -57,22 +58,19 @@ public class GameView extends JFrame implements GameUpdate{
         //if()
         n = numberOfPlayers();
         for (int i = 0; i < n; i++){
-            p = new Player( "Player " + i );
+            p = new Player( "Player " + (i+1) );
             for (int j = 0; j < 7; j++) {
                 p.addCardToHand(card = game.getDeck().drawCard());
             }
             game.addPlayer(p);
         }
+
         westPanel.setBackground(Color.DARK_GRAY);
         eastPanel.setBackground(Color.DARK_GRAY);
 
         game.setCurrentPlayer(game.getPlayers().get(0));
         updateView(game);
         controller = new GameController(game, GameView.this);
-        System.out.println("THE FUCKING CARD: ");
-        //System.out.println(controller.returnCard());
-        //System.out.println(controller.returnCard());
-        // frame setup
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.add(cardsPanel, BorderLayout.SOUTH);
@@ -80,17 +78,12 @@ public class GameView extends JFrame implements GameUpdate{
         this.add(westPanel, BorderLayout.WEST);
         this.add(eastPanel, BorderLayout.EAST);
         this.add(menuBar, BorderLayout.NORTH);
-        //menu.add(menuBar);
-        //menuBar.add(menuItem);
-        //this.add(menu);
-        //this.add(northPanel, BorderLayout.NORTH);
-        JButton nextPlayer = new JButton("Next Player");
+        nextPlayer = new JButton("Next Player");
+        nextPlayer.addActionListener(controller);
+        nextPlayer.setActionCommand("Next Player");
         westPanel.add(nextPlayer);
         JLabel status = new JLabel("Status:");
         eastPanel.add(status);
-        //scrollPane.setContent
-        //add(scrollPane, BorderLayout.SOUTH);
-        //this.cardsPanel.add(scrollPane);
         this.pack();
         this.setVisible(true);
 
@@ -104,6 +97,10 @@ public class GameView extends JFrame implements GameUpdate{
         return deckButton;
     }
 
+    public JButton getPlayerButton(){
+        return nextPlayer;
+    }
+
     public void updateView(Game game){
         // bottom cards panel
         cardsPanel.removeAll();
@@ -115,20 +112,16 @@ public class GameView extends JFrame implements GameUpdate{
                 cardButtons[i] = new JButton(cardName);
                 cardButtons[i].setPreferredSize(new Dimension(150, 275));
                 if(cardButtons[i].getText().contains("GREEN")) {
-                    //cardButtons[i].setBorderPainted(false);
                     cardButtons[i].setOpaque(true);
                     cardButtons[i].setBackground(Color.GREEN.darker());
                 } else if (cardButtons[i].getText().contains("BLUE")) {
-                    //cardButtons[i].setBorderPainted(true);
                     cardButtons[i].setOpaque(true);
                     cardButtons[i].setBackground(Color.BLUE.brighter());
                 } else if (cardButtons[i].getText().contains("RED")) {
-                    //cardButtons[i].setBorderPainted(false);
                     cardButtons[i].setOpaque(true);
                     cardButtons[i].setBackground(Color.RED.brighter());
                 }
                 else if(cardButtons[i].getText().contains("YELLOW")){
-                    //cardButtons[i].setBorderPainted(false);
                     cardButtons[i].setOpaque(true);
                     cardButtons[i].setBackground(Color.ORANGE);
                 }
@@ -152,40 +145,25 @@ public class GameView extends JFrame implements GameUpdate{
                     Color Purple= new Color(102,0,153);
                     cardButtons[i].setBackground(Purple.darker());
                 }
-                /**else if(cardButtons[i].getText().equals("WILD WILD")){
-                 System.out.println("WILD");
-                 wildCard();
-                 }
-                 else if (cardButtons[i].getText().equals("WILD_DRAW WILD")) {
-                 System.out.println("WILD2");
-                 wildDrawTwoCard();
-                 }**/
                 cardsPanel.add(cardButtons[i]);
-                //cardsPanel.add(cardButtons[7]);
             }
         //}
         cardsPanel.revalidate();
         cardsPanel.repaint();
-        //controller.returnCard();
-        // center panel
         centerPanel.removeAll();
         discardButton = new JButton(game.getDeck().topCardFromDiscardPile().toString(game.getSide()));
         discardButton.setPreferredSize(new Dimension(150,275));
         if(discardButton.getText().contains("GREEN")) {
-            //cardButtons[i].setBorderPainted(false);
             discardButton.setOpaque(true);
             discardButton.setBackground(Color.GREEN.darker());
         } else if (discardButton.getText().contains("BLUE")) {
-            //cardButtons[i].setBorderPainted(true);
             discardButton.setOpaque(true);
             discardButton.setBackground(Color.BLUE.brighter());
         } else if (discardButton.getText().contains("RED")) {
-            //cardButtons[i].setBorderPainted(false);
             discardButton.setOpaque(true);
             discardButton.setBackground(Color.RED.brighter());
         }
         else if(discardButton.getText().contains("YELLOW")){
-            //cardButtons[i].setBorderPainted(false);
             discardButton.setOpaque(true);
             discardButton.setBackground(Color.ORANGE);
         }
@@ -225,31 +203,8 @@ public class GameView extends JFrame implements GameUpdate{
         return number;
     }
 
-    public String wildCard(){
-        Object[] option = {"RED", "GREEN", "BLUE", "YELLOW"};
-        Object selectColor = JOptionPane.showInputDialog(this, "Choose a color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        String selectedColor = (String) selectColor;
-        return selectedColor;
-    }
-
-    public String wildDrawTwoCard(){
-        Object[] option = {"RED", "GREEN", "BLUE", "YELLOW"};
-        Object selectColor = JOptionPane.showInputDialog(this, "Choose a color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        String selectedColor = (String) selectColor;
-        return selectedColor;
-    }
-
-
-    public void getPlayerSize(){
-        Game g = new Game();
-        ArrayList<Player> play = g.getPlayers();
-        System.out.println(play.size());
-    }
-
     public static void main(String[] args) {
-        GameView view = new GameView();
-        //new DeckController();
-        //view.numberOfPlayers();
+        new GameView();
     }
 
     @Override
@@ -257,8 +212,5 @@ public class GameView extends JFrame implements GameUpdate{
         String card = e.getDrawCard();
         JButton button = new JButton(card);
         cardsPanel.add(button);
-
-        String removeCard = e.getRemovedCard();
-        //cardsPanel.remove();
     }
 }
