@@ -48,6 +48,14 @@ public class GameController implements ActionListener {
             System.out.println("Deck button clicked");
         }
 
+        if(e.getActionCommand() == "Next Player"){
+            for(int z =0; z< view.n; z++) {
+                game.nextPlayerIndex(z, view.n, game.getDirection());
+                game.getCurrentPlayer().getHand();
+                view.updateView(game);
+            }
+        }
+
         view.updateView(game);
         addCardListeners();
         //new GameEvent(game, this, removeCard);
