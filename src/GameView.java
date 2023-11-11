@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
 
+/**
+ * This class represents the graphical user interface for the UNO game.
+ * It extends JFrame and implements the GameUpdate interface to handle game events.
+ */
 
 public class GameView extends JFrame implements GameUpdate{
     public JPanel cardsPanel, centerPanel, westPanel, northPanel, eastPanel;
@@ -21,6 +25,11 @@ public class GameView extends JFrame implements GameUpdate{
     Player p;
     public int handSize;
     public JButton deckButton, discardButton;
+
+
+    /**
+     * Creates a GameView object and initializes the GUI of the UnoFlip! game.
+     */
     public GameView(){
         this.setTitle("Uno Flip");
         game = new Game();
@@ -80,17 +89,40 @@ public class GameView extends JFrame implements GameUpdate{
 
     }
 
+    /**
+     * Gets the array of card buttons in the player's hand.
+     *
+     * @return An array of type JButton which represents the current cards in the player's hand.
+     */
+
     public JButton[] getCardButtons() {
         return cardButtons;
     }
+
+    /**
+     * Gets the button for the deck.
+     *
+     * @return A JButton representing the deck button.
+     */
 
     public JButton getDeckButton() {
         return deckButton;
     }
 
+    /**
+     * Gets the button for moving to the next player.
+     *
+     * @return A JButton representing the next player button.
+     */
+
     public JButton getPlayerButton(){
         return nextPlayer;
     }
+    /**
+     * Updates the view based on the current state of the game.
+     *
+     * @param game The instance of the current game.
+     */
 
     public void updateView(Game game){
         // bottom cards panel
@@ -187,6 +219,11 @@ public class GameView extends JFrame implements GameUpdate{
         centerPanel.repaint();
     }
 
+    /**
+     * Prompts the user to input the number of players in the Uno game (between 2-4).
+     * @return the selected number of players
+     */
+
     public int numberOfPlayers(){
         Object[] option = {2, 3, 4};
         Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
@@ -194,9 +231,20 @@ public class GameView extends JFrame implements GameUpdate{
         return number;
     }
 
+    /**
+     * Main method to run the game
+     * @param args Command line arguments
+     */
+
     public static void main(String[] args) {
         new GameView();
     }
+
+    /**
+     * Handles updates to the game view.
+     *
+     * @param e The  instance of GameEvent which contains information about the game event.
+     */
 
     @Override
     public void handleUnoUpdate(GameEvent e) {

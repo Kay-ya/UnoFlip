@@ -4,8 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This is the Test class for the Card class, which represents a card in an UNO game.
+ */
 class CardTest {
     Card card, card1;
+
+    /**
+     * The initial state for each test case.
+     */
 
 
     @BeforeEach
@@ -15,15 +22,26 @@ class CardTest {
         card1 = new Card(CardType.DRAW, Color.GREEN, CardType.WILD, Color.TEAL);
     }
 
+
+    /**
+     * Cleans up after each test case.
+     */
     @AfterEach
     void tearDown() {
     }
+
+    /**
+     * Tests the getBrightCardType method of the Card class.
+     */
 
     @Test
     void getBrightCardType() {
         assertEquals(CardType.DRAW, card.getBrightCardType());
         assertNotEquals(CardType.FIVE, card1.getBrightCardType());
     }
+    /**
+     * Tests the getDarkCardType method of the Card class.
+     */
 
     @Test
     void getDarkCardType() {
@@ -31,11 +49,19 @@ class CardTest {
         assertNotEquals(CardType.REVERSE, card1.getDarkCardType());
     }
 
+    /**
+     * Tests the getBrightColor method of the Card class.
+     */
+
     @Test
     void getBrightColor() {
         assertEquals(Color.BLUE, card.getBrightColor());
         assertNotEquals(Color.RED, card1.getBrightColor());
     }
+
+    /**
+     * Tests the getDarkColor method of the Card class.
+     */
 
     @Test
     void getDarkColor() {

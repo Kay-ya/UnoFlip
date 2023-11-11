@@ -1,3 +1,8 @@
+/**
+ * The CardType enum represents the possible types of Uno cards in the Uno Flip game.
+ * Each enum value corresponds to a specific card type.
+ */
+
 public enum CardType {
     ONE,
     TWO,
