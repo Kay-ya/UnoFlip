@@ -7,6 +7,7 @@ public class Game {
     List<GameUpdate> updateView;
     private Boolean direction; // true (default) = clockwise,
     private Deck deck;
+    boolean status;
     private Boolean side; // true = Bright side, false = Dark side
 
     public Game(){
@@ -15,6 +16,7 @@ public class Game {
         this.currentPlayer = null;
         this.deck = new Deck();
         this.side = true;
+        this.status = false;
         updateView = new ArrayList<>();
     }
 
@@ -92,36 +94,50 @@ public class Game {
             replaceDeckCard(handCard);
             if(handCard.getBrightCardType() == CardType.FLIP){
                 flipSide();
+                status = false;
             }
             else if(handCard.getBrightCardType() == CardType.DRAW){
                 this.getCurrentPlayer().addCardToHand(deck.drawCard());
+                status = false;
             }
+            status = false;
         } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
             this.getCurrentPlayer().removeCardFromHand(handCard);
             this.getDeck().addToDiscardPile(handCard);
+            status = false;
             //removeCard = handCard;
             replaceDeckCard(handCard);
             if(handCard.getDarkCardType() == CardType.FLIP){
                 flipSide();
+                status = false;
             }
             else if(handCard.getDarkCardType() == CardType.DRAW){
                 for(int i =0; i<5; i++) {
                     this.getCurrentPlayer().addCardToHand(deck.drawCard());
                 }
+                status = false;
             }
+            status = false;
         }
         else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD_DRAW){
             replaceDeckCard(handCard);
             for(int i =0; i<2; i++) {
                 this.getCurrentPlayer().addCardToHand(deck.drawCard());
             }
+            status = false;
         } else if (!this.getSide() && handCard.getDarkCardType() == CardType.WILD) {
             replaceDeckCard(handCard);
+            status = false;
         } else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD){
             replaceDeckCard(handCard);
+            status = false;
+        }
+        else{
+            System.out.println("Invalid Card");
+            status = true;
         }
         for (GameUpdate view: updateView){
-            view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard));
+            view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard, status));
         }
     }
 
