@@ -1,5 +1,5 @@
 # SYSC3110: UNO FLIP
-SYSC3110 Group 28 UNO FLIP Game Project Version 1.0.1;
+SYSC3110 Group 28 UNO FLIP Game Project Version 2.0.1;
 
 11/08/2023
     
@@ -16,9 +16,9 @@ Deliverable 1:
 
 Deliverable 2:
 - [x] MVC
-- [ ] Swing UI
-- [ ] Next Player Button
-- [ ] Junit Testing
+- [x] Swing UI
+- [x] Next Player Button
+- [x] Junit Testing
 
 Deliverable 3:
 - [ ] Last Card UNO! button
@@ -40,15 +40,18 @@ git clone https://github.com/Kay-ya/UnoFlip
 ```
 2. Navigate to the Project Directory
 ```bash
-# TODO
+commnd: cd UnoFlip
+
 ```
 3. Compile the Source Code
 ```bash
-# TODO
+command: javac Game.java
+
 ```
 4. Run the Game
 ```bash
-# TODO
+command: java Game
+
 ```
 
 ## Gameplay features:
