@@ -7,7 +7,6 @@ public class GameController implements ActionListener {
     Game game;
     GameView view;
     JButton source;
-    Card removeCard;
     public JButton button;
     int size;
     Card handCard, topDiscardCard, drawnCard;
@@ -49,17 +48,13 @@ public class GameController implements ActionListener {
         }
 
         if(e.getActionCommand() == "Next Player"){
-            for(int z =0; z< view.n; z++) {
-                game.nextPlayerIndex(z, view.n, game.getDirection());
+                //game.nextPlayerIndex(z, view.n, game.getDirection());
                 game.getCurrentPlayer().getHand();
-                view.updateView(game);
             }
-        }
 
         view.updateView(game);
         addCardListeners();
         //new GameEvent(game, this, removeCard);
     }
-
 }
 

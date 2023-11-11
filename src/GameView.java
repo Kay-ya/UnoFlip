@@ -1,31 +1,23 @@
-import apple.laf.JRSUIUtils;
-
-import javax.print.attribute.standard.JobHoldUntil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.awt.Scrollbar;
+
 
 public class GameView extends JFrame implements GameUpdate{
-    public JPanel cardsPanel, centerPanel, westPanel, eastPanel, northPanel;
+    public JPanel cardsPanel, centerPanel, westPanel, northPanel, eastPanel;
     public Game game;
     public Card card;
     public JMenu menu;
     public JMenuBar menuBar;
     JButton nextPlayer;
+    JLabel status;
     public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
-    //public ScrollBar scrollBar;
     int n;
-    JTextArea area;
     JTextArea textArea;
-    JScrollPane scrollPane;//= new JScrollPane(textArea);
-    //JTextArea area;
+    JScrollPane scrollPane;
+
     Player p;
     public int handSize;
     public JButton deckButton, discardButton;
@@ -38,8 +30,8 @@ public class GameView extends JFrame implements GameUpdate{
         centerPanel.setBackground(Color.DARK_GRAY);
         cardsPanel.setBackground(Color.DARK_GRAY);
         westPanel = new JPanel();
-        eastPanel = new JPanel();
         northPanel = new JPanel();
+        eastPanel = new JPanel();
         menuBar = new JMenuBar();
         menu = new JMenu("Game");
         menuItemSave = new JMenuItem("Save");
@@ -49,13 +41,12 @@ public class GameView extends JFrame implements GameUpdate{
         menuBar.add(menu);
         textArea = new JTextArea(5, 30);
         scrollPane = new JScrollPane(cardsPanel);
-        scrollPane.setPreferredSize(new Dimension(450, 110));
-        //scrollBar = new Scrollbar(Scrollbar.HORIZONTAL, 0, 60, 0, 300);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         deckButton = new JButton("Deck");
         deckButton.setBorderPainted(false);
         deckButton.setOpaque(true);
         deckButton.setBackground(Color.lightGray);
-        //if()
         n = numberOfPlayers();
         for (int i = 0; i < n; i++){
             p = new Player( "Player " + (i+1) );
@@ -66,24 +57,24 @@ public class GameView extends JFrame implements GameUpdate{
         }
 
         westPanel.setBackground(Color.DARK_GRAY);
-        eastPanel.setBackground(Color.DARK_GRAY);
 
         game.setCurrentPlayer(game.getPlayers().get(0));
         updateView(game);
         controller = new GameController(game, GameView.this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        this.add(cardsPanel, BorderLayout.SOUTH);
+        this.add(scrollPane, BorderLayout.SOUTH);
         this.add(centerPanel, BorderLayout.CENTER);
         this.add(westPanel, BorderLayout.WEST);
-        this.add(eastPanel, BorderLayout.EAST);
         this.add(menuBar, BorderLayout.NORTH);
         nextPlayer = new JButton("Next Player");
+        eastPanel.add(nextPlayer);
         nextPlayer.addActionListener(controller);
         nextPlayer.setActionCommand("Next Player");
-        westPanel.add(nextPlayer);
-        JLabel status = new JLabel("Status:");
-        eastPanel.add(status);
+        status = new JLabel("Status: ");
+        status.setOpaque(true);
+        status.setBackground(Color.lightGray);
+        westPanel.add(status);
         this.pack();
         this.setVisible(true);
 
@@ -106,7 +97,6 @@ public class GameView extends JFrame implements GameUpdate{
         cardsPanel.removeAll();
         handSize = game.getCurrentPlayer().getHand().size();
         cardButtons = new JButton[handSize];
-        //for(int j = 0; j<n;j++ ) {
             for (int i = 0; i < handSize; i++) {
                 String cardName = game.getCurrentPlayer().getHand().get(i).toString(game.getSide());
                 cardButtons[i] = new JButton(cardName);
@@ -147,7 +137,8 @@ public class GameView extends JFrame implements GameUpdate{
                 }
                 cardsPanel.add(cardButtons[i]);
             }
-        //}
+        scrollPane.revalidate();
+            scrollPane.repaint();
         cardsPanel.revalidate();
         cardsPanel.repaint();
         centerPanel.removeAll();
@@ -184,7 +175,7 @@ public class GameView extends JFrame implements GameUpdate{
         }
         else if (discardButton.getText().contains("PURPLE")) {
             discardButton.setOpaque(true);
-            Color Purple= new Color(102,0,153);
+            Color Purple = new Color(102,0,153);
             discardButton.setBackground(Purple.darker());
         }
 
@@ -212,5 +203,14 @@ public class GameView extends JFrame implements GameUpdate{
         String card = e.getDrawCard();
         JButton button = new JButton(card);
         cardsPanel.add(button);
+
+        Boolean booleanStatus =e.getStatus();
+        if(booleanStatus == true){
+            status.setText("Status: Invalid card");
+        }
+        else if(booleanStatus == false){
+            status.setText("Status: Correct Card Selected");
+        }
+        //System.out.print(status);
     }
 }
