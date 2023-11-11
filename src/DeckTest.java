@@ -1,11 +1,12 @@
 import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ *  Test class for the Deck class, representing the deck of UNO cards.
+ */
 class DeckTest {
 
     Card card1;
@@ -16,8 +17,9 @@ class DeckTest {
     ArrayList<Card> side;
     ArrayList<Card> discardCard;
 
-
-
+    /**
+     * Initial state of each test case.
+     */
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         deck = new ArrayList<>();
@@ -34,22 +36,34 @@ class DeckTest {
 
     }
 
+    /**
+     * Cleans up after each test case.
+     */
     @org.junit.jupiter.api.AfterEach
     void tearDown() {
     }
 
+    /**
+     * Tests the shuffle method to ensure the deck is shuffled.
+     */
     @org.junit.jupiter.api.Test
     void shuffle() {
         Collections.shuffle(deck);
     }
 
+    /**
+     * Tests the drawCard method to ensure a card is drawn from the deck.
+     */
     @org.junit.jupiter.api.Test
     void drawCard() {
         String card_1 = card1.getBrightCardType() + "_" + card1.getBrightColor();
         Card card_2 = d.drawCard();
-        assertNotEquals(card_1,card_2.getBrightCardType()+ "_" + card_2.getBrightColor());
+        assertNotEquals(card_1, card_2.getBrightCardType() + "_" + card_2.getBrightColor());
     }
 
+    /**
+     * Tests the addToDiscardPile method to ensure a card is added to the discard pile.
+     */
     @org.junit.jupiter.api.Test
     void addToDiscardPile() {
         Card card = side.remove(0);
@@ -58,6 +72,9 @@ class DeckTest {
         assertEquals(discardCard.size(), 1);
     }
 
+    /**
+     * Tests the topCardFromDiscardFile method to ensure the top card from the discard pile is retrieved.
+     */
     @org.junit.jupiter.api.Test
     void topCardFromDiscardFile() {
         Player p = new Player("Sam");
@@ -68,8 +85,7 @@ class DeckTest {
         d.addToDiscardPile(c1);
         Card c2 = d.topCardFromDiscardPile();
 
-        String c3 = c2.getBrightCardType() + "_" + c2.getBrightColor() ;
-        assertNotEquals(card1.getBrightCardType()+ "_" + card1.getBrightColor(), c3);
-
+        String c3 = c2.getBrightCardType() + "_" + c2.getBrightColor();
+        assertNotEquals(card1.getBrightCardType() + "_" + card1.getBrightColor(), c3);
     }
 }

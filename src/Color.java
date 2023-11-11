@@ -1,3 +1,7 @@
+/**
+ * The Color enum represents the possible Colors of Uno cards in the Uno Flip game.
+ */
+
 public enum Color {
     // Light Side Colors
     BLUE,

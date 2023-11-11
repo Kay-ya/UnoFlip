@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * The Player class represents a player in the Uno Flip game. It contains information about the player's name,
+ * hand of cards, score, and methods to change the player's hand, calculate total points, and display the hand.
+ */
+
 public class Player {
 
     public ArrayList<Card> hand;

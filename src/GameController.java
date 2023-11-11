@@ -3,6 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+/**
+ * This class serves as the controller in the MVC pattern for the Uno Flip card game.
+ * It handles actions such as clicking on cards or the deck, and makes updates to the game state based on this.
+ */
 public class GameController implements ActionListener {
     Game game;
     GameView view;
@@ -11,7 +15,13 @@ public class GameController implements ActionListener {
     int size;
     Card handCard, topDiscardCard, drawnCard;
 
-    public GameController(Game game, GameView view){
+    /**
+     * Constructor for the GameController class.
+     *
+     * @param game The Game object representing the UnoFlip! game.
+     * @param view The GameView object representing the graphical user interface of the game.
+     */
+    public GameController(Game game, GameView view) {
         this.game = game;
         this.view = view;
         button = new JButton();
@@ -19,11 +29,20 @@ public class GameController implements ActionListener {
         view.getDeckButton().addActionListener(this);
     }
 
-    public void addCardListeners(){
+    /**
+     * Adds action listeners to all card buttons in the player's hand.
+     */
+    public void addCardListeners() {
         for (JButton cardButton : view.getCardButtons()) {
             cardButton.addActionListener(this);
         }
     }
+
+    /**
+     * Handles the action events triggered by user interactions.
+     *
+     * @param e The ActionEvent representing the user's action.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Action performed");
@@ -47,14 +66,13 @@ public class GameController implements ActionListener {
             System.out.println("Deck button clicked");
         }
 
-        if(e.getActionCommand() == "Next Player"){
-                //game.nextPlayerIndex(z, view.n, game.getDirection());
-                game.getCurrentPlayer().getHand();
-            }
+        if (e.getActionCommand() == "Next Player") {
+            //game.nextPlayerIndex(z, view.n, game.getDirection());
+            game.getCurrentPlayer().getHand();
+        }
 
         view.updateView(game);
         addCardListeners();
         //new GameEvent(game, this, removeCard);
     }
 }
-

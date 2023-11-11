@@ -1,5 +1,10 @@
 import java.util.*;
 import java.util.stream.Collectors;
+/**
+ * The Deck class represents the deck of Uno cards in the Uno Flip game.
+ * It contains methods to add both light and dark sides of uno cards to the deck,
+ * draw cards from the deck, add cards to the discard pile, and retrieve the top card from the discard pile.
+ */
 
 public class Deck {
 
@@ -51,7 +56,7 @@ public class Deck {
         CardType[] wildTypes = new CardType[]{CardType.WILD, CardType.WILD_DRAW};
 
 
-        // all card except the wild cards
+        // all cards except the wild cards
         for (Color color: colors){
             for (int i = 0; i < 2; i++){
                 for (CardType type: cardTypes) {

@@ -1,3 +1,10 @@
+/**
+ * This class represents an Uno card with both light and dark sides. Each card has a type and a color
+ * associated with both the light and dark sides. The color of the card can be allocated during the game.
+ */
+
+
+
 public class Card {
     private final CardType brightType;
     private Color brightColor;

@@ -4,10 +4,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+/**
+ * Test class for the Player class, which represents a player in the UNO game.
+ */
+
 public class PlayerTest {
 
     Player player;
     Card card, card1, card2;
+
+    /**
+     * The initial state for each test case.
+     */
     @BeforeEach
     public void setUp() {
 
@@ -17,9 +26,18 @@ public class PlayerTest {
         card2 = new Card(CardType.FIVE, Color.ORANGE, CardType.WILD, Color.WILD);
     }
 
+    /**
+     * Clean up after each test case.
+     */
+
     @AfterEach
     void tearDown() {
     }
+
+
+    /**
+     * Test for  the addition of cards to the player's hand.
+     */
 
     @Test
     public void testAddCardToHand() {
@@ -36,6 +54,9 @@ public class PlayerTest {
         assertEquals(player.hand.get(1), card1, "The second drawn card and card in hand should be equal");
         assertEquals(player.hand.get(2), card2, "The third drawn card and card in hand should be equal");
     }
+    /**
+     * Test for the removal of cards from the player's hand.
+     */
 
     @Test
     public void testRemoveCardFromHand() {
@@ -50,6 +71,9 @@ public class PlayerTest {
         player.removeCardFromHand(card);
         assertFalse(player.hand.contains(card), "The hand should not contain the removed card");
     }
+    /**
+     * Test for the calculation of total points for the player's hand.
+     */
 
     @Test
     public void testCalculateTotalPointsForPlayerHand() {
@@ -84,12 +108,20 @@ public class PlayerTest {
         assertEquals(48, darkPoints, "Points should be correctly calculated");
     }
 
+    /**
+     * Test for updating the player's score
+     */
+
     @Test
     public void testPlayerScore() {
         int initialScore = player.getPlayerScore();
         player.setPlayerScore(initialScore + 10);
         assertEquals(initialScore + 10, player.getPlayerScore(), "Player score should be updated correctly");
     }
+
+    /**
+     * Test for getting the player's name
+     */
 
     @Test
     public void testName() {
