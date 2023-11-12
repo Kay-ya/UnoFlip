@@ -5,6 +5,7 @@ public class Game {
     private ArrayList <Player> players; //Stores the player name in an ArrayList
     private Player currentPlayer;
     List<GameUpdate> updateView;
+    GameView view;
     private Boolean direction; // true (default) = clockwise,
     private Deck deck;
     boolean status;
@@ -18,6 +19,7 @@ public class Game {
         this.side = true;
         this.status = false;
         updateView = new ArrayList<>();
+        //view = new GameView();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -81,6 +83,18 @@ public class Game {
         return curIndex;
     }
 
+    public void returnNextPlayer(){
+        int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 2, getDirection());
+        setCurrentPlayer(players.get(i));
+        //nextPlayerIndex(players.)
+        System.out.println(i);
+        //return players.get(i);
+        for (GameUpdate view: updateView){
+            view.handlePlayerUnoUpdate(new GameEvent(this, players.get(i)));
+            //view.handleUnoUpdate(new GameEvent(this, players.get(i)));
+        }
+    }
+
     public void addGameView(GameUpdate view){
         updateView.add(view);
     }
@@ -90,7 +104,7 @@ public class Game {
     }
 
     public void placeCards(Card handCard, Card topDiscardCard){
-        if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
+        if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType() || handCard.getBrightCardType().toString().equals("WILD_DRAW") || handCard.getBrightCardType().toString().equals("WILD"))) {
             replaceDeckCard(handCard);
             if(handCard.getBrightCardType() == CardType.FLIP){
                 flipSide();
@@ -101,7 +115,7 @@ public class Game {
                 status = false;
             }
             status = false;
-        } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
+        } else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType() || handCard.getDarkCardType().toString().equals("WILD"))) {
             this.getCurrentPlayer().removeCardFromHand(handCard);
             this.getDeck().addToDiscardPile(handCard);
             status = false;
@@ -109,13 +123,13 @@ public class Game {
             replaceDeckCard(handCard);
             if(handCard.getDarkCardType() == CardType.FLIP){
                 flipSide();
-                status = false;
+                //status = false;
             }
             else if(handCard.getDarkCardType() == CardType.DRAW){
                 for(int i =0; i<5; i++) {
                     this.getCurrentPlayer().addCardToHand(deck.drawCard());
                 }
-                status = false;
+                //status = false;
             }
             status = false;
         }

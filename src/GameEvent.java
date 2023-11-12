@@ -10,12 +10,20 @@ public class GameEvent extends EventObject {
     Card drawCard;
     Card removeHandCard;
     Boolean status;
+
+
+    Player player;
     //GameController gameController;
     public GameEvent(Game game, Card drawCard, Card removeHandCard, Boolean status) {
         super(game);
         this.drawCard = drawCard;
         this.removeHandCard = removeHandCard;
         this.status = status;
+    }
+
+    public GameEvent(Game game, Player player){
+        super(game);
+        this.player = player;
     }
 
     public String getDrawCard(){
@@ -28,5 +36,9 @@ public class GameEvent extends EventObject {
 
     public boolean getStatus(){
         return this.status;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

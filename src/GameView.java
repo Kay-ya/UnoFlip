@@ -11,6 +11,7 @@ public class GameView extends JFrame implements GameUpdate{
     public JMenuBar menuBar;
     JButton nextPlayer;
     JLabel status;
+    JLabel playerLabel;
     public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
@@ -26,12 +27,13 @@ public class GameView extends JFrame implements GameUpdate{
         game = new Game();
         cardsPanel = new JPanel();
         centerPanel = new JPanel();
+        eastPanel = new JPanel();
         game.addGameView(this);
         centerPanel.setBackground(Color.DARK_GRAY);
         cardsPanel.setBackground(Color.DARK_GRAY);
+        eastPanel.setBackground(Color.BLUE);
         westPanel = new JPanel();
         northPanel = new JPanel();
-        eastPanel = new JPanel();
         menuBar = new JMenuBar();
         menu = new JMenu("Game");
         menuItemSave = new JMenuItem("Save");
@@ -39,7 +41,7 @@ public class GameView extends JFrame implements GameUpdate{
         menu.add(menuItemSave);
         menu.add(menuItemExit);
         menuBar.add(menu);
-        textArea = new JTextArea(5, 30);
+        //textArea = new JTextArea(5, 30);
         scrollPane = new JScrollPane(cardsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -50,17 +52,24 @@ public class GameView extends JFrame implements GameUpdate{
         n = numberOfPlayers();
         for (int i = 0; i < n; i++){
             p = new Player( "Player " + (i+1) );
+            playerLabel = new JLabel("Player " + (i+1));
             for (int j = 0; j < 7; j++) {
                 p.addCardToHand(card = game.getDeck().drawCard());
             }
             game.addPlayer(p);
+            System.out.println("Player Hand: ");
+            for (Card playerHand: p.hand) {
+                System.out.println(playerHand.getBrightCardType());
+            }
+            //p.getHand().get(i);
         }
+        System.out.println("Player Hand: ");
 
         westPanel.setBackground(Color.DARK_GRAY);
 
         game.setCurrentPlayer(game.getPlayers().get(0));
         updateView(game);
-        controller = new GameController(game, GameView.this);
+        controller = new GameController(game, this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.add(scrollPane, BorderLayout.SOUTH);
@@ -68,13 +77,14 @@ public class GameView extends JFrame implements GameUpdate{
         this.add(westPanel, BorderLayout.WEST);
         this.add(menuBar, BorderLayout.NORTH);
         nextPlayer = new JButton("Next Player");
-        eastPanel.add(nextPlayer);
+        westPanel.add(nextPlayer);
         nextPlayer.addActionListener(controller);
         nextPlayer.setActionCommand("Next Player");
         status = new JLabel("Status: ");
         status.setOpaque(true);
         status.setBackground(Color.lightGray);
         westPanel.add(status);
+        eastPanel.add(playerLabel);
         this.pack();
         this.setVisible(true);
 
@@ -93,7 +103,6 @@ public class GameView extends JFrame implements GameUpdate{
     }
 
     public void updateView(Game game){
-        // bottom cards panel
         cardsPanel.removeAll();
         handSize = game.getCurrentPlayer().getHand().size();
         cardButtons = new JButton[handSize];
@@ -195,7 +204,7 @@ public class GameView extends JFrame implements GameUpdate{
     }
 
     public static void main(String[] args) {
-        new GameView();
+       new GameView();
     }
 
     @Override
@@ -211,6 +220,11 @@ public class GameView extends JFrame implements GameUpdate{
         else if(booleanStatus == false){
             status.setText("Status: Correct Card Selected");
         }
-        //System.out.print(status);
+    }
+    public void handlePlayerUnoUpdate(GameEvent e){
+        Player p = e.getPlayer();
+        //updateView(game);
+        System.out.println(p.getName());
+
     }
 }

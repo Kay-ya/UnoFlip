@@ -26,6 +26,7 @@ public class GameController implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        String chosenWildCardColor = "";
         System.out.println("Action performed");
         source = (JButton) e.getSource();
         topDiscardCard = game.getDeck().topCardFromDiscardPile();
@@ -33,6 +34,16 @@ public class GameController implements ActionListener {
         view.updateView(game);
         for (JButton button : view.getCardButtons()) {
             handCard = game.getCurrentPlayer().getHand().get(i);
+            if(handCard.getBrightCardType().toString().equals("WILD") || handCard.getBrightCardType().toString().equals("WILD_DRAW")){
+                //chosenWildCardColor =  view.getWildCardLightColor();
+                //topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
+                //handCard.setBrightColor(Color.valueOf(chosenWildCardColor));    //sets handCard color to color chosen by player
+            }
+            if(handCard.getDarkCardType().toString().equals("WILD") || handCard.getDarkCardType().toString().equals("WILD_DRAW")){
+                //chosenWildCardColor =  view.getWildCardDarkColor();
+                //topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+                //handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+            }
             if (Objects.equals(source.getText(), button.getText())) {
                 game.placeCards(handCard, topDiscardCard);
                 System.out.println("Card button clicked: " + button.getText());
@@ -49,7 +60,8 @@ public class GameController implements ActionListener {
 
         if(e.getActionCommand() == "Next Player"){
                 //game.nextPlayerIndex(z, view.n, game.getDirection());
-                game.getCurrentPlayer().getHand();
+                //game.getCurrentPlayer().getHand();
+                game.returnNextPlayer();
             }
 
         view.updateView(game);
