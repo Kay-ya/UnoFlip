@@ -128,4 +128,12 @@ public class PlayerTest {
         assertEquals("Player 1", player.getName(), "Player name should be 'Player 1'");
     }
 
+
+
+    @Test
+    public void testHand() {
+        assertEquals(0, player.getHand().size(), "Player hand should be empty");
+    }
 }
+
+
