@@ -8,6 +8,7 @@ public class GameController implements ActionListener {
     GameView view;
     JButton source;
     public JButton button;
+    String chosenWildCardColor;
     int size;
     Card handCard, topDiscardCard, drawnCard;
 
@@ -17,6 +18,7 @@ public class GameController implements ActionListener {
         button = new JButton();
         addCardListeners();
         view.getDeckButton().addActionListener(this);
+        chosenWildCardColor = "";
     }
 
     public void addCardListeners(){
@@ -24,9 +26,15 @@ public class GameController implements ActionListener {
             cardButton.addActionListener(this);
         }
     }
+
+    public String wildLightCard()
+    {
+        chosenWildCardColor = view.getWildLightCardColor();
+        return chosenWildCardColor;
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
-        String chosenWildCardColor = "";
+
         System.out.println("Action performed");
         source = (JButton) e.getSource();
         topDiscardCard = game.getDeck().topCardFromDiscardPile();
@@ -34,15 +42,26 @@ public class GameController implements ActionListener {
         view.updateView(game);
         for (JButton button : view.getCardButtons()) {
             handCard = game.getCurrentPlayer().getHand().get(i);
-            if(handCard.getBrightCardType().toString().equals("WILD") || handCard.getBrightCardType().toString().equals("WILD_DRAW")){
-                //chosenWildCardColor =  view.getWildCardLightColor();
-                //topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
-                //handCard.setBrightColor(Color.valueOf(chosenWildCardColor));    //sets handCard color to color chosen by player
+            if(game.getSide() && handCard.getBrightCardType() == CardType.WILD){
+                chosenWildCardColor =  view.getWildLightCardColor();
+                topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
+                handCard.setBrightColor(Color.valueOf(chosenWildCardColor));
+                  //sets handCard color to color chosen by player
             }
-            if(handCard.getDarkCardType().toString().equals("WILD") || handCard.getDarkCardType().toString().equals("WILD_DRAW")){
-                //chosenWildCardColor =  view.getWildCardDarkColor();
-                //topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
-                //handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+            else if(game.getSide() && handCard.getBrightCardType() == CardType.WILD_DRAW){
+                chosenWildCardColor =  view.getWildLightCardColor();
+                topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
+                handCard.setBrightColor(Color.valueOf(chosenWildCardColor));
+            }
+            else if(!game.getSide() && handCard.getDarkCardType() == CardType.WILD){
+                chosenWildCardColor =  view.getWildDarkCardColor();
+                topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+                handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+            }
+            else if(!game.getSide() && handCard.getDarkCardType() == CardType.WILD_DRAW){
+                chosenWildCardColor =  view.getWildDarkCardColor();
+                topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+                handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
             }
             if (Objects.equals(source.getText(), button.getText())) {
                 game.placeCards(handCard, topDiscardCard);
@@ -62,6 +81,7 @@ public class GameController implements ActionListener {
                 //game.nextPlayerIndex(z, view.n, game.getDirection());
                 //game.getCurrentPlayer().getHand();
                 game.returnNextPlayer();
+
             }
 
         view.updateView(game);

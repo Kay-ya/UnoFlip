@@ -9,19 +9,14 @@ public class GameView extends JFrame implements GameUpdate{
     public Card card;
     public JMenu menu;
     public JMenuBar menuBar;
-    JButton nextPlayer;
-    JLabel status;
-    JLabel playerLabel;
+    JButton nextPlayer, deckButton, discardButton;
+    JLabel status, playerLabel;
     public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
-    int n;
-    JTextArea textArea;
     JScrollPane scrollPane;
-
     Player p;
-    public int handSize;
-    public JButton deckButton, discardButton;
+    public int handSize, n;
     public GameView(){
         this.setTitle("Uno Flip");
         game = new Game();
@@ -75,6 +70,7 @@ public class GameView extends JFrame implements GameUpdate{
         this.add(scrollPane, BorderLayout.SOUTH);
         this.add(centerPanel, BorderLayout.CENTER);
         this.add(westPanel, BorderLayout.WEST);
+        this.add(eastPanel, BorderLayout.EAST);
         this.add(menuBar, BorderLayout.NORTH);
         nextPlayer = new JButton("Next Player");
         westPanel.add(nextPlayer);
@@ -83,6 +79,8 @@ public class GameView extends JFrame implements GameUpdate{
         status = new JLabel("Status: ");
         status.setOpaque(true);
         status.setBackground(Color.lightGray);
+        playerLabel.setOpaque(true);
+        playerLabel.setBackground(Color.lightGray);
         westPanel.add(status);
         eastPanel.add(playerLabel);
         this.pack();
@@ -207,6 +205,22 @@ public class GameView extends JFrame implements GameUpdate{
        new GameView();
     }
 
+    public String getWildLightCardColor(){
+        String[] option = {"RED", "BLUE", "GREEN", "YELLOW"};
+        String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
+                JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        return colorSelected;
+
+    }
+
+    public String getWildDarkCardColor(){
+        String[] option = {"TEAL", "PURPLE", "PINK", "ORANGE"};
+        String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
+                JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        return colorSelected;
+
+    }
+
     @Override
     public void handleUnoUpdate(GameEvent e) {
         String card = e.getDrawCard();
@@ -223,7 +237,8 @@ public class GameView extends JFrame implements GameUpdate{
     }
     public void handlePlayerUnoUpdate(GameEvent e){
         Player p = e.getPlayer();
-        //updateView(game);
+        String name = p.getName();
+        playerLabel.setText(name);
         System.out.println(p.getName());
 
     }
