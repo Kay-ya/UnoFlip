@@ -84,7 +84,7 @@ public class Game {
     }
 
     public void returnNextPlayer() {
-        int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 4, getDirection());
+        int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 2, getDirection());
         setCurrentPlayer(players.get(i));
         System.out.println(i);
         for (GameUpdate view : updateView) {
@@ -114,6 +114,7 @@ public class Game {
                 flipSide();
                 status = false;
             } else if (handCard.getBrightCardType() == CardType.DRAW) {
+                returnNextPlayer();
                 this.getCurrentPlayer().addCardToHand(deck.drawCard());
                 status = false;
             } else if (handCard.getBrightCardType() == CardType.REVERSE) {
@@ -123,6 +124,10 @@ public class Game {
                     System.out.println(players.get(i).getName());
                 }
                 status = false;
+            } else if (handCard.getBrightCardType() == CardType.SKIP) {
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+                returnNextPlayer();
+                returnNextPlayer();
             }
         }
             else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
@@ -135,6 +140,7 @@ public class Game {
                     flipSide();
                     //status = false;
                 } else if (handCard.getDarkCardType() == CardType.DRAW) {
+                    returnNextPlayer();
                     for (int i = 0; i < 5; i++) {
                         this.getCurrentPlayer().addCardToHand(deck.drawCard());
                     }
@@ -143,6 +149,13 @@ public class Game {
                 else if (handCard.getDarkCardType() == CardType.REVERSE) {
                     this.getCurrentPlayer().addCardToHand(deck.drawCard());
                     flipDirection();
+                }
+                else if (handCard.getDarkCardType() == CardType.SKIP) {
+                    int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 4, getDirection());
+                    System.out.println(i);
+                    for (GameUpdate view : updateView) {
+                        view.handlePlayerUnoUpdate(new GameEvent(this, players.get(i)));
+                    }
                 }
                 status = false;
             }

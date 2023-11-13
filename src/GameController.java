@@ -42,7 +42,7 @@ public class GameController implements ActionListener {
         view.updateView(game);
         for (JButton button : view.getCardButtons()) {
             handCard = game.getCurrentPlayer().getHand().get(i);
-            if(game.getSide() && handCard.getBrightCardType() == CardType.WILD){
+            /**if(game.getSide() && handCard.getBrightCardType() == CardType.WILD){
                 chosenWildCardColor =  view.getWildLightCardColor();
                 topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
                 handCard.setBrightColor(Color.valueOf(chosenWildCardColor));
@@ -62,7 +62,7 @@ public class GameController implements ActionListener {
                 chosenWildCardColor =  view.getWildDarkCardColor();
                 topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
                 handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
-            }
+            }**/
             if (Objects.equals(source.getText(), button.getText())) {
                 game.placeCards(handCard, topDiscardCard);
                 System.out.println("Card button clicked: " + button.getText());

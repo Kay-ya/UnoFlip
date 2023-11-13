@@ -198,6 +198,9 @@ public class GameView extends JFrame implements GameUpdate{
         Object[] option = {2, 3, 4};
         Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         int number = (int) selectNumberOfPlayers;
+        if(JOptionPane.CANCEL_OPTION ==2){
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
         return number;
     }
 
