@@ -66,9 +66,9 @@ public class PlayerTest {
         assertEquals(player.hand.size(), 3);
         player.removeCardFromHand(card);
         assertEquals(player.hand.size(), 2);
-        player.removeCardFromHand(card);
+        player.removeCardFromHand(card1);
         assertEquals(player.hand.size(), 1);
-        player.removeCardFromHand(card);
+        player.removeCardFromHand(card2);
         assertFalse(player.hand.contains(card), "The hand should not contain the removed card");
     }
     /**
