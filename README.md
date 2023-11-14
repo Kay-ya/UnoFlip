@@ -1,5 +1,5 @@
 # SYSC3110: UNO FLIP
-SYSC3110 Group 28 UNO FLIP Game Project Version 2.0.1;
+SYSC3110 Group 28 UNO FLIP Game Project Version: 2.0.1;
 
 11/08/2023
     
