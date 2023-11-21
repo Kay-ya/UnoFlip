@@ -5,12 +5,16 @@ public class Game {
     private ArrayList<Player> players; //Stores the player name in an ArrayList
     private Player currentPlayer;
     List<GameUpdate> updateView;
-    GameView view;
-    private Boolean direction; // true (default) = clockwise,
+    private Boolean direction, side, placed; // true (default) = clockwise,
     private Deck deck;
     boolean status;
-    private Boolean side; // true = Bright side, false = Dark side
+    private static String chosenWildLightCardColor = "";
 
+    private static String chosenWildDarkCardColor = "";
+
+    /**
+     * Constructor for the Game class. Initializes the game state, including players, deck, and other parameters.
+     */
     public Game() {
         this.players = new ArrayList<>();
         this.direction = false;
@@ -18,50 +22,95 @@ public class Game {
         this.deck = new Deck();
         this.side = true;
         this.status = false;
+        this.placed = false;
         updateView = new ArrayList<>();
-        //view = new GameView();
     }
 
+    /**
+     * Getter for the list of players in the game.
+     *
+     * @return An ArrayList containing Player objects.
+     */
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Adds a player to the game.
+     *
+     * @param player The Player object to be added to the game.
+     */
     public void addPlayer(Player player) {
         players.add(player);
     }
 
+    /**
+     * Getter for the current player in the game.
+     *
+     * @return The current Player object.
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Sets the current player in the game.
+     *
+     * @param currentPlayer The Player object to be set as the current player.
+     */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Getter for the game direction (clockwise or counter-clockwise).
+     *
+     * @return true if the direction is clockwise, false otherwise.
+     */
     public Boolean getDirection() {
         return direction;
     }
 
+    /**
+     * Flips the game direction between clockwise and counter-clockwise.
+     */
     public void flipDirection() {
         direction = !direction;
     }
 
+    /**
+     * Getter for the game deck.
+     *
+     * @return The Deck object representing the game deck.
+     */
     public Deck getDeck() {
         return deck;
     }
 
+    /**
+     * Sets the game deck to the provided Deck object.
+     *
+     * @param deck The Deck object to be set as the game deck.
+     */
     public void setDeck(Deck deck) {
         this.deck = deck;
     }
 
+    /**
+     * Getter for the game side (Bright side or Dark side).
+     *
+     * @return true if the game is on the Bright side, false if on the Dark side.
+     */
     public Boolean getSide() {
         return side;
     }
 
+    /**
+     * Flips the game side between Bright side and Dark side.
+     */
     public void flipSide() {
         side = !side;
     }
-
 
     /**
      * Returns the player index of the card to see which direction the game is being played.
@@ -83,33 +132,77 @@ public class Game {
         return curIndex;
     }
 
+    public int totalNumberOfPlayer(){
+        return  GameView.sendNumberOfPlayers() + GameView.sendNumberOfAIPlayers();
+    }
+
+    /**
+     * Returns the next player.
+     */
     public void returnNextPlayer() {
-        int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 2, getDirection());
+        //int i = 0;
+        //int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), GameView.sendNumberOfPlayers(), getDirection());
+        int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), totalNumberOfPlayer(), getDirection());
         setCurrentPlayer(players.get(i));
-        System.out.println(i);
         for (GameUpdate view : updateView) {
             view.handlePlayerUnoUpdate(new GameEvent(this, players.get(i)));
         }
-    }
+        System.out.println(i);
 
+    }
+    /**
+     * Adds a GameUpdate listener to the list of views.
+     *
+     * @param view The GameUpdate object to be added as a listener.
+     */
     public void addGameView(GameUpdate view) {
         updateView.add(view);
     }
 
+    /**
+     * Replaces a card in the player's hand with the specified card and adds the replaced card to the discard pile.
+     *
+     * @param handCard The card to be replaced in the player's hand.
+     */
     public void replaceDeckCard(Card handCard) {
         this.getCurrentPlayer().removeCardFromHand(handCard);
         this.getDeck().addToDiscardPile(handCard);
     }
 
-    public void implementWildCard(Card handCard, Card topDiscardCard, String chosenWildCardColor){
+    /**
+     * Sets the Wild card color for the light side.
+     * @param handCard
+     * @param topDiscardCard
+     * @param chosenWildCardColor
+     */
+
+    public void setBrightWildCardColor(Card handCard, Card topDiscardCard, String chosenWildCardColor){
         topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
         handCard.setBrightColor(Color.valueOf(chosenWildCardColor));
     }
 
+    /**
+     * Sets the Wild card color for the dark side.
+     * @param handCard
+     * @param topDiscardCard
+     * @param chosenWildCardColor
+     */
+    public void setDarkWildCardColor(Card handCard, Card topDiscardCard, String chosenWildCardColor){
+        topDiscardCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+        handCard.setDarkColor(Color.valueOf(chosenWildCardColor));
+    }
 
+    /**
+     * manages the discard pile card placement in accordance with the game's regulations
+     * and modifies the status of the game.
+     * @param handCard        The card from the player's hand to be placed on the discard pile.
+     * @param topDiscardCard  The top card from the discard pile.
+     */
     public void placeCards(Card handCard, Card topDiscardCard) {
         if (this.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
+            //placed = false;
             replaceDeckCard(handCard);
+            placed = true;
             if (handCard.getBrightCardType() == CardType.FLIP) {
                 flipSide();
                 status = false;
@@ -124,71 +217,90 @@ public class Game {
                     System.out.println(players.get(i).getName());
                 }
                 status = false;
-            } else if (handCard.getBrightCardType() == CardType.SKIP) {
+            }
+            else if (handCard.getBrightCardType() == CardType.SKIP){
                 this.getCurrentPlayer().addCardToHand(deck.drawCard());
                 returnNextPlayer();
+            }
+        }
+        else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
+            placed = true;
+            this.getCurrentPlayer().removeCardFromHand(handCard);
+            this.getDeck().addToDiscardPile(handCard);
+            status = false;
+            replaceDeckCard(handCard);
+            if (handCard.getDarkCardType() == CardType.FLIP) {
+                flipSide();
+            } else if (handCard.getDarkCardType() == CardType.DRAW) {
                 returnNextPlayer();
-            }
-        }
-            else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
-                this.getCurrentPlayer().removeCardFromHand(handCard);
-                this.getDeck().addToDiscardPile(handCard);
-                status = false;
-                //removeCard = handCard;
-                replaceDeckCard(handCard);
-                if (handCard.getDarkCardType() == CardType.FLIP) {
-                    flipSide();
-                    //status = false;
-                } else if (handCard.getDarkCardType() == CardType.DRAW) {
-                    returnNextPlayer();
-                    for (int i = 0; i < 5; i++) {
-                        this.getCurrentPlayer().addCardToHand(deck.drawCard());
-                    }
-                    //status = false;
-                }
-                else if (handCard.getDarkCardType() == CardType.REVERSE) {
+                for (int i = 0; i < 5; i++) {
                     this.getCurrentPlayer().addCardToHand(deck.drawCard());
-                    flipDirection();
                 }
-                else if (handCard.getDarkCardType() == CardType.SKIP) {
-                    int i = nextPlayerIndex(getPlayers().indexOf(currentPlayer), 4, getDirection());
-                    System.out.println(i);
-                    for (GameUpdate view : updateView) {
-                        view.handlePlayerUnoUpdate(new GameEvent(this, players.get(i)));
-                    }
+            }
+            else if (handCard.getDarkCardType() == CardType.REVERSE) {
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+                flipDirection();
+            }
+            else if (handCard.getDarkCardType() == CardType.SKIP){
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+                for(int i=0; i<players.size(); i++) {
+                    returnNextPlayer();
                 }
-                status = false;
             }
-            /**else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD){
-                String chosenWildCardColor = "";
-                chosenWildCardColor =  view.getWildLightCardColor();
-                topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
-                handCard.setBrightColor(Color.valueOf(chosenWildCardColor));    //sets handCard color to color chosen by player
-            }**/
-            /**else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD_DRAW){
-             replaceDeckCard(handCard);
-             String chosenWildCardColor = "";
-             chosenWildCardColor =  view.getWildCardColor();
-             topDiscardCard.setBrightColor(Color.valueOf(chosenWildCardColor));
-             handCard.setBrightColor(Color.valueOf(chosenWildCardColor));
-             for(int i =0; i<2; i++) {
-             this.getCurrentPlayer().addCardToHand(deck.drawCard());
-             }
-             status = false;
-             } else if (!this.getSide() && handCard.getDarkCardType() == CardType.WILD) {
-             replaceDeckCard(handCard);
-             status = false;
-             } else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD){
-             replaceDeckCard(handCard);
-             status = false;
-             }**/
-            else {
-                System.out.println("Invalid Card");
-                status = true;
-            }
-            for (GameUpdate view : updateView) {
-                view.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard, status));
-            }
+            status = false;
         }
+        else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD){
+        setBrightWildCardColor(handCard, topDiscardCard, chosenWildLightCardColor);
+        replaceDeckCard(handCard);
+        }
+         else if (this.getSide() && handCard.getBrightCardType() == CardType.WILD_DRAW){
+         replaceDeckCard(handCard);
+         setBrightWildCardColor(handCard, topDiscardCard, chosenWildLightCardColor);
+         replaceDeckCard(handCard);
+         returnNextPlayer();
+         for(int i =0; i<2; i++) {
+            this.getCurrentPlayer().addCardToHand(deck.drawCard());
+         }
+         status = false;
+         } else if (!this.getSide() && handCard.getDarkCardType() == CardType.WILD) {
+            setDarkWildCardColor(handCard, topDiscardCard, chosenWildDarkCardColor);
+            replaceDeckCard(handCard);
 
+         status = false;
+         } else if (!this.getSide() && handCard.getDarkCardType() == CardType.WILD_DRAW){
+            setDarkWildCardColor(handCard, topDiscardCard, chosenWildDarkCardColor);
+            replaceDeckCard(handCard);
+            returnNextPlayer();
+            for(int i =0; i<5; i++) {
+                this.getCurrentPlayer().addCardToHand(deck.drawCard());
+            }
+         status = false;
+         }
+        else {
+            System.out.println("Invalid Card");
+            status = true;
+        }
+        for (GameUpdate v : updateView) {
+            v.handleUnoUpdate(new GameEvent(this, topDiscardCard, handCard, status));
+        }
+        for(GameUpdate v: updateView){
+            v.handlePlayerPlaced(new GameEvent(this, placed));
+        }
     }
+
+    /**
+     * Sets the color the player chooses for the wild card for the light side.
+     * @param chosenWildLightCardColor
+     */
+    public void setChosenWildLightCardColor(String chosenWildLightCardColor) {
+        this.chosenWildLightCardColor = chosenWildLightCardColor;
+    }
+
+    /**
+     * Sets the color the player chooses for the wild card for the dark side.
+     * @param chosenWildDarkCardColor
+     */
+    public void setChosenWildDarkCardColor(String chosenWildDarkCardColor) {
+        this.chosenWildDarkCardColor = chosenWildDarkCardColor;
+    }
+}
