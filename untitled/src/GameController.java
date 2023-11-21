@@ -92,7 +92,11 @@ public class GameController implements ActionListener {
             //----------------- Human player replaced with AI player
             if(e.getActionCommand() == "Next Player"){
                 game.getCurrentPlayer().displayHand(true);
-                if(handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType()) {
+                if(game.getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
+                    game.placeCards(handCard, topDiscardCard);
+                    isMatchFound = true;
+                }
+                if(!game.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
                     game.placeCards(handCard, topDiscardCard);
                     isMatchFound = true;
                 }
@@ -108,6 +112,7 @@ public class GameController implements ActionListener {
         if(!isMatchFound){
             drawnCard = game.getDeck().drawCard();
             game.getCurrentPlayer().addCardToHand(drawnCard);
+            game.returnNextPlayer();
             System.out.println("New Card Drawn");
         }
         if (source == view.getDeckButton()) {
