@@ -10,13 +10,16 @@ public class GameView extends JFrame implements GameUpdate{
     public JMenu menu;
     public JMenuBar menuBar;
     JButton nextPlayer, deckButton, discardButton;
-    JLabel status, playerLabel;
+    public static JLabel status, playerLabel;
     public JMenuItem menuItemSave, menuItemExit;
     public GameController controller;
     public JButton[] cardButtons;
     JScrollPane scrollPane;
     Player p;
-    public int handSize, n;
+    public int handSize, n, m;
+
+    public static int number;
+    public static int AINumber;
     public GameView(){
         this.setTitle("Uno Flip");
         game = new Game();
@@ -36,6 +39,8 @@ public class GameView extends JFrame implements GameUpdate{
         menu.add(menuItemSave);
         menu.add(menuItemExit);
         menuBar.add(menu);
+        number = 0;
+        AINumber = 0;
         //textArea = new JTextArea(5, 30);
         scrollPane = new JScrollPane(cardsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -45,20 +50,23 @@ public class GameView extends JFrame implements GameUpdate{
         deckButton.setOpaque(true);
         deckButton.setBackground(Color.lightGray);
         n = numberOfPlayers();
-        for (int i = 0; i < n; i++){
-            p = new Player( "Player " + (i+1) );
-            playerLabel = new JLabel("Player " + (i+1));
+        m = numberOfAIPlayers();
+        for (int i = 0; i < (n); i++){
+            p = new Player( "H" + (i+1) );
+            playerLabel = new JLabel("H" + (i+1));
             for (int j = 0; j < 7; j++) {
                 p.addCardToHand(card = game.getDeck().drawCard());
             }
             game.addPlayer(p);
-            System.out.println("Player Hand: ");
-            for (Card playerHand: p.hand) {
-                System.out.println(playerHand.getBrightCardType());
-            }
-            //p.getHand().get(i);
         }
-        System.out.println("Player Hand: ");
+        for (int i = 0; i < m; i++){
+            p = new Player( "AI" + (i+1) );
+            playerLabel = new JLabel("AI" + (i+1));
+            for (int j = 0; j < 7; j++) {
+                p.addCardToHand(card = game.getDeck().drawCard());
+            }
+            game.addPlayer(p);
+        }
 
         westPanel.setBackground(Color.DARK_GRAY);
 
@@ -82,14 +90,18 @@ public class GameView extends JFrame implements GameUpdate{
         playerLabel.setOpaque(true);
         playerLabel.setBackground(Color.lightGray);
         westPanel.add(status);
+        playerLabel.setText("H1");
         eastPanel.add(playerLabel);
         this.pack();
         this.setVisible(true);
+        this.setEnabled(true);
+        cardsPanel.setEnabled(true);
+        centerPanel.setEnabled(true);
 
     }
 
     public JButton[] getCardButtons() {
-        return cardButtons;
+            return cardButtons;
     }
 
     public JButton getDeckButton() {
@@ -99,53 +111,52 @@ public class GameView extends JFrame implements GameUpdate{
     public JButton getPlayerButton(){
         return nextPlayer;
     }
-
     public void updateView(Game game){
         cardsPanel.removeAll();
         handSize = game.getCurrentPlayer().getHand().size();
         cardButtons = new JButton[handSize];
-            for (int i = 0; i < handSize; i++) {
-                String cardName = game.getCurrentPlayer().getHand().get(i).toString(game.getSide());
-                cardButtons[i] = new JButton(cardName);
-                cardButtons[i].setPreferredSize(new Dimension(150, 275));
-                if(cardButtons[i].getText().contains("GREEN")) {
-                    cardButtons[i].setOpaque(true);
-                    cardButtons[i].setBackground(Color.GREEN.darker());
-                } else if (cardButtons[i].getText().contains("BLUE")) {
-                    cardButtons[i].setOpaque(true);
-                    cardButtons[i].setBackground(Color.BLUE.brighter());
-                } else if (cardButtons[i].getText().contains("RED")) {
-                    cardButtons[i].setOpaque(true);
-                    cardButtons[i].setBackground(Color.RED.brighter());
-                }
-                else if(cardButtons[i].getText().contains("YELLOW")){
-                    cardButtons[i].setOpaque(true);
-                    cardButtons[i].setBackground(Color.ORANGE);
-                }
-                else if (cardButtons[i].getText().contains("TEAL")) {
-                    cardButtons[i].setOpaque(true);
-                    Color Teal = new Color(0,255,255);
-                    cardButtons[i].setBackground(Teal);
-                }
-                else if (cardButtons[i].getText().contains("PINK")) {
-                    cardButtons[i].setOpaque(true);
-                    Color Pink = new Color(255, 192, 203);
-                    cardButtons[i].setBackground(Pink);
-                }
-                else if (cardButtons[i].getText().contains("ORANGE")) {
-                    cardButtons[i].setOpaque(true);
-                    Color Orange = new Color(255, 165, 0);
-                    cardButtons[i].setBackground(Orange);
-                }
-                else if (cardButtons[i].getText().contains("PURPLE")) {
-                    cardButtons[i].setOpaque(true);
-                    Color Purple= new Color(102,0,153);
-                    cardButtons[i].setBackground(Purple.darker());
-                }
-                cardsPanel.add(cardButtons[i]);
+        for (int i = 0; i < handSize; i++) {
+            String cardName = game.getCurrentPlayer().getHand().get(i).toString(game.getSide());
+            cardButtons[i] = new JButton(cardName);
+            cardButtons[i].setPreferredSize(new Dimension(150, 275));
+            if(cardButtons[i].getText().contains("GREEN")) {
+                cardButtons[i].setOpaque(true);
+                cardButtons[i].setBackground(Color.GREEN.darker());
+            } else if (cardButtons[i].getText().contains("BLUE")) {
+                cardButtons[i].setOpaque(true);
+                cardButtons[i].setBackground(Color.BLUE.brighter());
+            } else if (cardButtons[i].getText().contains("RED")) {
+                cardButtons[i].setOpaque(true);
+                cardButtons[i].setBackground(Color.RED.brighter());
             }
+            else if(cardButtons[i].getText().contains("YELLOW")){
+                cardButtons[i].setOpaque(true);
+                cardButtons[i].setBackground(Color.ORANGE);
+            }
+            else if (cardButtons[i].getText().contains("TEAL")) {
+                cardButtons[i].setOpaque(true);
+                Color Teal = new Color(0,255,255);
+                cardButtons[i].setBackground(Teal);
+            }
+            else if (cardButtons[i].getText().contains("PINK")) {
+                cardButtons[i].setOpaque(true);
+                Color Pink = new Color(255, 192, 203);
+                cardButtons[i].setBackground(Pink);
+            }
+            else if (cardButtons[i].getText().contains("ORANGE")) {
+                cardButtons[i].setOpaque(true);
+                Color Orange = new Color(255, 165, 0);
+                cardButtons[i].setBackground(Orange);
+            }
+            else if (cardButtons[i].getText().contains("PURPLE")) {
+                cardButtons[i].setOpaque(true);
+                Color Purple= new Color(102,0,153);
+                cardButtons[i].setBackground(Purple.darker());
+            }
+            cardsPanel.add(cardButtons[i]);
+        }
         scrollPane.revalidate();
-            scrollPane.repaint();
+        scrollPane.repaint();
         cardsPanel.revalidate();
         cardsPanel.repaint();
         centerPanel.removeAll();
@@ -193,21 +204,31 @@ public class GameView extends JFrame implements GameUpdate{
         centerPanel.revalidate();
         centerPanel.repaint();
     }
-
     public int numberOfPlayers(){
-        Object[] option = {2, 3, 4};
+        Object[] option = {2, 3, 4, 5, 6};
         Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        int number = (int) selectNumberOfPlayers;
-        if(JOptionPane.CANCEL_OPTION ==2){
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        }
+        number = (int) selectNumberOfPlayers;
         return number;
     }
 
-    public static void main(String[] args) {
-       new GameView();
+    public int numberOfAIPlayers(){
+        Object[] option = {2, 3, 4, 5, 6};
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of AI players:", "Select AI Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        AINumber = (int) selectNumberOfPlayers;
+        return AINumber;
+    }
+    public static int sendNumberOfPlayers(){
+        return number;
     }
 
+    public static int sendNumberOfAIPlayers(){
+        return AINumber;
+    }
+
+    /**
+     * Gets the wild card color for the light side.
+     * @return String
+     */
     public String getWildLightCardColor(){
         String[] option = {"RED", "BLUE", "GREEN", "YELLOW"};
         String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
@@ -215,15 +236,16 @@ public class GameView extends JFrame implements GameUpdate{
         return colorSelected;
 
     }
-
+    /**
+     * Gets the wild card color for the dark side.
+     * @return String
+     */
     public String getWildDarkCardColor(){
         String[] option = {"TEAL", "PURPLE", "PINK", "ORANGE"};
         String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
                 JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         return colorSelected;
-
     }
-
     @Override
     public void handleUnoUpdate(GameEvent e) {
         String card = e.getDrawCard();
@@ -241,8 +263,30 @@ public class GameView extends JFrame implements GameUpdate{
     public void handlePlayerUnoUpdate(GameEvent e){
         Player p = e.getPlayer();
         String name = p.getName();
+        System.out.println("PLAYER NAMEE: " + name);
         playerLabel.setText(name);
         System.out.println(p.getName());
+    }
 
+    public void handlePlayerPlaced(GameEvent e)
+    {
+        if(e.getCardPlaced() == true){
+            handSize = game.getCurrentPlayer().getHand().size();
+            cardButtons = new JButton[handSize];
+            for (int i = 0; i < handSize; i++) {
+               // cardButtons[i].setEnabled(false);
+            }
+            //cardsPanel.setVisible(false);
+            //this.getComponent(0).setEnabled(false);
+            //this.setEnabled(false);
+
+            //centerPanel.setEnabled(false);
+        }
+        else{
+            cardsPanel.setEnabled(true);
+        }
+    }
+    public static void main(String[] args) {
+        new GameView();
     }
 }
