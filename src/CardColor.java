@@ -1,4 +1,4 @@
-public enum Color {
+public enum CardColor {
     // Light Side Colors
     BLUE,
     GREEN,

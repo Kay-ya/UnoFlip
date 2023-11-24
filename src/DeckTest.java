@@ -1,8 +1,5 @@
-import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +20,9 @@ class DeckTest {
         deck = new ArrayList<>();
         side = new ArrayList<>();
         discardCard = new ArrayList<>();
-        card1 = new Card(CardType.TWO, Color.BLUE, CardType.FIVE, Color.TEAL);
-        card2 = new Card(CardType.EIGHT, Color.RED, CardType.NINE, Color.PINK);
-        card3 = new Card(CardType.ONE, Color.GREEN, CardType.SEVEN, Color.ORANGE);
+        card1 = new Card(CardType.TWO, CardColor.BLUE, CardType.FIVE, CardColor.TEAL);
+        card2 = new Card(CardType.EIGHT, CardColor.RED, CardType.NINE, CardColor.PINK);
+        card3 = new Card(CardType.ONE, CardColor.GREEN, CardType.SEVEN, CardColor.ORANGE);
         side.add(card1);
         side.add(card2);
         side.add(card3);

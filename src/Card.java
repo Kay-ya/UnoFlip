@@ -1,10 +1,10 @@
 public class Card {
     private final CardType brightType;
-    private Color brightColor;
+    private CardColor brightColor;
     private final CardType darkType;
-    private Color darkColor;
+    private CardColor darkColor;
 
-    public Card(CardType bCT, Color bC, CardType dCT, Color dC) {
+    public Card(CardType bCT, CardColor bC, CardType dCT, CardColor dC) {
         this.brightType = bCT;
         this.brightColor = bC;
         this.darkType = dCT;
@@ -32,7 +32,7 @@ public class Card {
      * Returns the color on the light side of the deck
      * @return Color
      */
-    public Color getBrightColor() {
+    public CardColor getBrightColor() {
         return brightColor;
     }
 
@@ -40,7 +40,7 @@ public class Card {
      * Returns the color on the dark side of the deck
      * @return Color
      */
-    public Color getDarkColor() {
+    public CardColor getDarkColor() {
         return darkColor;
     }
 
@@ -48,13 +48,13 @@ public class Card {
      * Set the bright side color for the current instance of the card
      * @param color the color that the card is going to be set to
      */
-    public void setBrightColor(Color color){ this.brightColor = color; }
+    public void setBrightColor(CardColor color){ this.brightColor = color; }
 
     /**
      * Set the dark side color for the current instance of the card
      * @param color the color that the card is going to be set to
      */
-    public void setDarkColor(Color color){ this.darkColor = color; }
+    public void setDarkColor(CardColor color){ this.darkColor = color; }
 
     /**
      * Prints the card of the side the user is player (dark or light) and returns the

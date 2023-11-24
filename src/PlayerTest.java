@@ -12,9 +12,9 @@ public class PlayerTest {
     public void setUp() {
 
         player = new Player("Player 1");
-        card = new Card(CardType.FIVE, Color.BLUE, CardType.SKIP, Color.PINK);
-        card1 = new Card(CardType.FLIP, Color.GREEN, CardType.EIGHT, Color.TEAL);
-        card2 = new Card(CardType.FIVE, Color.ORANGE, CardType.WILD, Color.WILD);
+        card = new Card(CardType.FIVE, CardColor.BLUE, CardType.SKIP, CardColor.PINK);
+        card1 = new Card(CardType.FLIP, CardColor.GREEN, CardType.EIGHT, CardColor.TEAL);
+        card2 = new Card(CardType.FIVE, CardColor.ORANGE, CardType.WILD, CardColor.WILD);
     }
 
     @AfterEach
