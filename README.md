@@ -1,25 +1,55 @@
 # SYSC3110: UNO FLIP
-SYSC3110 Group 28 UNO FLIP Game Project Version 1.0;
+SYSC3110 Group 28 UNO FLIP Game Project Version 1.0.1;
 
-10/22/2023
+11/08/2023
     
 ## Description:
 
-This game is a text-based UNO game that is played in the command line and is  between 2 - 4 players
+The classic card game [UNO Flip](https://en.wikipedia.org/wiki/Uno_Flip!), is built using Java, the Swing graphical user interface, and the Model-View-Controller (MVC) architecture. 
 
-The goal of the game is to be the first to clear the cards on one's hand by 
-matching the cards they have in their hand with the top card of the discard pile based on either number or colour
+## Development Roadmap
 
-It is based on the [Uno flip! card game](https://en.wikipedia.org/wiki/Uno_Flip!)
+Deliverable 1:
+- [x] Special Cards
+- [x] TextBased Implementation
+- [x] Junit Testing
 
-This program is implemented in Java
+Deliverable 2:
+- [x] MVC
+- [ ] Swing UI
+- [ ] Next Player Button
+- [ ] Junit Testing
 
+Deliverable 3:
+- [ ] Last Card UNO! button
+- [ ] Scoring Mechanism
+- [ ] AI Player Capability
+- [ ] Junit Testing 
 
-
+Deliverable 4:
+- [ ] Undo/Redo Capabilities
+- [ ] Reply Capability
+- [ ] Save/Load Features
+- [ ] Junit Testing
+      
 ## Installation:
-Java 17 or later is recommended
 
-
+1. Clone the Repository
+```bash
+git clone https://github.com/Kay-ya/UnoFlip
+```
+2. Navigate to the Project Directory
+```bash
+# TODO
+```
+3. Compile the Source Code
+```bash
+# TODO
+```
+4. Run the Game
+```bash
+# TODO
+```
 
 ## Gameplay features:
 
@@ -47,17 +77,18 @@ The game continues until one player successfully clears their hand of cards.
 
 The winner is declared, and the game ends.
 
-## Usage:
-
-1. Checkout the UNO repository from GitHub
-2. Run the Game.java class to begin the game
-
 ## Authors:
 
-Samson Ha <br>
-Keya Patel <br>
-Nikita Sara Vijay <br>
-Mofiopefoluwa Olatunji <br>
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/Kay-ya"><img src="https://avatars.githubusercontent.com/u/62533585?v=4?s=100" width="100px;" alt="Keya Patel"/><br /><sub><b>Keya Patel</b></sub></a><br /><a href="https://github.com/Kay-ya/UnoFlip/commits?author=Kay-ya" title="">💻</a></td>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/nikitasv457"><img src="https://avatars.githubusercontent.com/u/147352295?v=4?s=100" width="100px;" alt="Nikita Sara Vijay"/><br /><sub><b>Nikita Sara Vijay</b></sub></a><br /><a href="https://github.com/Kay-ya/UnoFlip/commits?author=nikitasv457" title="Code">💻</a> </td>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/Fiop3"><img src="https://avatars.githubusercontent.com/u/92556363?v=4?s=100" width="100px;" alt="Mofiopefoluwa Olatunji"/><br /><sub><b>Mofiopefoluwa Olatunji</b></sub></a><br /><a href="https://github.com/Kay-ya/UnoFlip/commits?author=Fiop3" title="Code">💻</a></td>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/SamsonHa2"><img src="https://avatars.githubusercontent.com/u/56209528?v=4?s=100" width="100px;" alt="Samson Ha"/><br /><sub><b>Samson Ha</b></sub></a><br /><a href="https://github.com/Kay-ya/UnoFlip/commits?author=SamsonHa2" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 CopyrightÂ© 2023 Keya Patel, Samson Ha, Nikita Sara Vijay, Mofiopefoluwa Olatunji
 
