@@ -161,7 +161,7 @@ public class GameView extends JFrame implements GameUpdate{
 
     @Override
     public void handlePlaceCardEvent(PlaceCardEvent e) {
-        ArrayList<Card> hand = e.gethand();
+        ArrayList<Card> hand = e.getHand();
         Card topDiscard = e.getTopDiscard();
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());

@@ -10,7 +10,7 @@ public class PlaceCardEvent extends GameEvent {
         this.topDiscard = topDiscard;
     }
 
-    public ArrayList<Card> gethand() {
+    public ArrayList<Card> getHand() {
         return hand;
     }
 
