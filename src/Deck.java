@@ -13,14 +13,16 @@ public class Deck {
     public Deck(){
         this.cards = new ArrayList<>();
         this.discardPile = new ArrayList<>();
-        List<CardSideDetails> lightSideDetails = createSideDetails(new Color[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW});
-        List<CardSideDetails> darkSideDetails = createSideDetails(new Color[]{Color.PINK, Color.TEAL, Color.ORANGE, Color.PURPLE});
+        List<CardSideDetails> lightSideDetails = createSideDetails(new CardColor[]{CardColor.BLUE, CardColor.GREEN, CardColor.RED, CardColor.YELLOW});
+        List<CardSideDetails> darkSideDetails = createSideDetails(new CardColor[]{CardColor.PINK, CardColor.TEAL, CardColor.ORANGE, CardColor.PURPLE});
 
         for (int i = 0; i < lightSideDetails.size() && i < darkSideDetails.size(); i++) {
             CardSideDetails light = lightSideDetails.get(i);
             CardSideDetails dark = darkSideDetails.get(i);
             cards.add(new Card(light.type, light.color, dark.type, dark.color));
         }
+        // starting card
+        addToDiscardPile(drawCard());
     }
 
     /**
@@ -28,8 +30,8 @@ public class Deck {
      */
     private static class CardSideDetails {
         CardType type;
-        Color color;
-        CardSideDetails(CardType type, Color color) {
+        CardColor color;
+        CardSideDetails(CardType type, CardColor color) {
             this.type = type;
             this.color = color;
 
@@ -41,7 +43,7 @@ public class Deck {
      * @param colors possible colors for bright or dark side that is being generated
      * @return List<CardSideDetails>
      */
-    private List<CardSideDetails> createSideDetails(Color[] colors) {
+    private List<CardSideDetails> createSideDetails(CardColor[] colors) {
         List<CardSideDetails> sideDetails = new ArrayList<>();
         List<CardType> cardTypes = Arrays.stream(CardType.values())
                 .filter(card -> card != CardType.WILD && card != CardType.WILD_DRAW)
@@ -50,7 +52,7 @@ public class Deck {
 
 
         // all card except the wild cards
-        for (Color color: colors){
+        for (CardColor color: colors){
             for (int i = 0; i < 2; i++){
                 for (CardType type: cardTypes) {
                     sideDetails.add(new CardSideDetails(type, color));
@@ -60,7 +62,7 @@ public class Deck {
 
         for (int i = 0; i< 4; i++){
             for (CardType type: wildTypes) {
-                sideDetails.add(new CardSideDetails(type, Color.WILD));
+                sideDetails.add(new CardSideDetails(type, CardColor.WILD));
             }
         }
         Collections.shuffle(sideDetails);

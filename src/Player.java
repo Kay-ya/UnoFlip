@@ -182,4 +182,13 @@ public class Player {
     public String getName() {
         return name;
     }
+
+    /**
+     * Returns the player's hand
+     * @return String Player's hand
+     */
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+
 }

@@ -11,8 +11,8 @@ class CardTest {
     @BeforeEach
     void setUp() {
 
-        card = new Card(CardType.DRAW, Color.BLUE, CardType.FIVE, Color.PINK);
-        card1 = new Card(CardType.DRAW, Color.GREEN, CardType.WILD, Color.TEAL);
+        card = new Card(CardType.DRAW, CardColor.BLUE, CardType.FIVE, CardColor.PINK);
+        card1 = new Card(CardType.DRAW, CardColor.GREEN, CardType.WILD, CardColor.TEAL);
     }
 
     @AfterEach
@@ -33,13 +33,13 @@ class CardTest {
 
     @Test
     void getBrightColor() {
-        assertEquals(Color.BLUE, card.getBrightColor());
-        assertNotEquals(Color.RED, card1.getBrightColor());
+        assertEquals(CardColor.BLUE, card.getBrightColor());
+        assertNotEquals(CardColor.RED, card1.getBrightColor());
     }
 
     @Test
     void getDarkColor() {
-        assertEquals(Color.PINK, card.getDarkColor());
-        assertNotEquals(Color.ORANGE, card1.getDarkColor());
+        assertEquals(CardColor.PINK, card.getDarkColor());
+        assertNotEquals(CardColor.ORANGE, card1.getDarkColor());
     }
 }
