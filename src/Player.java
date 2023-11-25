@@ -1,11 +1,8 @@
 import java.util.ArrayList;
 
 public class Player {
-
     public ArrayList<Card> hand;
-
     private String name;
-
     private int playerScore;
     public Player(String name){
         this.name = name;

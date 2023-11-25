@@ -3,9 +3,9 @@ import java.util.stream.Collectors;
 
 public class Deck {
 
-    private List<Card> cards;
+    private List<Card> cards, discardPile;
 
-    private List<Card> discardPile;
+    //private List<Card> discardPile;
 
     /**
      * Populates the deck with both light and dark side of UNO cards
