@@ -1,239 +1,215 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
-
+import java.util.ArrayList;
 
 public class GameView extends JFrame implements GameUpdate{
-    public JPanel cardsPanel, centerPanel, westPanel, northPanel, eastPanel;
-    public Game game;
-    public Card card;
-    public JMenu menu;
-    public JMenuBar menuBar;
-    JButton nextPlayer, deckButton, discardButton;
-    JLabel status, playerLabel;
-    public JMenuItem menuItemSave, menuItemExit;
-    public GameController controller;
-    public JButton[] cardButtons;
+    Game model;
     JScrollPane scrollPane;
-    Player p;
-    public int handSize, n;
+    JPanel handPanel, centerPanel, statusPanel;
+    JLabel statusLabel, playerLabel;
+    JButton btnNextPlayer;
+    GameController controller;
     public GameView(){
-        this.setTitle("Uno Flip");
-        game = new Game();
-        cardsPanel = new JPanel();
+        super("UnoFlip");
+        Container contentPane = this.getContentPane();
+
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        model = new Game();
+        try {
+            model.initialize(numberOfPlayers(), numberOfAIPlayers());
+        }catch (Exception e){        //Milestone  3-----------------
+            System.out.println("Number of players must be at least 1");
+            System.exit(0);      //Milestone  3-------------------
+        }
+        model.addView(this);
+        controller = new GameController(model, this);
+
+        // add items to frame
+        // Status section at the top
+        statusPanel = new JPanel();
+        statusPanel.setBackground(Color.LIGHT_GRAY);
+
+        playerLabel = new JLabel();
+        updateCurrentTurn(model.getCurrentPlayer());
+        statusPanel.add(playerLabel);
+
+        statusLabel = new JLabel();
+        updateStatus(Status.PLACEHOLDER);
+        statusPanel.add(statusLabel);
+
+        btnNextPlayer = new JButton("Next Player");
+        btnNextPlayer.addActionListener(controller);
+        statusPanel.add(btnNextPlayer);
+
+        contentPane.add(statusPanel);
+
+        // center section with draw from deck and top discard
         centerPanel = new JPanel();
-        eastPanel = new JPanel();
-        game.addGameView(this);
         centerPanel.setBackground(Color.DARK_GRAY);
-        cardsPanel.setBackground(Color.DARK_GRAY);
-        eastPanel.setBackground(Color.BLUE);
-        westPanel = new JPanel();
-        northPanel = new JPanel();
-        menuBar = new JMenuBar();
-        menu = new JMenu("Game");
-        menuItemSave = new JMenuItem("Save");
-        menuItemExit = new JMenuItem("Exit");
-        menu.add(menuItemSave);
-        menu.add(menuItemExit);
-        menuBar.add(menu);
-        //textArea = new JTextArea(5, 30);
-        scrollPane = new JScrollPane(cardsPanel);
+        updateDiscardPile(model.getDeck().topCardFromDiscardPile(), model.getSide());
+        contentPane.add(centerPanel);
+
+        // cards in hand section
+        handPanel = new JPanel();
+        handPanel.setBackground(Color.DARK_GRAY);
+
+        scrollPane = new JScrollPane(handPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        deckButton = new JButton("Deck");
-        deckButton.setBorderPainted(false);
-        deckButton.setOpaque(true);
-        deckButton.setBackground(Color.lightGray);
-        n = numberOfPlayers();
-        for (int i = 0; i < n; i++){
-            p = new Player( "Player " + (i+1) );
-            playerLabel = new JLabel("Player " + (i+1));
-            for (int j = 0; j < 7; j++) {
-                p.addCardToHand(card = game.getDeck().drawCard());
-            }
-            game.addPlayer(p);
-            System.out.println("Player Hand: ");
-            for (Card playerHand: p.hand) {
-                System.out.println(playerHand.getBrightCardType());
-            }
-            //p.getHand().get(i);
+        updateHandCards(model.getCurrentPlayer().getHand(), model.getSide());
+
+        contentPane.add(scrollPane);
+        //Enables the cards panel //Milestone  3-----
+        int componentCnt = handPanel.getComponents().length;
+        for (int i = 0; i < componentCnt; i++) {
+            handPanel.getComponent(i).setEnabled(true);
         }
-        System.out.println("Player Hand: ");
+        centerPanel.getComponent(0).setEnabled(true); //Enables the cards panel //Milestone  3-------------------------------------
 
-        westPanel.setBackground(Color.DARK_GRAY);
-
-        game.setCurrentPlayer(game.getPlayers().get(0));
-        updateView(game);
-        controller = new GameController(game, this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
-        this.add(scrollPane, BorderLayout.SOUTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(westPanel, BorderLayout.WEST);
-        this.add(eastPanel, BorderLayout.EAST);
-        this.add(menuBar, BorderLayout.NORTH);
-        nextPlayer = new JButton("Next Player");
-        westPanel.add(nextPlayer);
-        nextPlayer.addActionListener(controller);
-        nextPlayer.setActionCommand("Next Player");
-        status = new JLabel("Status: ");
-        status.setOpaque(true);
-        status.setBackground(Color.lightGray);
-        playerLabel.setOpaque(true);
-        playerLabel.setBackground(Color.lightGray);
-        westPanel.add(status);
-        eastPanel.add(playerLabel);
         this.pack();
         this.setVisible(true);
-
     }
 
-    public JButton[] getCardButtons() {
-        return cardButtons;
+    public void updateStatus(Status status){
+        String text = "Status: " + status.toString() + "                    ";
+        statusLabel.setText(text);
     }
 
-    public JButton getDeckButton() {
-        return deckButton;
+    public void updateCurrentTurn(Player player){
+        String text = "Current Turn: " + player.getName() + "                    ";
+        playerLabel.setText(text);
     }
 
-    public JButton getPlayerButton(){
-        return nextPlayer;
-    }
-    public void updateView(Game game){
-        cardsPanel.removeAll();
-        handSize = game.getCurrentPlayer().getHand().size();
-        cardButtons = new JButton[handSize];
-        for (int i = 0; i < handSize; i++) {
-            String cardName = game.getCurrentPlayer().getHand().get(i).toString(game.getSide());
-            cardButtons[i] = new JButton(cardName);
-            cardButtons[i].setPreferredSize(new Dimension(150, 275));
-            if(cardButtons[i].getText().contains("GREEN")) {
-                cardButtons[i].setOpaque(true);
-                cardButtons[i].setBackground(Color.GREEN.darker());
-            } else if (cardButtons[i].getText().contains("BLUE")) {
-                cardButtons[i].setOpaque(true);
-                cardButtons[i].setBackground(Color.BLUE.brighter());
-            } else if (cardButtons[i].getText().contains("RED")) {
-                cardButtons[i].setOpaque(true);
-                cardButtons[i].setBackground(Color.RED.brighter());
-            }
-            else if(cardButtons[i].getText().contains("YELLOW")){
-                cardButtons[i].setOpaque(true);
-                cardButtons[i].setBackground(Color.ORANGE);
-            }
-            else if (cardButtons[i].getText().contains("TEAL")) {
-                cardButtons[i].setOpaque(true);
-                Color Teal = new Color(0,255,255);
-                cardButtons[i].setBackground(Teal);
-            }
-            else if (cardButtons[i].getText().contains("PINK")) {
-                cardButtons[i].setOpaque(true);
-                Color Pink = new Color(255, 192, 203);
-                cardButtons[i].setBackground(Pink);
-            }
-            else if (cardButtons[i].getText().contains("ORANGE")) {
-                cardButtons[i].setOpaque(true);
-                Color Orange = new Color(255, 165, 0);
-                cardButtons[i].setBackground(Orange);
-            }
-            else if (cardButtons[i].getText().contains("PURPLE")) {
-                cardButtons[i].setOpaque(true);
-                Color Purple= new Color(102,0,153);
-                cardButtons[i].setBackground(Purple.darker());
-            }
-            cardsPanel.add(cardButtons[i]);
-        }
-        scrollPane.revalidate();
-        scrollPane.repaint();
-        cardsPanel.revalidate();
-        cardsPanel.repaint();
+    public void updateDiscardPile(Card card, Boolean side){
         centerPanel.removeAll();
-        discardButton = new JButton(game.getDeck().topCardFromDiscardPile().toString(game.getSide()));
-        discardButton.setPreferredSize(new Dimension(150,275));
-        if(discardButton.getText().contains("GREEN")) {
-            discardButton.setOpaque(true);
-            discardButton.setBackground(Color.GREEN.darker());
-        } else if (discardButton.getText().contains("BLUE")) {
-            discardButton.setOpaque(true);
-            discardButton.setBackground(Color.BLUE.brighter());
-        } else if (discardButton.getText().contains("RED")) {
-            discardButton.setOpaque(true);
-            discardButton.setBackground(Color.RED.brighter());
-        }
-        else if(discardButton.getText().contains("YELLOW")){
-            discardButton.setOpaque(true);
-            discardButton.setBackground(Color.ORANGE);
-        }
-        else if (discardButton.getText().contains("TEAL")) {
-            discardButton.setOpaque(true);
-            Color Teal = new Color(0,255,255);
-            discardButton.setBackground(Teal);
-        }
-        else if (discardButton.getText().contains("PINK")) {
-            discardButton.setOpaque(true);
-            Color Pink = new Color(255, 192, 203);
-            discardButton.setBackground(Pink);
-        }
-        else if (discardButton.getText().contains("ORANGE")) {
-            discardButton.setOpaque(true);
-            Color Orange = new Color(255, 165, 0);
-            discardButton.setBackground(Orange);
-        }
-        else if (discardButton.getText().contains("PURPLE")) {
-            discardButton.setOpaque(true);
-            Color Purple = new Color(102,0,153);
-            discardButton.setBackground(Purple.darker());
-        }
+        JButton drawButton = new JButton("Draw Card");
+        drawButton.setPreferredSize(new Dimension(150,275));
+        drawButton.addActionListener(controller);
+        centerPanel.add(drawButton);
 
-        deckButton.setPreferredSize(new Dimension(150,275));
-        centerPanel.add(deckButton);
-        centerPanel.add(discardButton);
+        JButton btn = cardToButton(card, side);
+        //btn.setEnabled(false);
 
+        centerPanel.add(btn);
         centerPanel.revalidate();
         centerPanel.repaint();
     }
-    public int numberOfPlayers(){
+
+    public void updateHandCards(ArrayList<Card> hand, Boolean side){
+        handPanel.removeAll();
+        for (int i = 0; i < hand.size(); i++) {
+            Card card  = hand.get(i);
+            JButton btn = cardToButton(card, side);
+            btn.setActionCommand(String.valueOf(i));
+            btn.addActionListener(controller);
+            handPanel.add(btn);
+        }
+        scrollPane.revalidate();
+        scrollPane.repaint();
+        handPanel.revalidate();
+        handPanel.repaint();
+    }
+
+    private JButton cardToButton(Card card, Boolean side) {
+        JButton btn = new JButton(card.toString(side));
+        btn.setPreferredSize(new Dimension(150, 275));
+        btn.setOpaque(true);
+        if(btn.getText().contains("GREEN")) {
+            btn.setBackground(Color.GREEN.darker());
+        }
+        else if (btn.getText().contains("BLUE")) {
+            btn.setBackground(Color.BLUE.brighter());
+        }
+        else if (btn.getText().contains("RED")) {
+            btn.setBackground(Color.RED.brighter());
+        }
+        else if (btn.getText().contains("YELLOW")) {
+            btn.setBackground(Color.ORANGE);
+        }
+        else if (btn.getText().contains("TEAL")) {
+            Color Teal = new Color(0,255,255);
+            btn.setBackground(Teal);
+        }
+        else if (btn.getText().contains("PINK")) {
+            Color Pink = new Color(255, 192, 203);
+            btn.setBackground(Pink);
+        }
+        else if (btn.getText().contains("ORANGE")) {
+            Color Orange = new Color(255, 165, 0);
+            btn.setBackground(Orange);
+        }
+        else if (btn.getText().contains("PURPLE")) {
+            Color Purple= new Color(102,0,153);
+            btn.setBackground(Purple.darker());
+        }
+        return btn;
+    }
+    public int numberOfPlayers() {
         Object[] option = {2, 3, 4};
-        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        int number = (int) selectNumberOfPlayers;
-        return number;
-    }
-    public String getWildLightCardColor(){
-        String[] option = {"RED", "BLUE", "GREEN", "YELLOW"};
-        String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
-                JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        return colorSelected;
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of Human players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
 
+        //Milestone  3-------------------------------------
+        if(selectNumberOfPlayers != null)
+            return (int) selectNumberOfPlayers;
+        else
+            return 0;
     }
-    public String getWildDarkCardColor(){
-        String[] option = {"TEAL", "PURPLE", "PINK", "ORANGE"};
-        String colorSelected = (String) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color",
-                JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        return colorSelected;
+    public int numberOfAIPlayers(){
+        Object[] option = {2, 3, 4, 5, 6};
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of AI players:", "Select AI Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
 
+        //Milestone  3-------------------------------------
+        if(selectNumberOfPlayers != null)
+            return (int) selectNumberOfPlayers;
+        else
+            return 0;
     }
-    @Override
-    public void handleUnoUpdate(GameEvent e) {
-        String card = e.getDrawCard();
-        JButton button = new JButton(card);
-        cardsPanel.add(button);
-
-        Boolean booleanStatus =e.getStatus();
-        if(booleanStatus == true){
-            status.setText("Status: Invalid card");
-        }
-        else if(booleanStatus == false){
-            status.setText("Status: Correct Card Selected");
-        }
-    }
-    public void handlePlayerUnoUpdate(GameEvent e){
-        Player p = e.getPlayer();
-        String name = p.getName();
-        playerLabel.setText(name);
-        System.out.println(p.getName());
-    }
-
     public static void main(String[] args) {
         new GameView();
+    }
+
+    @Override
+    public void handleNextPlayerEvent(NextPlayerEvent e) {
+        Player player = e.getPlayer();
+        updateStatus(Status.PLACEHOLDER);
+        updateCurrentTurn(player);
+        updateHandCards(player.getHand(), model.getSide());
+    }
+
+    @Override
+    public void handleDrawCardEvent(DrawCardEvent e) {
+        ArrayList<Card> hand = e.gethand();
+        updateStatus(Status.PLACEHOLDER);
+        updateHandCards(hand, model.getSide());
+    }
+
+    @Override
+    public void handlePlaceCardEvent(PlaceCardEvent e) {
+        ArrayList<Card> hand = e.getHand();
+        Card topDiscard = e.getTopDiscard();
+        updateHandCards(hand, model.getSide());
+        updateDiscardPile(topDiscard, model.getSide());
+
+    }
+
+    public CardColor getWildCardColor(){
+        CardColor[] option;
+        if (model.getSide()){
+            option = new CardColor[]{CardColor.BLUE, CardColor.RED, CardColor.GREEN, CardColor.YELLOW};
+        }
+        else {
+            option = new CardColor[]{CardColor.PINK, CardColor.TEAL, CardColor.ORANGE, CardColor.PURPLE};
+        }
+
+        CardColor colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+
+        //Milestone  3-------------------------------------
+        while (colorSelected == null){
+            colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Please choose a color to proceed:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        }
+
+        return colorSelected;
     }
 }
