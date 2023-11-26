@@ -232,8 +232,8 @@ public class Game {
      * Starts the round and increments the round as the game begins.
      * @return int
      */
-    public int startNewRound(){
-        return currentRound++;
+    public void startNewRound(){
+        currentRound++;
     }
 
     /**
