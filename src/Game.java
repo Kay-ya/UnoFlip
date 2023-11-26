@@ -4,11 +4,11 @@ import java.util.List;
 public class Game {
     private ArrayList <Player> players; //Stores the player name in an ArrayList
     private Player currentPlayer, displayedPlayer;
-    private Boolean direction, side, isPlaced, isMatchFound; // true (default) = clockwise, true = Bright side, false = Dark side
+    private Boolean direction, side; // true (default) = clockwise, true = Bright side, false = Dark side
     private Deck deck;
     private List<GameView> views;
     ArrayList<Card> cards;
-    private int currentRound, trackPlayer, totalScore;
+    private int currentRound, trackPlayer;
     private Status status;
 
     /**
@@ -23,21 +23,9 @@ public class Game {
         this.side = true;
         this.currentRound =1;
         this.trackPlayer =0;
-        this.isPlaced = false;
-        this.isMatchFound = false;
         this.views = new ArrayList<>();
         this.cards = new ArrayList<>();
     }
-
-    /**
-     * Getter for the list of players in the game.
-     *
-     * @return An ArrayList containing Player objects.
-     */
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
 
     /**
      * Adds a player to the game.
@@ -65,16 +53,6 @@ public class Game {
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
-
-    /**
-     * Getter for the game direction (clockwise or counter-clockwise).
-     *
-     * @return true if the direction is clockwise, false otherwise.
-     */
-    public Boolean getDirection() {
-        return direction;
-    }
-
     /**
      * Flips the game direction between clockwise and counter-clockwise.
      */
@@ -89,15 +67,6 @@ public class Game {
      */
     public Deck getDeck() {
         return deck;
-    }
-
-    /**
-     * Sets the game deck to the provided Deck object.
-     *
-     * @param deck The Deck object to be set as the game deck.
-     */
-    public void setDeck(Deck deck) {
-        this.deck = deck;
     }
 
     /**
@@ -116,10 +85,6 @@ public class Game {
         side = !side;
     }
 
-    public Status getStatus(){
-        return this.status;
-    }
-
     /**
      * Adds a GameUpdate listener to the list of views.
      *
@@ -131,11 +96,11 @@ public class Game {
 
     /**
      * Initializes AI and Human Players in the game.
-     * @param numHumanPlayers
+     * @param numPlayers
      * @param numAIPlayers
      */
     public void initialize(int numPlayers, int numAIPlayers){ // need test, possible point of failure
-        if (numPlayers < 1) {
+        if (numPlayers + numAIPlayers < 1) {
             throw new IllegalArgumentException("Number of players must be at least 1");
         }
 
@@ -143,14 +108,14 @@ public class Game {
         for (int i = 0; i < numPlayers; i++){
             p = new Player( "Human Player " + (i+1) );
             for (int j = 0; j < 7; j++) {
-                p.addCardToHand(getDeck().drawCard());
+                p.addCardToHand(deck.drawCard());
             }
             addPlayer(p);
         }
         for (int i = 0; i < numAIPlayers; i++){
             p = new Player( "AI Player " + (i+1) );
             for (int j = 0; j < 7; j++) {
-                p.addCardToHand(getDeck().drawCard());
+                p.addCardToHand(deck.drawCard());
             }
             addPlayer(p);
         }
@@ -181,15 +146,16 @@ public class Game {
     /**
      * Iterates through the next player when user presses 'Next Player' button.
      */
-    public void nextPlayer(CardColor selectedColor) {
+    public void nextPlayer() {
+        boolean isMatchFound = false;
         //AI IMPL BEGINS
+        CardColor selectedColor;
         Card topDiscardCard = deck.topCardFromDiscardPile();
         if(getCurrentPlayer().getName().contains("AI")){
             // placeCard(cardIndex, selectedColor);
             cards = displayedPlayer.getHand();
             int i=0;
             for(Card handCards : cards){ //Loops over hand cards of current player
-                System.out.println(handCards.getBrightCardType() + " : " + handCards.getBrightCardType() + " : " + getSide());
                 if(getSide() && (handCards.getBrightColor() == topDiscardCard.getBrightColor()) || handCards.getBrightCardType() == topDiscardCard.getBrightCardType() || (handCards.getBrightColor() == CardColor.WILD)) {
                     selectedColor = CardColor.RED; //Sets the default colour of AI Player WILD CARD to RED
                     placeCard(i, selectedColor);
@@ -197,7 +163,6 @@ public class Game {
                     break;
                 }
                 if(!getSide() && (handCards.getDarkColor() == topDiscardCard.getDarkColor() || handCards.getDarkCardType() == topDiscardCard.getDarkCardType() || (handCards.getDarkColor() == CardColor.WILD))) {
-
                     selectedColor = CardColor.PINK; //Sets the default colour of AI Player WILD CARD to PINK
                     placeCard(i, selectedColor);
                     isMatchFound = true;
@@ -206,7 +171,7 @@ public class Game {
                 i++;
             }
             if(!isMatchFound){
-                getCurrentPlayer().addCardToHand(getDeck().drawCard());
+                drawCard();
                 System.out.println("New Card Drawn");
             }
         }
@@ -214,14 +179,31 @@ public class Game {
         int i = nextPlayerIndex(players.indexOf(currentPlayer), players.size(), direction);
         setCurrentPlayer(players.get(i));
         displayedPlayer = currentPlayer;
-        //updateStatus();
+        status = Status.NEW_TURN;
         for (GameUpdate view : views) {
-            view.handleNextPlayerEvent(new NextPlayerEvent(this, currentPlayer));
+            view.handleNextPlayerEvent(new NextPlayerEvent(this, currentPlayer, status));
             trackPlayer++;
             if(trackPlayer == players.size()) {
                 trackPlayer = 0;
+                for(Player p: players){
+                    System.out.println(p.getName());
+                    if(this.getSide()) {
+                        p.setPlayerScore(p.calculateTotalPointsForPlayerHand(side));
+                        System.out.println("Get player BRIGHT" + " " + p.getName() + " " + p.getPlayerScore());
+                        view.handleUpdateScoreEvent(new UpdateScoreEvent(this, p.getPlayerScore(), p.getName(), status));
+                    }
+                    else {
+                        p.setPlayerScore(p.calculateTotalPointsForPlayerHand(!side));
+                        System.out.println("Get player DARK" + " " + p.getName() + " " + p.getPlayerScore());
+                        view.handleUpdateScoreEvent(new UpdateScoreEvent(this, p.getPlayerScore(), p.getName(), status));
+                    }
+                    if(p.getPlayerScore() > 500 || p.getPlayerScore() == 500){
+                        System.out.println(p.getName() + " WINS!");
+                        view.handleUpdateScoreEvent(new UpdateScoreEvent(this, p.getPlayerScore(), p.getName(), status));
+                    }
+                }
                 startNewRound();
-                view.handleUpdateScoreEvent(new UpdateScoreEvent(this, getCurrentRound(), currentPlayer.getPlayerScore()));
+                view.handleUpdateScoreEvent(new UpdateScoreEvent(this, getCurrentRound(), status));
             }
         }
     }
@@ -230,11 +212,11 @@ public class Game {
      * Draws a card from the deck and hands in to the current players hand
      */
     public void drawCard() {
-        Card drawnCard = getDeck().drawCard();
+        Card drawnCard = deck.drawCard();
         displayedPlayer.addCardToHand(drawnCard);
-        //updateStatus();
+        status = Status.CARD_DRAWN;
         for (GameUpdate view : views) {
-            view.handleDrawCardEvent(new DrawCardEvent(this, displayedPlayer.getHand()));
+            view.handleDrawCardEvent(new DrawCardEvent(this, displayedPlayer.getHand(), status));
         }
     }
 
@@ -260,39 +242,24 @@ public class Game {
      * @param selectedColor
      */
     public boolean placeCard(int cardIndex, CardColor selectedColor) {
-
+        boolean isPlaced = false;
+        status = Status.CARD_PLACED;
         Card handCard = displayedPlayer.getHand().get(cardIndex);
         Card topDiscardCard = deck.topCardFromDiscardPile();
         int index = nextPlayerIndex(players.indexOf(displayedPlayer), players.size(), direction);
         Player nextPlayer = players.get(index);
-
-        // if bright and color or card type match
+        // if light and color or card type match
         if (side && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
-            int score = getCurrentPlayer().calculateTotalPointsForPlayerHand(side);
-            currentPlayer.setPlayerScore(score);
-            System.out.println("Normal Bright " + currentPlayer.getPlayerScore());
             if (handCard.getBrightCardType() == CardType.FLIP) {
-                int score1 = getCurrentPlayer().calculateTotalPointsForPlayerHand(side);
-                currentPlayer.setPlayerScore(score1);
-                System.out.println("FLIP Bright " + currentPlayer.getPlayerScore());
                 flipSide();
             }
             else if (handCard.getBrightCardType() == CardType.DRAW) {
-                int score1 = getCurrentPlayer().calculateTotalPointsForPlayerHand(side);
-                currentPlayer.setPlayerScore(score1);
-                System.out.println("DRAW Bright " + currentPlayer.getPlayerScore());
                 nextPlayer.addCardToHand(deck.drawCard());
             }
             else if (handCard.getBrightCardType() == CardType.REVERSE) {
-                int score1 = getCurrentPlayer().calculateTotalPointsForPlayerHand(side);
-                currentPlayer.setPlayerScore(score1);
-                System.out.println("Reverse Bright " + currentPlayer.getPlayerScore());
                 flipDirection();
             }
             else if (handCard.getBrightCardType() == CardType.SKIP) {
-                int score1 = getCurrentPlayer().calculateTotalPointsForPlayerHand(side);
-                currentPlayer.setPlayerScore(score1);
-                System.out.println("Skip Bright " + currentPlayer.getPlayerScore());
                 int i = nextPlayerIndex(players.indexOf(currentPlayer), players.size(), direction);
                 setCurrentPlayer(players.get(i));
             }
@@ -318,6 +285,7 @@ public class Game {
             }
             displayedPlayer.removeCardFromHand(handCard);
             deck.addToDiscardPile(handCard);
+            isPlaced = true;
         }
         // light side wild cards
         else if (side && (handCard.getBrightColor() == CardColor.WILD)) {
@@ -335,8 +303,8 @@ public class Game {
         else if (!side && (handCard.getDarkColor() == CardColor.WILD)) {
             handCard.setDarkColor(selectedColor);
             if (handCard.getDarkCardType() == CardType.WILD_DRAW) {
-                Card drawnCard = new Card(null,null,null,null);
-                while (drawnCard.getDarkColor() != selectedColor){
+                Card drawnCard = new Card(null, null, null, null);
+                while (drawnCard.getDarkColor() != selectedColor) {
                     drawnCard = deck.drawCard();
                     nextPlayer.addCardToHand(drawnCard);
                 }
@@ -346,8 +314,12 @@ public class Game {
             deck.addToDiscardPile(handCard);
             isPlaced = true;
         }
+        else{
+            status = Status.INVALID;
+        }
+
         for (GameUpdate view : views) {
-            view.handlePlaceCardEvent(new PlaceCardEvent(this, displayedPlayer.getHand(), deck.topCardFromDiscardPile()));
+            view.handlePlaceCardEvent(new PlaceCardEvent(this, displayedPlayer.getHand(), deck.topCardFromDiscardPile(), status));
         }
         return isPlaced;
     }
