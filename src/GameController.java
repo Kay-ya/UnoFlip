@@ -32,6 +32,7 @@ public class GameController implements ActionListener {
         }
         else if (source.getText().equals("Draw Card")) {
             model.drawCard();
+            view.disablePanel();
         }
         else {
             CardColor selectedColor = null;

@@ -30,8 +30,8 @@ public class GameView extends JFrame implements GameUpdate{
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         model = new Game();
+        int humanPlayer = numberOfPlayers();
         try {
-            int humanPlayer = numberOfPlayers();
             model.initialize(humanPlayer, numberOfAIPlayers(humanPlayer));
             //if()
         }catch (Exception e){
@@ -87,11 +87,14 @@ public class GameView extends JFrame implements GameUpdate{
         updateHandCards(model.getCurrentPlayer().getHand(), model.getSide());
 
         contentPane.add(scrollPane);
-        int componentCnt = handPanel.getComponents().length;
+        /**int componentCnt = handPanel.getComponents().length;
         for (int i = 0; i < componentCnt; i++) {
             handPanel.getComponent(i).setEnabled(true);
         }
-        centerPanel.getComponent(0).setEnabled(true);
+        centerPanel.getComponent(0).setEnabled(true);**/
+        if(humanPlayer==0){
+            disablePanel();
+        }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
