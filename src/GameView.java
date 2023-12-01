@@ -19,6 +19,8 @@ public class GameView extends JFrame implements GameUpdate{
     JLabel playerScoreLabel;
     JButton btnNextPlayer;
     GameController controller;
+    JMenuBar menuBar;
+    JMenuItem  undo, redo, replay, saveGame,loadGame;
 
 
     /**
@@ -42,6 +44,22 @@ public class GameView extends JFrame implements GameUpdate{
         }
         model.addView(this);
         controller = new GameController(model, this);
+
+
+        //menubar initialization
+        menuBar = new JMenuBar();
+        menuBar.setLayout(new FlowLayout(0,1,1));
+        undo = new JMenuItem("Undo");
+        redo = new JMenuItem("Redo");
+        replay   = new JMenuItem("Replay");
+        saveGame = new JMenuItem("Save Game");
+        loadGame = new JMenuItem("Load Game");
+        menuBar.add(undo);
+        menuBar.add(redo);
+        menuBar.add(replay);
+        menuBar.add(saveGame);
+        menuBar.add(loadGame);
+        contentPane.add(menuBar);
 
         // add items to frame
         // Status section at the top
