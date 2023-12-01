@@ -10,8 +10,8 @@ public class PlaceCardEvent extends GameEvent {
      * @param hand
      * @param topDiscard
      */
-    public PlaceCardEvent(Game model, ArrayList<Card> hand, Card topDiscard) {
-        super(model);
+    public PlaceCardEvent(Game model, ArrayList<Card> hand, Card topDiscard, Status status) {
+        super(model, status);
         this.hand = hand;
         this.topDiscard = topDiscard;
     }

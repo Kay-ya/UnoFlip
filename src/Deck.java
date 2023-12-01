@@ -5,8 +5,6 @@ public class Deck {
 
     private List<Card> cards, discardPile;
 
-    //private List<Card> discardPile;
-
     /**
      * Populates the deck with both light and dark side of UNO cards
      */
@@ -21,8 +19,12 @@ public class Deck {
             CardSideDetails dark = darkSideDetails.get(i);
             cards.add(new Card(light.type, light.color, dark.type, dark.color));
         }
-        // starting card
-        addToDiscardPile(drawCard());
+        Card card = drawCard();
+        addToDiscardPile(card);
+        while(card.getBrightColor() == CardColor.WILD) {
+            card = drawCard();
+            addToDiscardPile(card);
+        }
     }
 
     /**
@@ -78,8 +80,6 @@ public class Deck {
         cards.remove(card);       
         return card;
     }
-
-
     /**
      * Adds the card to the discard pile after the user has
      * @param card card to add to discard pile

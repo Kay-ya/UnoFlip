@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Player {
     public ArrayList<Card> hand;
     private String name;
-    private int playerScore;
+    private int playerScore, totalPlayerScore;
     public Player(String name){
         this.name = name;
         hand = new ArrayList<>();
@@ -186,6 +186,12 @@ public class Player {
      */
     public ArrayList<Card> getHand() {
         return hand;
+    }
+
+    public int totalPlayerScore(){
+
+        totalPlayerScore+= getPlayerScore();
+        return totalPlayerScore;
     }
 
 }

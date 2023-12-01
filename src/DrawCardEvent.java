@@ -8,8 +8,8 @@ public class DrawCardEvent extends GameEvent {
      * @param model
      * @param hand
      */
-    public DrawCardEvent(Game model, ArrayList<Card> hand) {
-        super(model);
+    public DrawCardEvent(Game model, ArrayList<Card> hand, Status status) {
+        super(model, status);
         this.hand = hand;
     }
 

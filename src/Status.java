@@ -1,5 +1,5 @@
 public enum Status {
-    PLACEHOLDER,
+    NEW_TURN,
     INVALID,
     CARD_PLACED,
     CARD_DRAWN,
