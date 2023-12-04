@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -20,12 +21,39 @@ public class GameView extends JFrame implements GameUpdate{
     JButton btnNextPlayer;
     GameController controller;
 
-
+    //MENU BAR ITEMS
+    JMenuBar menuBar;
+    JMenuItem save, load, replayGame, redo, undo;
+    //JMenuItem file;
     /**
      * GameView constructor to initialize the JSwing classes and objects used in the view
      */
     public GameView(){
         super("UnoFlip");
+
+        //JMENU IMPLEMENTATION STARTS
+        menuBar = new JMenuBar();
+        menuBar.setLayout(new FlowLayout(0,1,1));
+
+        //JMenu
+        save = new JMenuItem("Save");
+        load = new JMenuItem("Load");
+        replayGame = new JMenuItem("Replay Game");
+        redo = new JMenuItem("Redo");
+        undo = new JMenuItem("Undo");
+
+        //adding menu
+        menuBar.add(save);
+        menuBar.add(load);
+        menuBar.add(replayGame);
+        menuBar.add(redo);
+        menuBar.add(undo);
+
+        this.setJMenuBar(menuBar);
+
+        //load.
+
+        //JMENU IMPLEMENTATION ENDS
         contentPane = this.getContentPane();
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -95,6 +123,13 @@ public class GameView extends JFrame implements GameUpdate{
         if(humanPlayer==0){
             disablePanel();
         }
+
+
+        save.setActionCommand("Save");
+        save.addActionListener(controller);
+
+        load.setActionCommand("Load");
+        load.addActionListener(controller);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();

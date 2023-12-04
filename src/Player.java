@@ -1,6 +1,10 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable {
     public ArrayList<Card> hand;
     private String name;
     private int playerScore, totalPlayerScore;
@@ -192,6 +196,15 @@ public class Player {
 
         totalPlayerScore+= getPlayerScore();
         return totalPlayerScore;
+    }
+
+    public void savePlayer(String fileName){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(this);
+            System.out.println("Player saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

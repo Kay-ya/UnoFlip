@@ -1,7 +1,11 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Deck {
+public class Deck implements Serializable {
 
     private List<Card> cards, discardPile;
 
@@ -95,5 +99,15 @@ public class Deck {
     public Card topCardFromDiscardPile(){
         return discardPile.get(discardPile.size()-1);
     }
+
+    public void saveDeck(String fileName){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(this);
+            System.out.println("Deck saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

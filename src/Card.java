@@ -1,4 +1,9 @@
-public class Card {
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Card implements Serializable {
     private final CardType brightType;
     private CardColor brightColor;
     private final CardType darkType;
@@ -83,4 +88,14 @@ public class Card {
         }
         return getDarkCardType().toString() + " " + getDarkColor().toString();
     }
+
+    public void saveCard(String fileName){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(this);
+            System.out.println("Card saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
