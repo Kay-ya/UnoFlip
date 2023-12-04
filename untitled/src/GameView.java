@@ -3,24 +3,42 @@ import java.awt.*;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import static java.lang.System.exit;
+
+
+/**
+ * This class represents the graphical user interface for the UNO game.
+ * It extends JFrame and implements the GameUpdate interface to handle game events.
+ */
 public class GameView extends JFrame implements GameUpdate{
     Game model;
     JScrollPane scrollPane;
+    Container contentPane;
     JPanel handPanel, centerPanel, statusPanel;
-    JLabel statusLabel, playerLabel;
+    JLabel statusLabel, playerLabel, roundLabel;
+    JLabel playerScoreLabel;
     JButton btnNextPlayer;
     GameController controller;
+
+
+    /**
+     * GameView constructor to initialize the JSwing classes and objects used in the view
+     */
     public GameView(){
         super("UnoFlip");
-        Container contentPane = this.getContentPane();
+        contentPane = this.getContentPane();
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         model = new Game();
+        int humanPlayer = numberOfPlayers();
         try {
-            model.initialize(numberOfPlayers(), numberOfAIPlayers());
-        }catch (Exception e){        //Milestone  3-----------------
+            model.initialize(humanPlayer, numberOfAIPlayers(humanPlayer));
+            //if()
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Number of players must be at least 1");
             System.out.println("Number of players must be at least 1");
-            System.exit(0);      //Milestone  3-------------------
+            exit(0);
+            //new GameView();
         }
         model.addView(this);
         controller = new GameController(model, this);
@@ -35,12 +53,20 @@ public class GameView extends JFrame implements GameUpdate{
         statusPanel.add(playerLabel);
 
         statusLabel = new JLabel();
-        updateStatus(Status.PLACEHOLDER);
+        updateStatus(Status.NEW_TURN);
         statusPanel.add(statusLabel);
 
         btnNextPlayer = new JButton("Next Player");
         btnNextPlayer.addActionListener(controller);
         statusPanel.add(btnNextPlayer);
+
+        playerScoreLabel = new JLabel();
+        updateScore(model.getCurrentPlayer().getPlayerScore(), model.getCurrentPlayer().getName());
+        //contentPane.add(playerScoreLabel);
+
+        roundLabel = new JLabel();
+        updateRound(model.getCurrentRound());
+        statusPanel.add(roundLabel);
 
         contentPane.add(statusPanel);
 
@@ -54,34 +80,70 @@ public class GameView extends JFrame implements GameUpdate{
         handPanel = new JPanel();
         handPanel.setBackground(Color.DARK_GRAY);
 
+
         scrollPane = new JScrollPane(handPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         updateHandCards(model.getCurrentPlayer().getHand(), model.getSide());
 
         contentPane.add(scrollPane);
-        //Enables the cards panel //Milestone  3-----
-        int componentCnt = handPanel.getComponents().length;
+        /**int componentCnt = handPanel.getComponents().length;
         for (int i = 0; i < componentCnt; i++) {
             handPanel.getComponent(i).setEnabled(true);
         }
-        centerPanel.getComponent(0).setEnabled(true); //Enables the cards panel //Milestone  3-------------------------------------
+        centerPanel.getComponent(0).setEnabled(true);**/
+        if(humanPlayer==0){
+            disablePanel();
+        }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);
     }
 
+
+    /**
+     * Displays the updated score of the players
+     * @param score
+     */
+    public void updateScore(int score, String playerName){
+        String text = "Score: " + score;
+        String player = "Player " + playerName;
+        playerScoreLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated round of the game
+     * @param round
+     */
+    public void updateRound(int round){
+        String text = "Round: " + round;
+        roundLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated status of the cards placed by the player in the game
+     * @param status
+     */
     public void updateStatus(Status status){
         String text = "Status: " + status.toString() + "                    ";
         statusLabel.setText(text);
     }
 
+    /**
+     * Displays the updated current turn of each player (Human or AI)
+     * @param player
+     */
     public void updateCurrentTurn(Player player){
         String text = "Current Turn: " + player.getName() + "                    ";
         playerLabel.setText(text);
     }
 
+    /**
+     * Displays the updated discard pile everytime a playable card is played
+     * @param card
+     * @param side
+     */
     public void updateDiscardPile(Card card, Boolean side){
         centerPanel.removeAll();
         JButton drawButton = new JButton("Draw Card");
@@ -90,13 +152,16 @@ public class GameView extends JFrame implements GameUpdate{
         centerPanel.add(drawButton);
 
         JButton btn = cardToButton(card, side);
-        //btn.setEnabled(false);
 
         centerPanel.add(btn);
         centerPanel.revalidate();
         centerPanel.repaint();
     }
-
+    /**
+     * Updates the hand displayed by each player upon selecting a card from the deck
+     * @param hand
+     * @param side
+     */
     public void updateHandCards(ArrayList<Card> hand, Boolean side){
         handPanel.removeAll();
         for (int i = 0; i < hand.size(); i++) {
@@ -112,8 +177,60 @@ public class GameView extends JFrame implements GameUpdate{
         handPanel.repaint();
     }
 
+    /**
+     * Updates and enables the center panel cards
+     */
+    public void enablePanel(){
+        this.centerPanel.getComponent(0).setEnabled(true);
+    }
+
+    /**
+     * Updates and disables the center panel and hand panel cards
+     */
+    public void disablePanel(){
+        int componentCnt = this.handPanel.getComponents().length;
+        for (int i = 0; i < componentCnt; i++) {
+            this.handPanel.getComponent(i).setEnabled(false);
+        }
+        this.centerPanel.getComponent(0).setEnabled(false); //Disables draw button
+    }
+
+    //*************Milestone 4
+    /** Returns an ImageIcon, or null if the path was invalid. */
+//    protected ImageIcon createImageIcon(String path) {
+//        java.net.URL imgURL = getClass().getResource(path);
+//        if (imgURL != null) {
+//            return new ImageIcon(imgURL);
+//        } else {
+//            System.err.println("Couldn't find file: " + path);
+//            return null;
+//        }
+//    }
+//*************Milestone 4
+    /**
+     * Displays the colour of cards on both dark and light side
+     * @param card
+     * @param side
+     * @return JButton
+     */
     private JButton cardToButton(Card card, Boolean side) {
-        JButton btn = new JButton(card.toString(side));
+        //JButton btn = new JButton(card.toString(side));
+
+        //*************Milestone 4
+        String imagePath = "images/" + card.toString(side)+".png";
+        Image image1 = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
+        JButton btn = new JButton(new ImageIcon(image1));
+        btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
+
+//        String imagePath = "images/" + card.toString(side)+".png";
+//        System.out.println(imagePath);
+//        ImageIcon image1 = createImageIcon(imagePath);
+//        JButton btn = new JButton(image1);
+//        btn.setToolTipText(card.toString(side));
+//        System.out.println(" ------------GET --------- " + btn.getToolTipText());
+
+        //*************Milestone 4
+
         btn.setPreferredSize(new Dimension(150, 275));
         btn.setOpaque(true);
         if(btn.getText().contains("GREEN")) {
@@ -146,21 +263,37 @@ public class GameView extends JFrame implements GameUpdate{
         }
         return btn;
     }
-    public int numberOfPlayers() {
-        Object[] option = {2, 3, 4};
-        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of Human players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
 
-        //Milestone  3-------------------------------------
+    /**
+     * Enables the user to select the number of human players
+     * @return int
+     */
+    public int numberOfPlayers() {
+        Object[] option = {0, 1, 2, 3, 4, 5, 6};
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of Human players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         if(selectNumberOfPlayers != null)
             return (int) selectNumberOfPlayers;
         else
             return 0;
     }
-    public int numberOfAIPlayers(){
-        Object[] option = {2, 3, 4, 5, 6};
-        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of AI players:", "Select AI Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
 
-        //Milestone  3-------------------------------------
+    /**
+     * Enables the user to select the number of AI players
+     * @param human
+     * @return int
+     */
+    public int numberOfAIPlayers(int human){
+        Object[] option = new Object[0];
+        if(human == 1) {
+           option = new Object[]{1, 2, 3, 4, 5, 6};
+        } else if (human == 0) {
+            option = new Object[]{2, 3, 4, 5, 6};
+        }
+        else{
+            option = new Object[]{0 ,1, 2, 3, 4, 5, 6};
+        }
+
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of AI players:", "Select AI Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         if(selectNumberOfPlayers != null)
             return (int) selectNumberOfPlayers;
         else
@@ -170,30 +303,61 @@ public class GameView extends JFrame implements GameUpdate{
         new GameView();
     }
 
+    /**
+     * Gets the score and Round following the MVC pattern
+     * @param e
+     */
+    @Override
+    public void handleUpdateScoreEvent(UpdateScoreEvent e) {
+        updateScore(e.getScore(), e.getPlayer());
+        if(e.getScore() > 500){
+            JOptionPane.showMessageDialog(this, e.getPlayer() + " WINS!!");
+            exit(0);
+        }
+        updateRound(e.getRound());
+    }
+
+    /**
+     * Gets the next player when user presses next player button following the MVC pattern
+     * @param e
+     */
     @Override
     public void handleNextPlayerEvent(NextPlayerEvent e) {
         Player player = e.getPlayer();
-        updateStatus(Status.PLACEHOLDER);
+        updateStatus(e.getStatus());
         updateCurrentTurn(player);
         updateHandCards(player.getHand(), model.getSide());
     }
 
+    /**
+     * Gets the drawn card and updates the hand of the current player
+     * @param e
+     */
     @Override
     public void handleDrawCardEvent(DrawCardEvent e) {
-        ArrayList<Card> hand = e.gethand();
-        updateStatus(Status.PLACEHOLDER);
+        ArrayList<Card> hand = e.getHand();
+        updateStatus(e.getStatus());
         updateHandCards(hand, model.getSide());
     }
 
+    /**
+     * Gets and updates the hand placed on the discard pile by the user
+     * @param e
+     */
     @Override
     public void handlePlaceCardEvent(PlaceCardEvent e) {
         ArrayList<Card> hand = e.getHand();
         Card topDiscard = e.getTopDiscard();
+        updateStatus(e.getStatus());
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());
 
     }
 
+    /**
+     * Returns the card color for the selected user input wild card
+     * @return CardColor
+     */
     public CardColor getWildCardColor(){
         CardColor[] option;
         if (model.getSide()){
@@ -204,8 +368,6 @@ public class GameView extends JFrame implements GameUpdate{
         }
 
         CardColor colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-
-        //Milestone  3-------------------------------------
         while (colorSelected == null){
             colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Please choose a color to proceed:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         }
