@@ -1,256 +1,377 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Game {
-    private ArrayList <Player> players; //Stores the player name in an ArrayList
-    private Player currentPlayer;
-    private Player displayedPlayer;
-    private Boolean direction; // true (default) = clockwise,
-    private Deck deck;
-    private Boolean side; // true = Bright side, false = Dark side
-    private List<GameView> views;
+import static java.lang.System.exit;
 
-    private Status status;
 
-    public Game(){
-        this.players = new ArrayList<>();
-        this.direction = false;
-        this.currentPlayer = null;
-        this.displayedPlayer = null;
-        this.deck = new Deck();
-        this.side = true;
-        this.views = new ArrayList<>();
-    }
+/**
+ * This class represents the graphical user interface for the UNO game.
+ * It extends JFrame and implements the GameUpdate interface to handle game events.
+ */
+public class GameView extends JFrame implements GameUpdate{
+    Game model;
+    JScrollPane scrollPane;
+    Container contentPane;
+    JPanel handPanel, centerPanel, statusPanel;
+    JLabel statusLabel, playerLabel, roundLabel;
+    JLabel playerScoreLabel;
+    JButton btnNextPlayer;
+    GameController controller;
 
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
 
-    public void addPlayer( Player player) {
-        players.add(player);
-    }
+    /**
+     * GameView constructor to initialize the JSwing classes and objects used in the view
+     */
+    public GameView(){
+        super("UnoFlip");
+        contentPane = this.getContentPane();
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        model = new Game();
+        int humanPlayer = numberOfPlayers();
+        try {
+            model.initialize(humanPlayer, numberOfAIPlayers(humanPlayer));
+            //if()
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Number of players must be at least 1");
+            System.out.println("Number of players must be at least 1");
+            exit(0);
+            //new GameView();
+        }
+        model.addView(this);
+        controller = new GameController(model, this);
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
+        // add items to frame
+        // Status section at the top
+        statusPanel = new JPanel();
+        statusPanel.setBackground(Color.LIGHT_GRAY);
 
-    public Boolean getDirection() {
-        return direction;
-    }
+        playerLabel = new JLabel();
+        updateCurrentTurn(model.getCurrentPlayer());
+        statusPanel.add(playerLabel);
 
-    public void flipDirection() {
-        direction = !direction;
-    }
+        statusLabel = new JLabel();
+        updateStatus(Status.NEW_TURN);
+        statusPanel.add(statusLabel);
 
-    public Deck getDeck() {
-        return deck;
-    }
+        btnNextPlayer = new JButton("Next Player");
+        btnNextPlayer.addActionListener(controller);
+        statusPanel.add(btnNextPlayer);
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
+        playerScoreLabel = new JLabel();
+        updateScore(model.getCurrentPlayer().getPlayerScore(), model.getCurrentPlayer().getName());
+        //contentPane.add(playerScoreLabel);
 
-    public Boolean getSide() {
-        return side;
-    }
+        roundLabel = new JLabel();
+        updateRound(model.getCurrentRound());
+        statusPanel.add(roundLabel);
 
-    public void flipSide() {
-        side = !side;
-    }
+        contentPane.add(statusPanel);
 
-    public Status getStatus(){
-        return this.status;
-    }
-    public void addView(GameView view){
-        this.views.add(view);
-    }
+        // center section with draw from deck and top discard
+        centerPanel = new JPanel();
+        centerPanel.setBackground(Color.DARK_GRAY);
+        updateDiscardPile(model.getDeck().topCardFromDiscardPile(), model.getSide());
+        contentPane.add(centerPanel);
 
-    public void initialize(int numPlayers, int numAIPlayers){ // need test, possible point of failure
-        if (numPlayers < 1) {
-            throw new IllegalArgumentException("Number of players must be at least 1");
+        // cards in hand section
+        handPanel = new JPanel();
+        handPanel.setBackground(Color.DARK_GRAY);
+
+
+        scrollPane = new JScrollPane(handPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        updateHandCards(model.getCurrentPlayer().getHand(), model.getSide());
+
+        contentPane.add(scrollPane);
+        /**int componentCnt = handPanel.getComponents().length;
+        for (int i = 0; i < componentCnt; i++) {
+            handPanel.getComponent(i).setEnabled(true);
+        }
+        centerPanel.getComponent(0).setEnabled(true);**/
+        if(humanPlayer==0){
+            disablePanel();
         }
 
-        Player p;
-        for (int i = 0; i < numPlayers; i++){
-            p = new Player( "Human Player " + (i+1) );
-            for (int j = 0; j < 7; j++) {
-                p.addCardToHand(getDeck().drawCard());
-            }
-            addPlayer(p);
-        }
-        for (int i = 0; i < numAIPlayers; i++){
-            p = new Player( "AI Player " + (i+1) );
-            for (int j = 0; j < 7; j++) {
-                p.addCardToHand(getDeck().drawCard());
-            }
-            addPlayer(p);
-        }
-        currentPlayer = players.get(0);
-        displayedPlayer = currentPlayer;
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
+    }
+
+
+    /**
+     * Displays the updated score of the players
+     * @param score
+     */
+    public void updateScore(int score, String playerName){
+        String text = "Score: " + score;
+        String player = "Player " + playerName;
+        playerScoreLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated round of the game
+     * @param round
+     */
+    public void updateRound(int round){
+        String text = "Round: " + round;
+        roundLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated status of the cards placed by the player in the game
+     * @param status
+     */
+    public void updateStatus(Status status){
+        String text = "Status: " + status.toString() + "                    ";
+        statusLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated current turn of each player (Human or AI)
+     * @param player
+     */
+    public void updateCurrentTurn(Player player){
+        String text = "Current Turn: " + player.getName() + "                    ";
+        playerLabel.setText(text);
+    }
+
+    /**
+     * Displays the updated discard pile everytime a playable card is played
+     * @param card
+     * @param side
+     */
+    public void updateDiscardPile(Card card, Boolean side){
+        centerPanel.removeAll();
+        JButton drawButton = new JButton("Draw Card");
+        drawButton.setPreferredSize(new Dimension(150,275));
+        drawButton.addActionListener(controller);
+        centerPanel.add(drawButton);
+
+        JButton btn = cardToButton(card, side);
+
+        centerPanel.add(btn);
+        centerPanel.revalidate();
+        centerPanel.repaint();
     }
     /**
-     * Returns the player index of the card to see which direction the game is being played.
-     * @param curIndex current index
-     * @param numPlayers number of players in game
-     * @param direction clockwise or counter-clockwise
+     * Updates the hand displayed by each player upon selecting a card from the deck
+     * @param hand
+     * @param side
+     */
+    public void updateHandCards(ArrayList<Card> hand, Boolean side){
+        handPanel.removeAll();
+        for (int i = 0; i < hand.size(); i++) {
+            Card card  = hand.get(i);
+            JButton btn = cardToButton(card, side);
+            btn.setActionCommand(String.valueOf(i));
+            btn.addActionListener(controller);
+            handPanel.add(btn);
+        }
+        scrollPane.revalidate();
+        scrollPane.repaint();
+        handPanel.revalidate();
+        handPanel.repaint();
+    }
+
+    /**
+     * Updates and enables the center panel cards
+     */
+    public void enablePanel(){
+        this.centerPanel.getComponent(0).setEnabled(true);
+    }
+
+    /**
+     * Updates and disables the center panel and hand panel cards
+     */
+    public void disablePanel(){
+        int componentCnt = this.handPanel.getComponents().length;
+        for (int i = 0; i < componentCnt; i++) {
+            this.handPanel.getComponent(i).setEnabled(false);
+        }
+        this.centerPanel.getComponent(0).setEnabled(false); //Disables draw button
+    }
+
+    //*************Milestone 4
+    /** Returns an ImageIcon, or null if the path was invalid. */
+//    protected ImageIcon createImageIcon(String path) {
+//        java.net.URL imgURL = getClass().getResource(path);
+//        if (imgURL != null) {
+//            return new ImageIcon(imgURL);
+//        } else {
+//            System.err.println("Couldn't find file: " + path);
+//            return null;
+//        }
+//    }
+//*************Milestone 4
+    /**
+     * Displays the colour of cards on both dark and light side
+     * @param card
+     * @param side
+     * @return JButton
+     */
+    private JButton cardToButton(Card card, Boolean side) {
+        //JButton btn = new JButton(card.toString(side));
+
+        //*************Milestone 4
+        String imagePath = "images/" + card.toString(side)+".png";
+        Image image1 = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
+        JButton btn = new JButton(new ImageIcon(image1));
+        btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
+
+//        String imagePath = "images/" + card.toString(side)+".png";
+//        System.out.println(imagePath);
+//        ImageIcon image1 = createImageIcon(imagePath);
+//        JButton btn = new JButton(image1);
+//        btn.setToolTipText(card.toString(side));
+//        System.out.println(" ------------GET --------- " + btn.getToolTipText());
+
+        //*************Milestone 4
+
+        btn.setPreferredSize(new Dimension(150, 275));
+        btn.setOpaque(true);
+        if(btn.getText().contains("GREEN")) {
+            btn.setBackground(Color.GREEN.darker());
+        }
+        else if (btn.getText().contains("BLUE")) {
+            btn.setBackground(Color.BLUE.brighter());
+        }
+        else if (btn.getText().contains("RED")) {
+            btn.setBackground(Color.RED.brighter());
+        }
+        else if (btn.getText().contains("YELLOW")) {
+            btn.setBackground(Color.ORANGE);
+        }
+        else if (btn.getText().contains("TEAL")) {
+            Color Teal = new Color(0,255,255);
+            btn.setBackground(Teal);
+        }
+        else if (btn.getText().contains("PINK")) {
+            Color Pink = new Color(255, 192, 203);
+            btn.setBackground(Pink);
+        }
+        else if (btn.getText().contains("ORANGE")) {
+            Color Orange = new Color(255, 165, 0);
+            btn.setBackground(Orange);
+        }
+        else if (btn.getText().contains("PURPLE")) {
+            Color Purple= new Color(102,0,153);
+            btn.setBackground(Purple.darker());
+        }
+        return btn;
+    }
+
+    /**
+     * Enables the user to select the number of human players
      * @return int
      */
-    public int nextPlayerIndex(int curIndex, int numPlayers, Boolean direction){
-        if (direction) {
-            curIndex -= 1;
-            if (curIndex == -1){
-                curIndex = numPlayers-1;
-            }
+    public int numberOfPlayers() {
+        Object[] option = {0, 1, 2, 3, 4, 5, 6};
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of Human players:", "Select Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        if(selectNumberOfPlayers != null)
+            return (int) selectNumberOfPlayers;
+        else
+            return 0;
+    }
+
+    /**
+     * Enables the user to select the number of AI players
+     * @param human
+     * @return int
+     */
+    public int numberOfAIPlayers(int human){
+        Object[] option = new Object[0];
+        if(human == 1) {
+           option = new Object[]{1, 2, 3, 4, 5, 6};
+        } else if (human == 0) {
+            option = new Object[]{2, 3, 4, 5, 6};
         }
         else{
-            curIndex = (curIndex + 1) % numPlayers;
+            option = new Object[]{0 ,1, 2, 3, 4, 5, 6};
         }
-        return curIndex;
+
+        Object selectNumberOfPlayers = JOptionPane.showInputDialog(this, "Choose the number of AI players:", "Select AI Players", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        if(selectNumberOfPlayers != null)
+            return (int) selectNumberOfPlayers;
+        else
+            return 0;
+    }
+    public static void main(String[] args) {
+        new GameView();
     }
 
-    public void nextPlayer(CardColor selectedColor) {
-        ArrayList<Card> cards = new ArrayList<>();
-        boolean isMatchFound = false;
-        Card topDiscardCard = deck.topCardFromDiscardPile();
-
-        //-----------------FOR AI ----------------------------------------------------
-        if(getCurrentPlayer().getName().contains("AI")){
-
-
-           // placeCard(cardIndex, selectedColor);
-            cards = displayedPlayer.getHand();
-            int i=0;
-            for(Card handCard : cards){ //Loops over hand cards of current player
-                System.out.println(handCard.getBrightCardType() + " : " + handCard.getBrightCardType() + " : " + getSide());
-                if(getSide() && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType() || (handCard.getBrightColor() == CardColor.WILD))) {
-                    selectedColor = CardColor.RED; //Sets the default colour of AI Player WILD CARD to RED
-                    placeCard(i, selectedColor);
-                    isMatchFound = true;
-                    break;
-                }
-                if(!getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType() || (handCard.getDarkColor() == CardColor.WILD))) {
-
-                    selectedColor = CardColor.PINK; //Sets the default colour of AI Player WILD CARD to PINK
-                    placeCard(i, selectedColor);
-                    isMatchFound = true;
-                    break;
-                }
-                i++;
-            }
-            if(!isMatchFound){
-                getCurrentPlayer().addCardToHand(getDeck().drawCard());
-                System.out.println("New Card Drawn");
-            }
+    /**
+     * Gets the score and Round following the MVC pattern
+     * @param e
+     */
+    @Override
+    public void handleUpdateScoreEvent(UpdateScoreEvent e) {
+        updateScore(e.getScore(), e.getPlayer());
+        if(e.getScore() > 500){
+            JOptionPane.showMessageDialog(this, e.getPlayer() + " WINS!!");
+            exit(0);
         }
-        //--------------------------------------------------------------------------
-
-        int i = nextPlayerIndex(players.indexOf(currentPlayer), players.size(), direction);
-        setCurrentPlayer(players.get(i));
-        System.out.println("getCurrentPlayer 2: " + getCurrentPlayer().getName());
-        displayedPlayer = currentPlayer;
-        //updateStatus();
-        for (GameUpdate view : views) {
-            view.handleNextPlayerEvent(new NextPlayerEvent(this, currentPlayer));
-        }
+        updateRound(e.getRound());
     }
 
-    public void drawCard() {
-        Card drawnCard = getDeck().drawCard();
-        displayedPlayer.addCardToHand(drawnCard);
-        //updateStatus();
-        for (GameUpdate view : views) {
-            view.handleDrawCardEvent(new DrawCardEvent(this, displayedPlayer.getHand()));
-        }
+    /**
+     * Gets the next player when user presses next player button following the MVC pattern
+     * @param e
+     */
+    @Override
+    public void handleNextPlayerEvent(NextPlayerEvent e) {
+        Player player = e.getPlayer();
+        updateStatus(e.getStatus());
+        updateCurrentTurn(player);
+        updateHandCards(player.getHand(), model.getSide());
     }
-    public boolean placeCard(int cardIndex, CardColor selectedColor) {
-        Card handCard = displayedPlayer.getHand().get(cardIndex);
-        System.out.println("HAND card  " + handCard.getBrightCardType());
-        System.out.println("In placeCard handCard" + handCard.getBrightCardType() + " : " + handCard.getDarkCardType());
-        Card topDiscardCard = deck.topCardFromDiscardPile();
-        int index = nextPlayerIndex(players.indexOf(displayedPlayer), players.size(), direction);
-        Player nextPlayer = players.get(index);
-        boolean isPlaced = false;      //Returns status of placeCards - Milestone  3-----------------
 
-        // if bright and color or card type match
-        if (side && (handCard.getBrightColor() == topDiscardCard.getBrightColor() || handCard.getBrightCardType() == topDiscardCard.getBrightCardType())) {
-            if (handCard.getBrightCardType() == CardType.FLIP) {
-                flipSide();
-            }
-            else if (handCard.getBrightCardType() == CardType.DRAW) {
-                nextPlayer.addCardToHand(deck.drawCard());
-            }
-            else if (handCard.getBrightCardType() == CardType.REVERSE) {
-                flipDirection();
-            }
-            else if (handCard.getBrightCardType() == CardType.SKIP) {
-                int i = nextPlayerIndex(players.indexOf(currentPlayer), players.size(), direction);
-                setCurrentPlayer(players.get(i));
-            }
-            displayedPlayer.removeCardFromHand(handCard);
-            deck.addToDiscardPile(handCard);
-            isPlaced = true;  //Returns status of placeCards - Milestone  3-----------------
+    /**
+     * Gets the drawn card and updates the hand of the current player
+     * @param e
+     */
+    @Override
+    public void handleDrawCardEvent(DrawCardEvent e) {
+        ArrayList<Card> hand = e.getHand();
+        updateStatus(e.getStatus());
+        updateHandCards(hand, model.getSide());
+    }
 
+    /**
+     * Gets and updates the hand placed on the discard pile by the user
+     * @param e
+     */
+    @Override
+    public void handlePlaceCardEvent(PlaceCardEvent e) {
+        ArrayList<Card> hand = e.getHand();
+        Card topDiscard = e.getTopDiscard();
+        updateStatus(e.getStatus());
+        updateHandCards(hand, model.getSide());
+        updateDiscardPile(topDiscard, model.getSide());
+
+    }
+
+    /**
+     * Returns the card color for the selected user input wild card
+     * @return CardColor
+     */
+    public CardColor getWildCardColor(){
+        CardColor[] option;
+        if (model.getSide()){
+            option = new CardColor[]{CardColor.BLUE, CardColor.RED, CardColor.GREEN, CardColor.YELLOW};
         }
-        // if dark and color or card type match
-        else if (!this.getSide() && (handCard.getDarkColor() == topDiscardCard.getDarkColor() || handCard.getDarkCardType() == topDiscardCard.getDarkCardType())) {
-            if (handCard.getDarkCardType() == CardType.FLIP) {
-                flipSide();
-            } else if (handCard.getDarkCardType() == CardType.DRAW) {
-                for (int j = 0; j < 5; j++) {
-                    nextPlayer.addCardToHand(deck.drawCard());
-                }
-            }
-            else if (handCard.getDarkCardType() == CardType.REVERSE) {
-                flipDirection();
-            }
-            else if (handCard.getBrightCardType() == CardType.SKIP) {
-                int i = nextPlayerIndex(players.indexOf(currentPlayer), players.size(), !direction);
-                setCurrentPlayer(players.get(i));
-            }
-            displayedPlayer.removeCardFromHand(handCard);
-            deck.addToDiscardPile(handCard);
-            isPlaced = true;   //Returns status of placeCards - Milestone  3----------------
-
+        else {
+            option = new CardColor[]{CardColor.PINK, CardColor.TEAL, CardColor.ORANGE, CardColor.PURPLE};
         }
-        // light side wild cards
-        else if (side && (handCard.getBrightColor() == CardColor.WILD)) {
-            System.out.println("In placeCard handCard LIGHT");
-            handCard.setBrightColor(selectedColor);
-            if (handCard.getBrightCardType() == CardType.WILD_DRAW) {
-                nextPlayer.addCardToHand(deck.drawCard());
-                nextPlayer.addCardToHand(deck.drawCard());
-            }
 
-            displayedPlayer.removeCardFromHand(handCard);
-            deck.addToDiscardPile(handCard);
-            isPlaced = true;   //Returns status of placeCards - Milestone  3----------------
+        CardColor colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Choose the color:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        while (colorSelected == null){
+            colorSelected = (CardColor) JOptionPane.showInputDialog(this, "Please choose a color to proceed:", "Select Color", JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        }
 
-        }
-        // dark side wild cards
-        else if (!side && (handCard.getDarkColor() == CardColor.WILD)) {
-            System.out.println("In placeCard handCard DARK");
-            handCard.setDarkColor(selectedColor);
-            if (handCard.getDarkCardType() == CardType.WILD_DRAW) {
-                Card drawnCard = new Card(null,null,null,null);
-                while (drawnCard.getDarkColor() != selectedColor){
-                    drawnCard = deck.drawCard();
-                    nextPlayer.addCardToHand(drawnCard);
-                }
-            }
-
-            displayedPlayer.removeCardFromHand(handCard);
-            deck.addToDiscardPile(handCard);
-            isPlaced = true;   //Returns status of placeCards - Milestone  3---------------
-        }
-        //updateStatus();
-        for (GameUpdate view : views) {
-            view.handlePlaceCardEvent(new PlaceCardEvent(this, displayedPlayer.getHand(), deck.topCardFromDiscardPile()));
-        }
-        return  isPlaced;
+        return colorSelected;
     }
 }
