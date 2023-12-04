@@ -89,13 +89,4 @@ public class Card implements Serializable {
         return getDarkCardType().toString() + " " + getDarkColor().toString();
     }
 
-    public void saveCard(String fileName){
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            oos.writeObject(this);
-            System.out.println("Card saved successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -100,14 +100,4 @@ public class Deck implements Serializable {
         return discardPile.get(discardPile.size()-1);
     }
 
-    public void saveDeck(String fileName){
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            oos.writeObject(this);
-            System.out.println("Deck saved successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

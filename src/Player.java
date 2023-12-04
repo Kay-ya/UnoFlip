@@ -198,13 +198,4 @@ public class Player implements Serializable {
         return totalPlayerScore;
     }
 
-    public void savePlayer(String fileName){
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            oos.writeObject(this);
-            System.out.println("Player saved successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
