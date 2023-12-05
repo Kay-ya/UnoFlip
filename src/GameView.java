@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Color;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -33,12 +31,12 @@ public class GameView extends JFrame implements GameUpdate{
 
         //JMENU IMPLEMENTATION STARTS
         menuBar = new JMenuBar();
-        menuBar.setLayout(new FlowLayout(0,1,1));
+        menuBar.setLayout(new FlowLayout(FlowLayout.LEFT,5,0));
 
         //JMenu
         save = new JMenuItem("Save");
         load = new JMenuItem("Load");
-        replayGame = new JMenuItem("Replay Game");
+        replayGame = new JMenuItem("Replay");
         redo = new JMenuItem("Redo");
         undo = new JMenuItem("Undo");
 
@@ -57,6 +55,7 @@ public class GameView extends JFrame implements GameUpdate{
         contentPane = this.getContentPane();
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
         model = new Game();
         int humanPlayer = numberOfPlayers();
         try {
@@ -124,12 +123,14 @@ public class GameView extends JFrame implements GameUpdate{
             disablePanel();
         }
 
-
         save.setActionCommand("Save");
         save.addActionListener(controller);
 
         load.setActionCommand("Load");
         load.addActionListener(controller);
+
+        undo.setActionCommand("Undo");
+        undo.addActionListener(controller);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -358,7 +359,23 @@ public class GameView extends JFrame implements GameUpdate{
         updateStatus(e.getStatus());
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());
+    }
 
+    /**
+     * Gets and updates the hand placed on the discard pile by the user
+     * @param e
+     */
+    @Override
+    public void handleLoadEvent(LoadEvent e) {
+        Player player = e.getPlayer();
+        ArrayList<Card> hand = player.getHand();
+        Card topDiscard = e.getTopDiscard();
+
+        updateStatus(e.getStatus());
+        updateRound(e.getRound());
+        updateScore(e.getScore(), player.getName());
+        updateHandCards(hand, model.getSide());
+        updateDiscardPile(topDiscard, model.getSide());
     }
 
     /**

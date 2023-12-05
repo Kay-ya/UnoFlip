@@ -4,4 +4,5 @@ public interface GameUpdate {
     void handleDrawCardEvent(DrawCardEvent e);
     void handlePlaceCardEvent(PlaceCardEvent e);
     void handleUpdateScoreEvent(UpdateScoreEvent e);
+    void handleLoadEvent(LoadEvent e);
 }

@@ -57,6 +57,9 @@ public class GameController implements ActionListener {
                 model.saveGame("SaveUnoGame1.ser");
             } else if (source.equals("Load")) {
                 model.loadGame("SaveUnoGame1.ser");
+            } else if (source.equals("Undo")) {
+                System.out.println("undo pressd");
+                model.loadGame("Undo.ser");
             }
         }
     }

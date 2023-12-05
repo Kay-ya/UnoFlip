@@ -1,10 +1,5 @@
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +10,7 @@ public class Game extends DefaultHandler implements Serializable {
     private Boolean direction, side; // true (default) = clockwise, true = Bright side, false = Dark side
     private Deck deck;
     private transient List<GameView> views;
-    //Card card;
+
     private int currentRound, trackPlayer;
     private Status status;
 
@@ -157,6 +152,7 @@ public class Game extends DefaultHandler implements Serializable {
      * Iterates through the next player when user presses 'Next Player' button.
      */
     public void nextPlayer() {
+        saveGame("Undo.ser");
         ArrayList<Card> cards;
         boolean isMatchFound = false;
         //AI IMPL BEGINS
@@ -223,6 +219,7 @@ public class Game extends DefaultHandler implements Serializable {
      * Draws a card from the deck and hands in to the current players hand
      */
     public void drawCard() {
+        saveGame("Undo.ser");
         Card drawnCard = deck.drawCard();
         displayedPlayer.addCardToHand(drawnCard);
         status = Status.CARD_DRAWN;
@@ -253,6 +250,7 @@ public class Game extends DefaultHandler implements Serializable {
      * @param selectedColor
      */
     public boolean placeCard(int cardIndex, CardColor selectedColor) {
+        saveGame("Undo.ser");
         boolean isPlaced = false;
         status = Status.CARD_PLACED;
         Card handCard = displayedPlayer.getHand().get(cardIndex);
@@ -355,15 +353,11 @@ public class Game extends DefaultHandler implements Serializable {
             this.side = loadedGame.side;
             this.currentRound = loadedGame.currentRound;
             this.trackPlayer = loadedGame.trackPlayer;
-            //this.cards = loadedGame.cards;
             this.players = loadedGame.players;
             this.status = loadedGame.status;
 
             for(GameUpdate view: views){
-                view.handleNextPlayerEvent(new NextPlayerEvent(this, displayedPlayer, status));
-                view.handleUpdateScoreEvent(new UpdateScoreEvent(this, currentRound, status));
-                view.handlePlaceCardEvent(new PlaceCardEvent(this, displayedPlayer.getHand(), deck.topCardFromDiscardPile(), status));
-                //view.handleGameView(new )
+                view.handleLoadEvent(new LoadEvent(this, displayedPlayer, status, deck.topCardFromDiscardPile(), displayedPlayer.getPlayerScore(), currentRound));
             }
 
         } catch (IOException | ClassNotFoundException e) {
