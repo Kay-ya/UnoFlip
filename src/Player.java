@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable {
     public ArrayList<Card> hand;
     private String name;
     private int playerScore, totalPlayerScore;

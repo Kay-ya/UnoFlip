@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Deck {
+public class Deck implements Serializable {
 
     private List<Card> cards, discardPile;
 

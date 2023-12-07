@@ -1,13 +1,16 @@
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Game extends DefaultHandler implements Serializable {
     private ArrayList <Player> players; //Stores the player name in an ArrayList
     private Player currentPlayer, displayedPlayer;
     private Boolean direction, side; // true (default) = clockwise, true = Bright side, false = Dark side
     private Deck deck;
-    private List<GameView> views;
-    ArrayList<Card> cards;
+    private transient List<GameView> views;
+
     private int currentRound, trackPlayer;
     private Status status;
 
@@ -23,8 +26,10 @@ public class Game {
         this.side = true;
         this.currentRound =1;
         this.trackPlayer =0;
+        this.status = Status.NEW_TURN;
+        //this.card = new Card();
         this.views = new ArrayList<>();
-        this.cards = new ArrayList<>();
+        //this.cards = new ArrayList<>();
     }
 
     /**
@@ -147,6 +152,8 @@ public class Game {
      * Iterates through the next player when user presses 'Next Player' button.
      */
     public void nextPlayer() {
+        saveGame("Undo.ser");
+        ArrayList<Card> cards;
         boolean isMatchFound = false;
         //AI IMPL BEGINS
         CardColor selectedColor;
@@ -212,6 +219,7 @@ public class Game {
      * Draws a card from the deck and hands in to the current players hand
      */
     public void drawCard() {
+        saveGame("Undo.ser");
         Card drawnCard = deck.drawCard();
         displayedPlayer.addCardToHand(drawnCard);
         status = Status.CARD_DRAWN;
@@ -242,6 +250,7 @@ public class Game {
      * @param selectedColor
      */
     public boolean placeCard(int cardIndex, CardColor selectedColor) {
+        saveGame("Undo.ser");
         boolean isPlaced = false;
         status = Status.CARD_PLACED;
         Card handCard = displayedPlayer.getHand().get(cardIndex);
@@ -323,4 +332,52 @@ public class Game {
         }
         return isPlaced;
     }
+
+    public void saveGame(String fileName){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(this);
+            System.out.println("Game saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadGame(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            Game loadedGame = (Game) ois.readObject();
+            System.out.println("Game loaded successfully.");
+            this.deck = loadedGame.deck;
+            this.currentPlayer = loadedGame.currentPlayer;
+            this.displayedPlayer = loadedGame.displayedPlayer;
+            this.direction = loadedGame.direction;
+            this.side = loadedGame.side;
+            this.currentRound = loadedGame.currentRound;
+            this.trackPlayer = loadedGame.trackPlayer;
+            this.players = loadedGame.players;
+            this.status = loadedGame.status;
+
+            for(GameUpdate view: views){
+                view.handleLoadEvent(new LoadEvent(this, displayedPlayer, status, deck.topCardFromDiscardPile(), displayedPlayer.getPlayerScore(), currentRound));
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            //return null;
+        }
+    }
+
+    /**public Game returnLoadedGame(String fileName){
+        Game g = loadGame(fileName);
+        return g;
+    }**/
+    //public static void main(String[] args) {
+       // Game g = new Game();
+        //g.saveGame("unoGame.ser");
+
+        //Game loadedGame = Game.loadGame("unoGame.ser");
+
+        //System.out.println(g.serializeToXml());
+        //.save("game.txt");
+    //}
+
 }

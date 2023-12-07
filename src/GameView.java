@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Color;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -22,15 +21,43 @@ public class GameView extends JFrame implements GameUpdate{
     JMenuBar menuBar;
     JMenuItem  undo, redo, replay, saveGame,loadGame;
 
-
+    //MENU BAR ITEMS
+    JMenuBar menuBar;
+    JMenuItem save, load, replayGame, redo, undo;
+    //JMenuItem file;
     /**
      * GameView constructor to initialize the JSwing classes and objects used in the view
      */
     public GameView(){
         super("UnoFlip");
+
+        //JMENU IMPLEMENTATION STARTS
+        menuBar = new JMenuBar();
+        menuBar.setLayout(new FlowLayout(FlowLayout.LEFT,5,0));
+
+        //JMenu
+        save = new JMenuItem("Save");
+        load = new JMenuItem("Load");
+        replayGame = new JMenuItem("Replay");
+        redo = new JMenuItem("Redo");
+        undo = new JMenuItem("Undo");
+
+        //adding menu
+        menuBar.add(save);
+        menuBar.add(load);
+        menuBar.add(replayGame);
+        menuBar.add(redo);
+        menuBar.add(undo);
+
+        this.setJMenuBar(menuBar);
+
+        //load.
+
+        //JMENU IMPLEMENTATION ENDS
         contentPane = this.getContentPane();
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
         model = new Game();
         int humanPlayer = numberOfPlayers();
         try {
@@ -113,6 +140,15 @@ public class GameView extends JFrame implements GameUpdate{
         if(humanPlayer==0){
             disablePanel();
         }
+
+        save.setActionCommand("Save");
+        save.addActionListener(controller);
+
+        load.setActionCommand("Load");
+        load.addActionListener(controller);
+
+        undo.setActionCommand("Undo");
+        undo.addActionListener(controller);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -341,7 +377,23 @@ public class GameView extends JFrame implements GameUpdate{
         updateStatus(e.getStatus());
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());
+    }
 
+    /**
+     * Gets and updates the hand placed on the discard pile by the user
+     * @param e
+     */
+    @Override
+    public void handleLoadEvent(LoadEvent e) {
+        Player player = e.getPlayer();
+        ArrayList<Card> hand = player.getHand();
+        Card topDiscard = e.getTopDiscard();
+
+        updateStatus(e.getStatus());
+        updateRound(e.getRound());
+        updateScore(e.getScore(), player.getName());
+        updateHandCards(hand, model.getSide());
+        updateDiscardPile(topDiscard, model.getSide());
     }
 
     /**

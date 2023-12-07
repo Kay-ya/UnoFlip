@@ -1,4 +1,6 @@
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
     private final CardType brightType;
     private CardColor brightColor;
     private final CardType darkType;
@@ -83,4 +85,5 @@ public class Card {
         }
         return getDarkCardType().toString() + " " + getDarkColor().toString();
     }
+
 }
