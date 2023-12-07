@@ -18,8 +18,6 @@ public class GameView extends JFrame implements GameUpdate{
     JLabel playerScoreLabel;
     JButton btnNextPlayer;
     GameController controller;
-    JMenuBar menuBar;
-    JMenuItem  undo, redo, replay, saveGame,loadGame;
 
     //MENU BAR ITEMS
     JMenuBar menuBar;
@@ -49,9 +47,6 @@ public class GameView extends JFrame implements GameUpdate{
         menuBar.add(redo);
         menuBar.add(undo);
 
-        this.setJMenuBar(menuBar);
-
-        //load.
 
         //JMENU IMPLEMENTATION ENDS
         contentPane = this.getContentPane();
@@ -78,14 +73,14 @@ public class GameView extends JFrame implements GameUpdate{
         menuBar.setLayout(new FlowLayout(0,1,1));
         undo = new JMenuItem("Undo");
         redo = new JMenuItem("Redo");
-        replay   = new JMenuItem("Replay");
-        saveGame = new JMenuItem("Save Game");
-        loadGame = new JMenuItem("Load Game");
+        replayGame   = new JMenuItem("Replay");
+        save = new JMenuItem("Save Game");
+        load = new JMenuItem("Load Game");
         menuBar.add(undo);
         menuBar.add(redo);
-        menuBar.add(replay);
-        menuBar.add(saveGame);
-        menuBar.add(loadGame);
+        menuBar.add(replayGame);
+        menuBar.add(save);
+        menuBar.add(load);
         contentPane.add(menuBar);
 
         // add items to frame
@@ -150,9 +145,21 @@ public class GameView extends JFrame implements GameUpdate{
         undo.setActionCommand("Undo");
         undo.addActionListener(controller);
 
+        replayGame.setActionCommand("Replay");
+        replayGame.addActionListener(controller);
+
+
+
+
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);
+    }
+
+    public int replayOption(){
+        int result = JOptionPane.showConfirmDialog(this, "Do you want to restart the game?", "Replay Confirmation", JOptionPane.YES_NO_OPTION);
+        return result;
     }
 
 
@@ -174,6 +181,10 @@ public class GameView extends JFrame implements GameUpdate{
         String text = "Round: " + round;
         roundLabel.setText(text);
     }
+
+
+
+
 
     /**
      * Displays the updated status of the cards placed by the player in the game

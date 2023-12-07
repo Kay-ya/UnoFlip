@@ -126,7 +126,9 @@ public class Game extends DefaultHandler implements Serializable {
         }
         currentPlayer = players.get(0);
         displayedPlayer = currentPlayer;
+        saveGame("Replay.ser");
     }
+
 
     /**
      * Returns the player index of the card to see which direction the game is being played.
@@ -365,6 +367,9 @@ public class Game extends DefaultHandler implements Serializable {
             //return null;
         }
     }
+
+
+
 
     /**public Game returnLoadedGame(String fileName){
         Game g = loadGame(fileName);
