@@ -5,70 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8981a1d8-9319-406f-8732-c16cd17ffe84" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/LoadEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Game_java_jar2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game.java.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Game.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Card.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/CardTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/CardType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Deck$CardSideDetails.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Deck.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/DeckTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/GameController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/GameEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/GameTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/GameUpdate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/GameView.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Player$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Game.java/PlayerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CardTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CardTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DeckTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeckTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Game/GameController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Game/GameController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Game/GameView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Game/GameView.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameUpdate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PlayerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PlayerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UnoFlip.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Card.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/CardColor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/CardTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/CardType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Deck$CardSideDetails.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Deck.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/DeckTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/DrawCardEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/GameController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/GameEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/GameTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/GameUpdate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/GameView.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/NextPlayerEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/PlaceCardEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Player$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/PlayerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/Status.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/UnoFlip.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/out/production/UnoFlip/UpdateScoreEvent.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,10 +20,20 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2ZC8LFTWHjke4uyedEzMD0ZNDFP" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "Samson-Undo",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
     "jdk.selected.JAVA_MODULE": "1.8",
     "last_opened_file_path": "C:/Users/Forgo/IdeaProjects/UnoFlipqwe/Game.iml",
     "project.structure.last.edited": "Modules",
@@ -95,8 +47,33 @@
       <recent name="C:\Users\Forgo\IdeaProjects\UnoFlipqwe\src" />
       <recent name="C:\Users\Forgo\IdeaProjects\UnoFlipqwe\.idea" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\CARLETON\YEAR 4\SYSC 3110\!!! PROJECT\Milestone4.1\out\production\Game" />
+    </key>
   </component>
+  <component name="RunManager">
+    <configuration name="GameView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GameView" />
+      <module name="Game" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.GameView" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8981a1d8-9319-406f-8732-c16cd17ffe84" name="Changes" comment="" />
+      <created>1701914643574</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701914643574</updated>
+    </task>
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

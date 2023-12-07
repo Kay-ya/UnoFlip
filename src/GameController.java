@@ -36,7 +36,7 @@ public class GameController implements ActionListener {
                 view.disablePanel();
             } else {
                 CardColor selectedColor = null;
-                if (source.getText().contains("WILD")){
+                if (source.getToolTipText().contains("WILD")){
                     selectedColor = view.getWildCardColor();
                 }
                 try {
@@ -59,8 +59,13 @@ public class GameController implements ActionListener {
                 model.loadGame("SaveUnoGame1.ser");
             } else if (source.equals("Undo")) {
                 System.out.println("undo pressd");
+                model.saveGame("SaveUndoGameState.ser");
                 model.loadGame("Undo.ser");
-            }
+            }else if (source.equals("Redo")) {        // Milestone 4 - 2nd change
+                 System.out.println("redo pressed");
+                 model.loadGame("SaveUndoGameState.ser");
+                 view.disablePanel();
+             }
         }
     }
 }

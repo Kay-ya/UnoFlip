@@ -19,11 +19,12 @@ public class GameView extends JFrame implements GameUpdate{
     JButton btnNextPlayer;
     GameController controller;
     JMenuBar menuBar;
-    JMenuItem  undo, redo, replay, saveGame,loadGame;
+    //JMenuItem  undo, redo, replay, saveGame,loadGame;
 
-    //MENU BAR ITEMS
-    JMenuBar menuBar;
     JMenuItem save, load, replayGame, redo, undo;
+    //MENU BAR ITEMS
+    //JMenuBar menuBar;
+    //JMenuItem save, load, replayGame;
     //JMenuItem file;
     /**
      * GameView constructor to initialize the JSwing classes and objects used in the view
@@ -74,19 +75,13 @@ public class GameView extends JFrame implements GameUpdate{
 
 
         //menubar initialization
-        menuBar = new JMenuBar();
-        menuBar.setLayout(new FlowLayout(0,1,1));
-        undo = new JMenuItem("Undo");
-        redo = new JMenuItem("Redo");
-        replay   = new JMenuItem("Replay");
-        saveGame = new JMenuItem("Save Game");
-        loadGame = new JMenuItem("Load Game");
-        menuBar.add(undo);
-        menuBar.add(redo);
-        menuBar.add(replay);
-        menuBar.add(saveGame);
-        menuBar.add(loadGame);
-        contentPane.add(menuBar);
+       // menuBar = new JMenuBar();
+      //  menuBar.setLayout(new FlowLayout(0,1,1));
+//        undo = new JMenuItem("Undo");
+//        redo = new JMenuItem("Redo");
+       // menuBar.add(undo);
+       // menuBar.add(redo);
+       // contentPane.add(menuBar);
 
         // add items to frame
         // Status section at the top
@@ -149,6 +144,10 @@ public class GameView extends JFrame implements GameUpdate{
 
         undo.setActionCommand("Undo");
         undo.addActionListener(controller);
+
+        redo.setActionCommand("Redo"); // Milestone 4 - 2nd change
+        redo.addActionListener(controller);
+
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -256,7 +255,12 @@ public class GameView extends JFrame implements GameUpdate{
      * @return JButton
      */
     private JButton cardToButton(Card card, Boolean side) {
-        JButton btn = new JButton(card.toString(side));
+        String imagePath = "images/" + card.toString(side)+".png";
+        Image image1 = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
+        JButton btn = new JButton(new ImageIcon(image1));
+        btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
+
+        //JButton btn = new JButton(card.toString(side));
         btn.setPreferredSize(new Dimension(150, 275));
         btn.setOpaque(true);
         if(btn.getText().contains("GREEN")) {
