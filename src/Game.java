@@ -127,6 +127,9 @@ public class Game extends DefaultHandler implements Serializable {
         currentPlayer = players.get(0);
         displayedPlayer = currentPlayer;
         saveGame("Replay.ser");
+        saveGame("Undo.ser");
+        saveGame("SaveUndoGameState.ser");
+
     }
 
     /**
@@ -205,7 +208,7 @@ public class Game extends DefaultHandler implements Serializable {
                         System.out.println("Get player DARK" + " " + p.getName() + " " + p.getPlayerScore());
                         view.handleUpdateScoreEvent(new UpdateScoreEvent(this, p.getPlayerScore(), p.getName(), status));
                     }
-                    if(p.getPlayerScore() > 500 || p.getPlayerScore() == 500){
+                    if(p.getPlayerScore() > 500 || p.getPlayerScore() == 500 || p.calculateTotalPointsForPlayerHand(getSide()) == 0){
                         System.out.println(p.getName() + " WINS!");
                         view.handleUpdateScoreEvent(new UpdateScoreEvent(this, p.getPlayerScore(), p.getName(), status));
                     }

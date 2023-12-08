@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -250,6 +251,16 @@ public class GameView extends JFrame implements GameUpdate{
         this.centerPanel.getComponent(0).setEnabled(false); //Disables draw button
     }
 
+    protected ImageIcon createImageIcon(String path) {
+        java.net.URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+
     /**
      * Displays the colour of cards on both dark and light side
      * @param card
@@ -257,9 +268,31 @@ public class GameView extends JFrame implements GameUpdate{
      * @return JButton
      */
     private JButton cardToButton(Card card, Boolean side) {
-        String imagePath = "/images/" + card.toString(side) + ".png";
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource(imagePath));
+//        String imagePath = "/images/" + card.toString(side) + ".png";
+//        ImageIcon imageIcon = new ImageIcon(getClass().getResource(imagePath));
+//
+//        Image image = imageIcon.getImage();
+//        JButton btn = new JButton(new ImageIcon(image));
+//        btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
 
+//        String imagePath = "images/" + card.toString(side)+".png";
+//        System.out.println(imagePath);
+//        ImageIcon image1 = createImageIcon(imagePath);
+//        JButton btn = new JButton(image1);
+//        btn.setToolTipText(card.toString(side));
+//        System.out.println(" ------------GET --------- " + btn.getToolTipText());
+
+        String imagePath = "/images/" + card.toString(side) + ".png";
+        URL imageUrl = getClass().getResource(imagePath);
+
+        if (imageUrl == null) {
+            // Log an error or handle the case where the image is not found
+            System.err.println("Resource not found at path: " + imagePath);
+            // You can return a button with default text or icon to avoid the application crashing
+            return new JButton("Image not found");
+        }
+
+        ImageIcon imageIcon = new ImageIcon(imageUrl);
         Image image = imageIcon.getImage();
         JButton btn = new JButton(new ImageIcon(image));
         btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
