@@ -22,33 +22,49 @@ public class GameController implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        JButton source = (JButton) e.getSource();
-        if (source.getText().equals("Next Player")){
-            model.nextPlayer();
-            view.enablePanel();
-            if(model.getCurrentPlayer().getName().contains("AI")) {
-                view.disablePanel();
-            }
-        }
-        else if (source.getText().equals("Draw Card")) {
-            model.drawCard();
-            view.disablePanel();
-        }
-        else {
-            CardColor selectedColor = null;
-            //if (source.getText().contains("WILD")){
-            if (source.getToolTipText().contains("WILD")){    // replaced getText() with getToolTipText() *************Milestone 4
-                selectedColor = view.getWildCardColor();
-            }
-            try {
-                String strNumber = source.getActionCommand();
-                int cardIndex = Integer.parseInt(strNumber);
-                boolean isPlaced = model.placeCard(cardIndex, selectedColor);
-                if(isPlaced) {
+        if (e.getSource() instanceof JButton) {
+            JButton source = (JButton) e.getSource();
+
+            if (source.getText().equals("Next Player")) {
+                model.nextPlayer();
+                view.enablePanel();
+                if (model.getCurrentPlayer().getName().contains("AI")) {
                     view.disablePanel();
                 }
-            } catch (NumberFormatException error) {
-                System.out.println("The string is not a valid integer.");
+            } else if (source.getText().equals("Draw Card")) {
+                model.drawCard();
+                view.disablePanel();
+            } else {
+                CardColor selectedColor = null;
+                if (source.getToolTipText().contains("WILD")){
+                    selectedColor = view.getWildCardColor();
+                }
+                try {
+                    String strNumber = source.getActionCommand();
+                    int cardIndex = Integer.parseInt(strNumber);
+                    boolean isPlaced = model.placeCard(cardIndex, selectedColor);
+                    if (isPlaced) {
+                        view.disablePanel();
+                    }
+                } catch (NumberFormatException error) {
+                    System.out.println("The string is not a valid integer.");
+                }
+            }
+        }
+        else if (e.getSource() instanceof JMenuItem){
+            Object source = e.getActionCommand();
+             if (source.equals("Save")) {
+                model.saveGame("SaveUnoGame1.ser");
+            } else if (source.equals("Load")) {
+                model.loadGame("SaveUnoGame1.ser");
+            } else if (source.equals("Undo")) {
+                System.out.println("undo pressd");
+                model.saveGame("SaveUndoGameState.ser");
+                model.loadGame("Undo.ser");
+            }else if (source.equals("Redo")) {
+                 System.out.println("redo pressed");
+                 model.loadGame("SaveUndoGameState.ser");
+                 view.disablePanel();
             }
         }
     }
