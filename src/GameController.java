@@ -58,14 +58,20 @@ public class GameController implements ActionListener {
             } else if (source.equals("Load")) {
                 model.loadGame("SaveUnoGame1.ser");
             } else if (source.equals("Undo")) {
-                System.out.println("undo pressd");
+                System.out.println("undo pressed");
                 model.saveGame("SaveUndoGameState.ser");
                 model.loadGame("Undo.ser");
             }else if (source.equals("Redo")) {        // Milestone 4 - 2nd change
                  System.out.println("redo pressed");
                  model.loadGame("SaveUndoGameState.ser");
                  view.disablePanel();
-             }
+            } else if(source.equals("Replay")){
+                 System.out.println("Replayed");
+                 int result = view.replayOption();
+                 if(result == JOptionPane.YES_OPTION) {
+                     model.loadGame("Replay.ser");
+                 }
+            }
         }
     }
 }

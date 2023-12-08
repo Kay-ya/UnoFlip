@@ -126,6 +126,7 @@ public class Game extends DefaultHandler implements Serializable {
         }
         currentPlayer = players.get(0);
         displayedPlayer = currentPlayer;
+        saveGame("Replay.ser");
     }
 
     /**

@@ -148,6 +148,8 @@ public class GameView extends JFrame implements GameUpdate{
         redo.setActionCommand("Redo"); // Milestone 4 - 2nd change
         redo.addActionListener(controller);
 
+        replayGame.setActionCommand("Replay");
+        replayGame.addActionListener(controller);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -255,9 +257,11 @@ public class GameView extends JFrame implements GameUpdate{
      * @return JButton
      */
     private JButton cardToButton(Card card, Boolean side) {
-        String imagePath = "images/" + card.toString(side)+".png";
-        Image image1 = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
-        JButton btn = new JButton(new ImageIcon(image1));
+        String imagePath = "/images/" + card.toString(side) + ".png";
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(imagePath));
+
+        Image image = imageIcon.getImage();
+        JButton btn = new JButton(new ImageIcon(image));
         btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
 
         //JButton btn = new JButton(card.toString(side));
@@ -329,6 +333,12 @@ public class GameView extends JFrame implements GameUpdate{
         else
             return 0;
     }
+    /**
+     *  replay confirmation
+     */
+    public int replayOption(){
+        return JOptionPane.showConfirmDialog(this, "Do you want to restart the game?", "Replay Confirmation", JOptionPane.YES_NO_OPTION);
+    }
     public static void main(String[] args) {
         new GameView();
     }
@@ -398,6 +408,11 @@ public class GameView extends JFrame implements GameUpdate{
         updateScore(e.getScore(), player.getName());
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());
+        updateCurrentTurn(player);
+
+        if (player.getName().contains("AI")){
+            disablePanel();
+        }
     }
 
     /**
