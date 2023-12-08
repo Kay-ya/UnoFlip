@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Color;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -19,16 +18,47 @@ public class GameView extends JFrame implements GameUpdate{
     JLabel playerScoreLabel;
     JButton btnNextPlayer;
     GameController controller;
+    JMenuBar menuBar;
+    //JMenuItem  undo, redo, replay, saveGame,loadGame;
 
-
+    JMenuItem save, load, replayGame, redo, undo;
+    //MENU BAR ITEMS
+    //JMenuBar menuBar;
+    //JMenuItem save, load, replayGame;
+    //JMenuItem file;
     /**
      * GameView constructor to initialize the JSwing classes and objects used in the view
      */
     public GameView(){
         super("UnoFlip");
+
+        //JMENU IMPLEMENTATION STARTS
+        menuBar = new JMenuBar();
+        menuBar.setLayout(new FlowLayout(FlowLayout.LEFT,5,0));
+
+        //JMenu
+        save = new JMenuItem("Save");
+        load = new JMenuItem("Load");
+        replayGame = new JMenuItem("Replay");
+        redo = new JMenuItem("Redo");
+        undo = new JMenuItem("Undo");
+
+        //adding menu
+        menuBar.add(save);
+        menuBar.add(load);
+        menuBar.add(replayGame);
+        menuBar.add(redo);
+        menuBar.add(undo);
+
+        this.setJMenuBar(menuBar);
+
+        //load.
+
+        //JMENU IMPLEMENTATION ENDS
         contentPane = this.getContentPane();
 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
         model = new Game();
         int humanPlayer = numberOfPlayers();
         try {
@@ -42,6 +72,16 @@ public class GameView extends JFrame implements GameUpdate{
         }
         model.addView(this);
         controller = new GameController(model, this);
+
+
+        //menubar initialization
+       // menuBar = new JMenuBar();
+      //  menuBar.setLayout(new FlowLayout(0,1,1));
+//        undo = new JMenuItem("Undo");
+//        redo = new JMenuItem("Redo");
+       // menuBar.add(undo);
+       // menuBar.add(redo);
+       // contentPane.add(menuBar);
 
         // add items to frame
         // Status section at the top
@@ -95,6 +135,19 @@ public class GameView extends JFrame implements GameUpdate{
         if(humanPlayer==0){
             disablePanel();
         }
+
+        save.setActionCommand("Save");
+        save.addActionListener(controller);
+
+        load.setActionCommand("Load");
+        load.addActionListener(controller);
+
+        undo.setActionCommand("Undo");
+        undo.addActionListener(controller);
+
+        redo.setActionCommand("Redo");  
+        redo.addActionListener(controller);
+
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -195,18 +248,6 @@ public class GameView extends JFrame implements GameUpdate{
         this.centerPanel.getComponent(0).setEnabled(false); //Disables draw button
     }
 
-    //*************Milestone 4
-    /** Returns an ImageIcon, or null if the path was invalid. */
-//    protected ImageIcon createImageIcon(String path) {
-//        java.net.URL imgURL = getClass().getResource(path);
-//        if (imgURL != null) {
-//            return new ImageIcon(imgURL);
-//        } else {
-//            System.err.println("Couldn't find file: " + path);
-//            return null;
-//        }
-//    }
-//*************Milestone 4
     /**
      * Displays the colour of cards on both dark and light side
      * @param card
@@ -214,23 +255,12 @@ public class GameView extends JFrame implements GameUpdate{
      * @return JButton
      */
     private JButton cardToButton(Card card, Boolean side) {
-        //JButton btn = new JButton(card.toString(side));
-
-        //*************Milestone 4
         String imagePath = "images/" + card.toString(side)+".png";
         Image image1 = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
         JButton btn = new JButton(new ImageIcon(image1));
         btn.setToolTipText(card.toString(side));  //String that is shown when hovered over
 
-//        String imagePath = "images/" + card.toString(side)+".png";
-//        System.out.println(imagePath);
-//        ImageIcon image1 = createImageIcon(imagePath);
-//        JButton btn = new JButton(image1);
-//        btn.setToolTipText(card.toString(side));
-//        System.out.println(" ------------GET --------- " + btn.getToolTipText());
-
-        //*************Milestone 4
-
+        //JButton btn = new JButton(card.toString(side));
         btn.setPreferredSize(new Dimension(150, 275));
         btn.setOpaque(true);
         if(btn.getText().contains("GREEN")) {
@@ -351,7 +381,23 @@ public class GameView extends JFrame implements GameUpdate{
         updateStatus(e.getStatus());
         updateHandCards(hand, model.getSide());
         updateDiscardPile(topDiscard, model.getSide());
+    }
 
+    /**
+     * Gets and updates the hand placed on the discard pile by the user
+     * @param e
+     */
+    @Override
+    public void handleLoadEvent(LoadEvent e) {
+        Player player = e.getPlayer();
+        ArrayList<Card> hand = player.getHand();
+        Card topDiscard = e.getTopDiscard();
+
+        updateStatus(e.getStatus());
+        updateRound(e.getRound());
+        updateScore(e.getScore(), player.getName());
+        updateHandCards(hand, model.getSide());
+        updateDiscardPile(topDiscard, model.getSide());
     }
 
     /**
